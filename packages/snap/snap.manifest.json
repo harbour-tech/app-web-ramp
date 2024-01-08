@@ -7,12 +7,12 @@
     "url": "https://github.com/harbour-tech/app-web-ramp.git"
   },
   "source": {
-    "shasum": "hcm3mxSHHojeEePVCKk5KgL1AmmF0v1cZJjWvKrCNQ0=",
+    "shasum": "KJ1ZPVDPP0bTfR2sq52rUtiFiruv1y6D4zC7z6vJw8I=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
         "iconPath": "images/icon.svg",
-        "packageName": "@harbour/ramp-snap",
+        "packageName": "@harbour-fi/ramp-snap",
         "registry": "https://registry.npmjs.org/"
       }
     }
