@@ -199,6 +199,8 @@ export class GetAccountInfoResponse_Authentication extends Message<GetAccountInf
  */
 export class GetAccountInfoResponse_Account extends Message<GetAccountInfoResponse_Account> {
   /**
+   * list of whitelisted addresses
+   *
    * @generated from field: repeated ramp.v1.GetAccountInfoResponse.Wallet wallets = 10;
    */
   wallets: GetAccountInfoResponse_Wallet[] = [];
@@ -294,6 +296,11 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
  */
 export class GetAccountInfoResponse_Wallet extends Message<GetAccountInfoResponse_Wallet> {
   /**
+   * @generated from field: string name = 5;
+   */
+  name = "";
+
+  /**
    * @generated from field: ramp.v1.Network network = 10;
    */
   network = Network.UNSPECIFIED;
@@ -316,6 +323,7 @@ export class GetAccountInfoResponse_Wallet extends Message<GetAccountInfoRespons
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 5, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 10, name: "network", kind: "enum", T: proto3.getEnumType(Network) },
     { no: 20, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 30, name: "assets", kind: "message", T: GetAccountInfoResponse_Wallet_RampAsset, repeated: true },

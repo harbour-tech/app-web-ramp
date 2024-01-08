@@ -10,7 +10,7 @@ import { MethodKind } from "@bufbuild/protobuf";
  * signature_type is supplied with every request in the header
  * public_key is supplied with every request in the header
  * timestamp is supplied with every request in the header and timestamp is validated as (+-1 minute from now) and used as a salt
- * signature is supplied with every request in the header as sing(request body + salt, private_key) and validated as verify(request body + salt, public_key)
+ * signature is supplied with every request in the header as sing(request body + timestamp, private_key) and validated as verify(request body + timestamp, public_key)
  *
  * @generated from service ramp.v1.RampService
  */
@@ -45,6 +45,8 @@ export const RampService = {
       kind: MethodKind.Unary,
     },
     /**
+     * Set a bank account for the off ramp
+     *
      * @generated from rpc ramp.v1.RampService.SetBankAccount
      */
     setBankAccount: {

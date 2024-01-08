@@ -82,17 +82,21 @@ export const singRequest = async (body: string) => {
  */
 
 export const requestAccounts = async () => {
-  await window.ethereum.request<string[]>({
-    method: 'wallet_revokePermissions',
-    params: [{
-      "eth_accounts": {}
-    }],
-  });
+  try {
+    await window.ethereum.request<string[]>({
+      method: 'wallet_revokePermissions',
+      params: [{
+        "eth_accounts": {}
+      }],
+    });
+  } catch (e) {
+    console.log(e);
+  }
 
-  return await window.ethereum.request<string[]>({
-    method: 'eth_requestAccounts',
-    params: [],
-  });
+    return await window.ethereum.request<string[]>({
+      method: 'eth_requestAccounts',
+      params: [],
+    });
 };
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "description": "Ramp it by Harbour",
+  "proposedName": "Harbour Ramp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harbour-tech/app-web-ramp.git"
+  },
+  "source": {
+    "shasum": "YyNbi59ey/evgpmQiy/oxETW7Rw1h8Z+7erexUd7eyc=",
+    "location": {
+      "npm": {
+        "filePath": "dist/bundle.js",
+        "iconPath": "images/icon.svg",
+        "packageName": "@harbour/ramp-snap",
+        "registry": "https://registry.npmjs.org/"
+      }
+    }
+  },
+  "initialPermissions": {
+    "snap_getEntropy": {},
+    "endowment:ethereum-provider": {},
+    "endowment:rpc": {
+      "dapps": true,
+      "snaps": false
+    }
+  },
+  "manifestVersion": "0.1"
+}

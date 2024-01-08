@@ -25,8 +25,12 @@ export class RampClient {
 
     //TODO: not implemented yet
     const fetchWithSignature: typeof globalThis.fetch = async (r, init) => {
+      if (!(init?.body instanceof Uint8Array)) {
+        throw "unsupported body type"
+      }
+      const bodyText = new TextDecoder().decode(init.body);
       const timestamp = Date.now().toString();
-      const data = init!.body!.toString() + timestamp
+      const data = bodyText + timestamp
       const signature = await signer(data)
 
       const headers = new Headers(init?.headers);
