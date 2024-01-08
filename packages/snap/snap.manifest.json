@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Ramp it by Harbour",
   "proposedName": "Harbour Ramp",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/harbour-tech/app-web-ramp.git"
   },
   "source": {
-    "shasum": "KJ1ZPVDPP0bTfR2sq52rUtiFiruv1y6D4zC7z6vJw8I=",
+    "shasum": "GKZI6G7gSvTklj4BYCZIqURvN24kjFpO6zqpERzlVgY=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
