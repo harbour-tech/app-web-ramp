@@ -10,10 +10,15 @@ import {cn} from "@/lib/utils";
 export interface AssetsProps {
   assets: GetAccountInfoResponse_Wallet_RampAsset[],
   selected?: GetAccountInfoResponse_Wallet_RampAsset,
-  onSelected: (asset: GetAccountInfoResponse_Wallet_RampAsset) => void
+  onSelected: (asset: GetAccountInfoResponse_Wallet_RampAsset) => void,
+  description: string
 }
 
-export const Assets: FunctionComponent<AssetsProps> = ({assets, selected, onSelected}) => {
+export const Assets: FunctionComponent<AssetsProps> = ({
+                                                         assets,
+                                                         selected,
+                                                         onSelected,
+                                                         description}) => {
   const style = (asset: GetAccountInfoResponse_Wallet_RampAsset) => {
     if (asset!.asset!.shortName == selected?.asset?.shortName) {
       return "bg-accent text-accent-foreground"
@@ -29,9 +34,7 @@ export const Assets: FunctionComponent<AssetsProps> = ({assets, selected, onSele
     <Card className="shadow">
       <CardHeader className="pb-3">
         <CardTitle>Asset</CardTitle>
-        <CardDescription>
-          Choose asset you want to on ramp.
-        </CardDescription>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-1">
         {assets.map(asset => (

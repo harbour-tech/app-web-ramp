@@ -5,12 +5,13 @@ import {
 import {FunctionComponent, useState} from "react";
 import {Wallet, Wallets} from "@/components/Wallets";
 import {Assets} from "@/components/Assets";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {BankAccount as BankAccountComponent} from "@/components/BankAccount";
 import BankAccount from "@/types/bankAccount";
+import {PiggyBankIcon} from "lucide-react";
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account,
@@ -87,11 +88,15 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
       <Wallets wallets={account.wallets}
                selectedWallet={selectedWallet}
                onWalletSelected={handleSelectWalletClick}
-               onAddWallet={onAddWallet}/>
+               onAddWallet={onAddWallet}
+               description="Step 1: Choose the wallet you want to offramp assets from"/>
     </div>
     <div className="basis-1/3">
       {selectedWallet?.assets &&
-        <Assets assets={selectedWallet?.assets!} onSelected={setSelectedAsset} selected={selectedAsset}></Assets>}
+        <Assets assets={selectedWallet?.assets!}
+                onSelected={setSelectedAsset}
+                selected={selectedAsset}
+                description="Step 2: Choose the asset you want to offramp"/>}
     </div>
     <div className="basis-1/3">
       {selectedAsset &&
@@ -99,7 +104,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
           <CardHeader className="pb-3">
             <CardTitle>Crypto Transactions Details</CardTitle>
             <CardDescription>
-              Send your funds from selected address or just enter amount and sign transaction. Please note that
+              Step 3: Send your funds from selected address or just enter amount and sign transaction. Please note that
               transfers from other addresses could cause unrecoverable loss of assets.
             </CardDescription>
           </CardHeader>
@@ -108,19 +113,36 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
               <Label htmlFor="address">Address</Label>
               <Input type="text" id="address" placeholder="address" readOnly={true} value={selectedAsset.offRamp?.address}/>
             </div>
-            {false && <>
+            {<>
               <div className="w-full max-w-sm items-center">
                 <Label htmlFor="amount">Amount {selectedAsset!.asset?.shortName}</Label>
-                <Input type="text" id="amount" placeholder={`amount in ${selectedAsset!.asset?.shortName}`} autoFocus/>
+                <Input type="text" id="amount" placeholder={`amount in ${selectedAsset!.asset?.shortName}`} disabled/>
               </div>
               <div>
-                <Button className="w-full">Sing and submit transaction</Button>
+                <Button className="w-full" disabled>Sign and submit transaction</Button>
               </div>
             </>}
           </CardContent>
+          <CardFooter className="grid gap-4">
+            <div className=" flex items-center space-x-4 rounded-md border p-4">
+              <PiggyBankIcon/>
+              <div className="flex-1 space-y-1">
+                {false &&<p className="text-sm font-medium leading-none">
+                  Push Notifications
+                </p>}
+                <p className="text-sm text-muted-foreground">
+                  You will receive your funds directly to your bank account.
+                </p>
+              </div>
+            </div>
+            <div className="w-full max-w-sm items-center">
+              <BankAccountComponent account={getOffRampBankAccount(account)}/>
+            </div>
+          </CardFooter>
         </Card>}
     </div>
     </>}
   </div>
-)}
+  )
+}
 

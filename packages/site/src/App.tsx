@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import {MetamaskActions, useMetaMask} from "@/hooks/useMetaMask";
 import {useRampClient} from "@/hooks/useRpc";
 import {
-  GetAccountInfoResponse,
+  GetAccountInfoResponse, IbanCoordinates,
   Network, SetBankAccountRequest, WhitelistAddressRequest
 } from "@/harbour/gen/ramp/v1/public_pb";
 import {Button} from "@/components/ui/button";
@@ -17,6 +17,7 @@ import {OffRamp} from "@/OffRamp";
 import {BankAccount} from "@/types/bankAccount";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {RocketIcon} from "lucide-react";
+import splash from "@/assets/splash.png"
 
 function App() {
   const [metamask, metamaskDispatch] = useMetaMask();
@@ -46,6 +47,14 @@ function App() {
       //       iban: "DE1233231231",
       //     })
       //   }
+
+
+      response.result.value.offrampBankAccount = {
+          case:"offrampIban",
+          value: new IbanCoordinates({
+            iban: "DE39 5001 0517 3186 9541 84",
+          })
+        }
     }
 
     // response.result = {
@@ -106,8 +115,8 @@ function App() {
   return (
     <div>
       <div className="">
-        <h2 className="text-2xl font-bold tracking-tight">Bringing fiat on and off chain</h2>
-        <p className="text-muted-foreground">On ramp and off ramp assets with Harbour!</p>
+        <h2 className="text-2xl font-bold tracking-tight">Say goodbye to the hassle and costs of on and off ramping</h2>
+        <p className="text-muted-foreground">Experience seamless transfers between your bank account and MetaMask wallet with Harbour</p>
       </div>
       <div className="py-2">
         <Separator className="my-4" />
@@ -118,8 +127,11 @@ function App() {
           <Button onClick={handleConnectClick}>Reconnect Snap</Button>
         )}
       </div>
-      <div>
+      <div >
         {!metamask.installedSnap && <Button onClick={handleConnectClick}>Install Snap</Button>}
+        <div className="flex justify-center">
+          <img width="600" src={splash} className="mt-8"/>
+        </div>
       </div>
 
       {accountInfo?.result.case == "authentication" && <div className="grid justify-items-center">

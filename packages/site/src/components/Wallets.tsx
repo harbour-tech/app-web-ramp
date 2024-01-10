@@ -21,13 +21,15 @@ export interface WalletsProps {
   selectedWallet?: GetAccountInfoResponse_Wallet,
   onWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void
   onAddWallet: (wallet: Wallet) => void
+  description: string
 }
 
 export const Wallets: FunctionComponent<WalletsProps> = ({
                                                            wallets,
                                                            selectedWallet,
                                                            onWalletSelected,
-                                                           onAddWallet}) => {
+                                                           onAddWallet,
+                                                           description}) => {
 
   const style = (wallet: GetAccountInfoResponse_Wallet) => {
     if (wallet.network == selectedWallet?.network && wallet.address == selectedWallet.address) {
@@ -45,9 +47,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
     <Card className="shadow">
       <CardHeader className="pb-3">
         <CardTitle>Wallet</CardTitle>
-        <CardDescription>
-          Choose wallet you want to on ramp assets to.
-        </CardDescription>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-1">
         {wallets.map(wallet => (

@@ -37,6 +37,10 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({account, onAddWallet}) =
       default: throw "onramp bank account must be set!"
     }
   }
+  const currency  = {
+    "iban":"EUR",
+    "scan": "GBP",
+  }[getOnRampBankAccount().case]
 
   return (
   <div className="flex flex-row gap-8">
@@ -44,19 +48,23 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({account, onAddWallet}) =
       <Wallets wallets={account.wallets}
                selectedWallet={selectedWallet}
                onWalletSelected={handleSelectWalletClick}
-               onAddWallet={onAddWallet}/>
+               onAddWallet={onAddWallet}
+               description="Step 1: Choose the wallet you want to onramp assets to"/>
     </div>
     <div className="basis-1/3">
       {selectedWallet?.assets &&
-        <Assets assets={selectedWallet?.assets!} onSelected={setSelectedAsset} selected={selectedAsset}></Assets>}
+        <Assets assets={selectedWallet?.assets!}
+                onSelected={setSelectedAsset}
+                selected={selectedAsset}
+                description="Step 2: Choose the asset you want to onramp"/>}
     </div>
     <div className="basis-1/3">
       {selectedAsset &&
         <Card className="shadow">
           <CardHeader className="pb-3">
-            <CardTitle>Bank Transfer Details</CardTitle>
+            <CardTitle>Magic Ramp Details</CardTitle>
             <CardDescription>
-              Find you bank transfer details below.
+              Step 3: Transfer {currency} to these details to receive {selectedAsset.asset!.shortName} on your selected wallet.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
