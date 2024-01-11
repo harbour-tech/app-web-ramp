@@ -128,10 +128,12 @@ function App() {
         )}
       </div>
       <div >
-        {!metamask.installedSnap && <Button onClick={handleConnectClick}>Install Snap</Button>}
-        <div className="flex justify-center">
-          <img width="600" src={splash} className="mt-8"/>
-        </div>
+        {!metamask.installedSnap && <>
+          <Button onClick={handleConnectClick}>Install Snap</Button>
+          <div className="flex justify-center">
+            <img width="600" src={splash} className="mt-8"/>
+          </div>
+        </>}
       </div>
 
       {accountInfo?.result.case == "authentication" && <div className="grid justify-items-center">

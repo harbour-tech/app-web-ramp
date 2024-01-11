@@ -2,7 +2,7 @@ import {
   GetAccountInfoResponse_Account, GetAccountInfoResponse_Wallet,
   GetAccountInfoResponse_Wallet_RampAsset, IbanCoordinates, ScanCoordinates
 } from "@/harbour/gen/ramp/v1/public_pb";
-import {FunctionComponent, useState} from "react";
+import React, {FunctionComponent, useState} from "react";
 import {Wallet, Wallets} from "@/components/Wallets";
 import {Assets} from "@/components/Assets";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
@@ -12,6 +12,7 @@ import {Button} from "@/components/ui/button";
 import {BankAccount as BankAccountComponent} from "@/components/BankAccount";
 import BankAccount from "@/types/bankAccount";
 import {PiggyBankIcon} from "lucide-react";
+// import {ethers, parseUnits} from "ethers"
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account,
@@ -23,6 +24,28 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
   {account, onAddWallet}) => {
   const [selectedWallet, setSelectedWallet] = useState<GetAccountInfoResponse_Wallet | undefined>(undefined)
   const [selectedAsset, setSelectedAsset] = useState<GetAccountInfoResponse_Wallet_RampAsset | undefined>(undefined)
+  const [amount, setAmount] = useState("5.43")
+
+  async function handleTransfer() {
+    // const provider = new ethers.BrowserProvider(window.ethereum)
+    // const signer = await provider.getSigner(selectedWallet!.address)
+    //
+    // const usdc = {
+    //   address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    //   abi: [
+    //     "function balanceOf(address _owner) public view returns (uint256 balance)",
+    //     "function transfer(address _to, uint256 _value) public returns (bool success)",
+    //   ],
+    // };
+    // console.log(selectedAsset!.offRamp!.address)
+    //
+    // const usdcContract = new ethers.Contract(usdc.address, usdc.abi, signer);
+    // const xAmount = parseUnits(amount, 6);
+    // const tx = await usdcContract.transfer(selectedAsset!.offRamp!.address, xAmount, { /*gasPrice: 0*/  });
+    // const receipt = await tx.wait();
+    // console.log(receipt)
+    // return signer
+  }
 
   const handleSelectWalletClick = (wallet: GetAccountInfoResponse_Wallet) => {
     setSelectedWallet(wallet)
@@ -61,6 +84,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
     setBankAccount(account)
   }
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(e.target.value)
+  }
   return (
   <div className="flex flex-row gap-8">
     {needSetBankAccount && <>
@@ -116,10 +142,10 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
             {<>
               <div className="w-full max-w-sm items-center">
                 <Label htmlFor="amount">Amount {selectedAsset!.asset?.shortName}</Label>
-                <Input type="text" id="amount" placeholder={`amount in ${selectedAsset!.asset?.shortName}`} disabled/>
+                <Input type="text" id="amount" placeholder={`amount in ${selectedAsset!.asset?.shortName}`} value={amount}  onChange={handleAmountChange} disabled/>
               </div>
               <div>
-                <Button className="w-full" disabled>Sign and submit transaction</Button>
+                <Button className="w-full" onClick={handleTransfer} disabled>Sign and submit transaction</Button>
               </div>
             </>}
           </CardContent>
