@@ -27,7 +27,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
   const [amount, setAmount] = useState("5.43")
 
   async function handleTransfer() {
-    // const provider = new ethers.BrowserProvider(window.ethereum)
+     //const provider = new ethers.BrowserProvider(window.ethereum)
     // const signer = await provider.getSigner(selectedWallet!.address)
     //
     // const usdc = {

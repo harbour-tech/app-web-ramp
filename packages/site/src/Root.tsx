@@ -15,7 +15,7 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
             Magic Ramping</h1>
           <div className="flex justify-start py-2 gap-2 items-center">
             <div className="text-2xl">by</div>
-            <svg width="154" height="18" viewBox="0 0 154 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg id="logo" width="154" height="18" viewBox="0 0 154 18" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M15.9336 7.24271H7.59711C2.13443 7.24271 0.234375 8.57275 0.234375 12.0404V17.313H3.91574V10.3541H12.2523C17.7149 10.3541 19.615 9.14277 19.615 5.67516V0.6875H15.9336V7.24271Z"
                 fill="black"/>
