@@ -1,39 +1,44 @@
-import {useEffect, useState} from 'react'
-import {MetamaskActions, useMetaMask} from "@/hooks/useMetaMask";
-import {useRampClient} from "@/hooks/useRpc";
+import { useEffect, useState } from 'react';
+import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
+import { useRampClient } from '@/hooks/useRpc';
 import {
-  GetAccountInfoResponse, IbanCoordinates,
-  Network, SetBankAccountRequest, WhitelistAddressRequest
-} from "@/harbour/gen/ramp/v1/public_pb";
-import {Button} from "@/components/ui/button";
-import {connectSnap, getSnap, isLocalSnap} from "@/utils";
-import {Separator} from "@radix-ui/react-separator";
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {OnRamp} from "@/OnRamp";
-import {Snap} from "@/types";
-import {Wallet} from "@/components/Wallets";
-import {OffRamp} from "@/OffRamp";
+  GetAccountInfoResponse,
+  IbanCoordinates,
+  Network,
+  SetBankAccountRequest,
+  WhitelistAddressRequest,
+} from '@/harbour/gen/ramp/v1/public_pb';
+import { Button } from '@/components/ui/button';
+import { connectSnap, getSnap, isLocalSnap } from '@/utils';
+import { Separator } from '@radix-ui/react-separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { OnRamp } from '@/OnRamp';
+import { Snap } from '@/types';
+import { Wallet } from '@/components/Wallets';
+import { OffRamp } from '@/OffRamp';
 
-import {BankAccount} from "@/types/bankAccount";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-import {RocketIcon} from "lucide-react";
-import splash from "@/assets/splash.png"
+import { BankAccount } from '@/types/bankAccount';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { RocketIcon } from 'lucide-react';
+import splash from '@/assets/splash.png';
 
 function App() {
   const [metamask, metamaskDispatch] = useMetaMask();
-  const rampClient = useRampClient()
-  const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(null)
-  const isMetaMaskReady = metamask.snapsDetected
+  const rampClient = useRampClient();
+  const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(
+    null,
+  );
+  const isMetaMaskReady = metamask.snapsDetected;
 
   const load = async () => {
     let response: GetAccountInfoResponse;
     try {
       response = await rampClient.client.getAccountInfo({});
     } catch (e) {
-      throw e
+      throw e;
     }
 
-    if (response.result.case == "account"){
+    if (response.result.case == 'account') {
       // response.result.value.onrampBankAccount = {
       //   case:"onrampScan",
       //   value: new ScanCoordinates({
@@ -48,13 +53,12 @@ function App() {
       //     })
       //   }
 
-
       response.result.value.offrampBankAccount = {
-          case:"offrampIban",
-          value: new IbanCoordinates({
-            iban: "DE39 5001 0517 3186 9541 84",
-          })
-        }
+        case: 'offrampIban',
+        value: new IbanCoordinates({
+          iban: 'DE39 5001 0517 3186 9541 84',
+        }),
+      };
     }
 
     // response.result = {
@@ -62,16 +66,15 @@ function App() {
     //   value: new GetAccountInfoResponse_Authentication({}),
     // }
 
-    setAccountInfo(response)
-    console.log("loaded account")
-  }
-
+    setAccountInfo(response);
+    console.log('loaded account');
+  };
 
   useEffect(() => {
     if (metamask.installedSnap) {
-      load()
+      load();
     }
-  },[metamask.installedSnap, rampClient])
+  }, [metamask.installedSnap, rampClient]);
 
   const handleConnectClick = async () => {
     try {
@@ -90,84 +93,111 @@ function App() {
 
   const handleAddWallet = async (wallet: Wallet) => {
     try {
-      await rampClient.whitelistAddress(new WhitelistAddressRequest({
-        name: wallet.name,
-        address: wallet.address,
-        network: Network.ETHEREUM_MAINNET,
-      }), async (_) => "not implemented")
+      await rampClient.whitelistAddress(
+        new WhitelistAddressRequest({
+          name: wallet.name,
+          address: wallet.address,
+          network: Network.ETHEREUM_MAINNET,
+        }),
+        async (_) => 'not implemented',
+      );
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-    await load()
-  }
+    await load();
+  };
 
   const handleSaveBankAccount = async (account: BankAccount) => {
     try {
-      await rampClient.setBankAccount(new SetBankAccountRequest({
-        bankAccount: account
-      }))
+      await rampClient.setBankAccount(
+        new SetBankAccountRequest({
+          bankAccount: account,
+        }),
+      );
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-    await load()
-  }
+    await load();
+  };
 
   return (
     <div>
       <div className="">
-        <h2 className="text-2xl font-bold tracking-tight">Say goodbye to the hassle and costs of on and off ramping</h2>
-        <p className="text-muted-foreground">Experience seamless transfers between your bank account and MetaMask wallet with Harbour</p>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Say goodbye to the hassle and costs of on and off ramping
+        </h2>
+        <p className="text-muted-foreground">
+          Experience seamless transfers between your bank account and MetaMask
+          wallet with Harbour
+        </p>
       </div>
       <div className="py-2">
         <Separator className="my-4" />
-        {!isMetaMaskReady && <Button asChild>
-          <a href="/login" target="_blank">Install MetaMask</a>
-        </Button>}
+        {!isMetaMaskReady && (
+          <Button asChild>
+            <a href="/login" target="_blank">
+              Install MetaMask
+            </a>
+          </Button>
+        )}
         {shouldDisplayReconnectButton(metamask.installedSnap) && (
           <Button onClick={handleConnectClick}>Reconnect Snap</Button>
         )}
       </div>
-      <div >
-        {!metamask.installedSnap && <>
-          <Button onClick={handleConnectClick}>Install Snap</Button>
-          <div className="flex justify-center">
-            <img width="600" src={splash} className="mt-8"/>
-          </div>
-        </>}
+      <div>
+        {!metamask.installedSnap && (
+          <>
+            <Button onClick={handleConnectClick}>Install Snap</Button>
+            <div className="flex justify-center">
+              <img width="600" src={splash} className="mt-8" />
+            </div>
+          </>
+        )}
       </div>
 
-      {accountInfo?.result.case == "authentication" && <div className="grid justify-items-center">
-        <Alert className="mt-10 sm:max-w-[700px]">
-          <RocketIcon className="h-4 w-4" />
-          <AlertTitle>This is private beta</AlertTitle>
-          <AlertDescription>
-            We are working hard on the letting magic happen. We strongly encourage you to come back later. See you soon!
-          </AlertDescription>
-        </Alert>
-      </div>}
-      {accountInfo?.result.case == "account" && <>
-      <Tabs defaultValue="onramp" className="grid gap-4">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="onramp">On Ramp</TabsTrigger>
-          <TabsTrigger value="offramp">Off Ramp</TabsTrigger>
-        </TabsList>
-        <TabsContent value="onramp" >
-          <OnRamp account={accountInfo.result.value} onAddWallet={handleAddWallet}></OnRamp>
-        </TabsContent>
-        <TabsContent value="offramp" className="grid gap-4">
-          <OffRamp account={accountInfo.result.value} onAddWallet={handleAddWallet} onSaveBankAccount={handleSaveBankAccount}></OffRamp>
-        </TabsContent>
-      </Tabs></>}
+      {accountInfo?.result.case == 'authentication' && (
+        <div className="grid justify-items-center">
+          <Alert className="mt-10 sm:max-w-[700px]">
+            <RocketIcon className="h-4 w-4" />
+            <AlertTitle>This is private beta</AlertTitle>
+            <AlertDescription>
+              We are working hard on the letting magic happen. We strongly
+              encourage you to come back later. See you soon!
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
+      {accountInfo?.result.case == 'account' && (
+        <>
+          <Tabs defaultValue="onramp" className="grid gap-4">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="onramp">On Ramp</TabsTrigger>
+              <TabsTrigger value="offramp">Off Ramp</TabsTrigger>
+            </TabsList>
+            <TabsContent value="onramp">
+              <OnRamp
+                account={accountInfo.result.value}
+                onAddWallet={handleAddWallet}
+              ></OnRamp>
+            </TabsContent>
+            <TabsContent value="offramp" className="grid gap-4">
+              <OffRamp
+                account={accountInfo.result.value}
+                onAddWallet={handleAddWallet}
+                onSaveBankAccount={handleSaveBankAccount}
+              ></OffRamp>
+            </TabsContent>
+          </Tabs>
+        </>
+      )}
     </div>
-  )
+  );
 }
 
-export default App
-
+export default App;
 
 const shouldDisplayReconnectButton = (installedSnap?: Snap) =>
   installedSnap && isLocalSnap(installedSnap?.id);
-
 
 // response = new GetAccountInfoResponse({
 //   result: {

@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply bg-night;
+  height: 100vh;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -50,13 +55,13 @@
 }
 
 h1 {
-  font-family: Space Grotesk,sans-serif;
+  font-family: Space Grotesk, sans-serif;
 }
 body {
-  font-family: Albert Sans,sans-serif;
+  font-family: Albert Sans, sans-serif;
   /*background: #FBFBFB;*/
 }
 
 .dark body #logo {
-  filter: invert()
+  filter: invert();
 }
