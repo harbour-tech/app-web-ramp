@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
 import { useRampClient } from '@/hooks/useRpc';
 import {
-  GetAccountInfoResponse,
-  IbanCoordinates,
-  Network,
+  Ecosystem,
+  GetAccountInfoResponse, IbanCoordinates,
   SetBankAccountRequest,
   WhitelistAddressRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
@@ -33,7 +32,7 @@ function App() {
   const load = async () => {
     let response: GetAccountInfoResponse;
     try {
-      response = await rampClient.client.getAccountInfo({});
+      response = await rampClient.getAccountInfo({});
     } catch (e) {
       throw e;
     }
@@ -52,6 +51,9 @@ function App() {
       //       iban: "DE1233231231",
       //     })
       //   }
+
+      response.result.value.wallets[0].address = "0x73c2D5103898a0a850886314B6099b4DE03FC0Bb";
+      response.result.value.wallets[0].name = "Stepan's Metamask";
 
       response.result.value.offrampBankAccount = {
         case: 'offrampIban',
@@ -97,7 +99,7 @@ function App() {
         new WhitelistAddressRequest({
           name: wallet.name,
           address: wallet.address,
-          network: Network.ETHEREUM_MAINNET,
+          ecosystem: Ecosystem.ETHEREUM,
         }),
         async (_) => 'not implemented',
       );

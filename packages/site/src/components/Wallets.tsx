@@ -32,7 +32,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
                                                            description}) => {
 
   const style = (wallet: GetAccountInfoResponse_Wallet) => {
-    if (wallet.network == selectedWallet?.network && wallet.address == selectedWallet.address) {
+    if (wallet.ecosystem == selectedWallet?.ecosystem && wallet.address == selectedWallet?.address) {
       return "bg-accent text-accent-foreground"
     } else {
       return "hover:bg-accent hover:text-accent-foreground"
@@ -52,7 +52,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
       <CardContent className="grid gap-1">
         {wallets.map(wallet => (
           <div onClick={() => handleSelect(wallet)}
-               key={wallet.network + wallet.address}
+               key={wallet.ecosystem+ ":" + wallet.address}
                className={cn("-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all", style(wallet))}
           >
             <GemIcon className="mt-px h-5 w-5"/> {/*TODO: map network to icon*/}
