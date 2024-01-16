@@ -22,7 +22,7 @@ export interface OffRampProps {
 }
 
 export const OffRamp: FunctionComponent<OffRampProps> = (
-  {account, onAddWallet}) => {
+  {account, onAddWallet, onSaveBankAccount}) => {
   const [selectedWallet, setSelectedWallet] = useState<GetAccountInfoResponse_Wallet | undefined>(undefined)
   const [selectedAsset, setSelectedAsset] = useState<GetAccountInfoResponse_Wallet_RampAsset | undefined>(undefined)
   const [amount, setAmount] = useState("5.43")
@@ -102,7 +102,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
           <CardContent className="grid gap-4">
             <BankAccountComponent account={bankAccount} onChange={onChangeBankAccount}/>
             <div>
-              <Button className="w-full" onClick={() => console.log(bankAccount)}>Save</Button>
+              <Button className="w-full" onClick={() => onSaveBankAccount(bankAccount)}>Save</Button>
             </div>
           </CardContent>
         </Card>
@@ -141,7 +141,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
               </div>
               <div className="w-full max-w-sm items-center">
                 <BankAccountComponent account={getOffRampBankAccount(account)}/>
-              </div>1§
+              </div>
               <div>
                 <Button className="w-full" onClick={handleTransfer} disabled={false}>
                   <img src={Metamask} className="mr-2 h-4 w-4"/>

@@ -3,7 +3,7 @@ import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
 import { useRampClient } from '@/hooks/useRpc';
 import {
   Ecosystem,
-  GetAccountInfoResponse, IbanCoordinates,
+  GetAccountInfoResponse,
   SetBankAccountRequest,
   WhitelistAddressRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
@@ -52,15 +52,15 @@ function App() {
       //     })
       //   }
 
-      response.result.value.wallets[0].address = "0x73c2D5103898a0a850886314B6099b4DE03FC0Bb";
-      response.result.value.wallets[0].name = "Stepan's Metamask";
+      //response.result.value.wallets[0].address = "0x73c2D5103898a0a850886314B6099b4DE03FC0Bb";
+      //response.result.value.wallets[0].name = "Stepan's Metamask";
 
-      response.result.value.offrampBankAccount = {
-        case: 'offrampIban',
-        value: new IbanCoordinates({
-          iban: 'DE39 5001 0517 3186 9541 84',
-        }),
-      };
+      // response.result.value.offrampBankAccount = {
+      //   case: 'offrampIban',
+      //   value: new IbanCoordinates({
+      //     iban: 'DE39 5001 0517 3186 9541 84',
+      //   }),
+      // };
     }
 
     // response.result = {
@@ -69,8 +69,7 @@ function App() {
     // }
 
     setAccountInfo(response);
-    console.log('loaded account');
-  };
+  }
 
   useEffect(() => {
     if (metamask.installedSnap) {
@@ -121,6 +120,8 @@ function App() {
     }
     await load();
   };
+
+  console.log(accountInfo?.result)
 
   return (
     <div>
