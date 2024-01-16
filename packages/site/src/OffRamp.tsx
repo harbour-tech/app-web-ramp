@@ -11,8 +11,9 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {BankAccount as BankAccountComponent} from "@/components/BankAccount";
 import BankAccount from "@/types/bankAccount";
-import {PiggyBankIcon} from "lucide-react";
-// import {ethers, parseUnits} from "ethers"
+import {WalletIcon} from "lucide-react";
+import {ethers, parseUnits} from "ethers"
+import Metamask from "@/assets/metamask.svg"
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account,
@@ -21,30 +22,29 @@ export interface OffRampProps {
 }
 
 export const OffRamp: FunctionComponent<OffRampProps> = (
-  {account, onAddWallet}) => {
+  {account, onAddWallet, onSaveBankAccount}) => {
   const [selectedWallet, setSelectedWallet] = useState<GetAccountInfoResponse_Wallet | undefined>(undefined)
   const [selectedAsset, setSelectedAsset] = useState<GetAccountInfoResponse_Wallet_RampAsset | undefined>(undefined)
   const [amount, setAmount] = useState("5.43")
 
   async function handleTransfer() {
-     //const provider = new ethers.BrowserProvider(window.ethereum)
-    // const signer = await provider.getSigner(selectedWallet!.address)
-    //
-    // const usdc = {
-    //   address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    //   abi: [
-    //     "function balanceOf(address _owner) public view returns (uint256 balance)",
-    //     "function transfer(address _to, uint256 _value) public returns (bool success)",
-    //   ],
-    // };
-    // console.log(selectedAsset!.offRamp!.address)
-    //
-    // const usdcContract = new ethers.Contract(usdc.address, usdc.abi, signer);
-    // const xAmount = parseUnits(amount, 6);
-    // const tx = await usdcContract.transfer(selectedAsset!.offRamp!.address, xAmount, { /*gasPrice: 0*/  });
-    // const receipt = await tx.wait();
-    // console.log(receipt)
-    // return signer
+     const provider = new ethers.BrowserProvider(window.ethereum)
+    const signer = await provider.getSigner(selectedWallet!.address)
+
+    const usdc = {
+      address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      abi: [
+        "function balanceOf(address _owner) public view returns (uint256 balance)",
+        "function transfer(address _to, uint256 _value) public returns (bool success)",
+      ],
+    };
+    console.log(selectedAsset!.offRamp!.address)
+
+    const usdcContract = new ethers.Contract(usdc.address, usdc.abi, signer);
+    const xAmount = parseUnits(amount, 6);
+    const tx = await usdcContract.transfer(selectedAsset!.offRamp!.address, xAmount, { /*gasPrice: 0*/  });
+    const receipt = await tx.wait();
+    console.log(receipt)
   }
 
   const handleSelectWalletClick = (wallet: GetAccountInfoResponse_Wallet) => {
@@ -102,7 +102,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
           <CardContent className="grid gap-4">
             <BankAccountComponent account={bankAccount} onChange={onChangeBankAccount}/>
             <div>
-              <Button className="w-full" onClick={() => console.log(bankAccount)}>Save</Button>
+              <Button className="w-full" onClick={() => onSaveBankAccount(bankAccount)}>Save</Button>
             </div>
           </CardContent>
         </Card>
@@ -130,39 +130,50 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
           <CardHeader className="pb-3">
             <CardTitle>Crypto Transactions Details</CardTitle>
             <CardDescription>
-              Step 3: Send your funds from selected address or just enter amount and sign transaction. Please note that
-              transfers from other addresses could cause unrecoverable loss of assets.
+              Step 3: Just enter amount and confirm transaction with MetaMask.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <div className="w-full max-w-sm items-center">
-              <Label htmlFor="address">Address</Label>
-              <Input type="text" id="address" placeholder="address" readOnly={true} value={selectedAsset.offRamp?.address}/>
-            </div>
-            {<>
               <div className="w-full max-w-sm items-center">
                 <Label htmlFor="amount">Amount {selectedAsset!.asset?.shortName}</Label>
-                <Input type="text" id="amount" placeholder={`amount in ${selectedAsset!.asset?.shortName}`} value={amount}  onChange={handleAmountChange} disabled/>
+                <Input type="text" id="amount" placeholder={`amount in ${selectedAsset!.asset?.shortName}`}
+                       value={amount} onChange={handleAmountChange} disabled={false}/>
+              </div>
+              <div className="w-full max-w-sm items-center">
+                <BankAccountComponent account={getOffRampBankAccount(account)}/>
               </div>
               <div>
-                <Button className="w-full" onClick={handleTransfer} disabled>Sign and submit transaction</Button>
+                <Button className="w-full" onClick={handleTransfer} disabled={false}>
+                  <img src={Metamask} className="mr-2 h-4 w-4"/>
+                  Send with MetaMask
+                </Button>
               </div>
-            </>}
           </CardContent>
           <CardFooter className="grid gap-4">
+            <div className="relative m-2">
+              <div className="absolute inset-0 flex items-center"><span className="w-full border-t"></span></div>
+              <div className="relative flex justify-center text-xs"><span
+                className="bg-background px-2 text-muted-foreground">or</span></div>
+            </div>
+
             <div className=" flex items-center space-x-4 rounded-md border p-4">
-              <PiggyBankIcon/>
+              <WalletIcon/>
               <div className="flex-1 space-y-1">
-                {false &&<p className="text-sm font-medium leading-none">
+                {false && <p className="text-sm font-medium leading-none">
                   Push Notifications
                 </p>}
                 <p className="text-sm text-muted-foreground">
-                  You will receive your funds directly to your bank account.
+                  Alternatively send {selectedAsset!.asset?.shortName} from the <u>selected address</u> to the <u>following
+                  address</u>.
+                  Please note that transfers from other addresses will be bounced back, minus network fees.
                 </p>
               </div>
+
             </div>
             <div className="w-full max-w-sm items-center">
-              <BankAccountComponent account={getOffRampBankAccount(account)}/>
+              <Label htmlFor="address">Address</Label>
+              <Input type="text" id="address" placeholder="address" readOnly={true}
+                     value={selectedAsset.offRamp?.address}/>
             </div>
           </CardFooter>
         </Card>}

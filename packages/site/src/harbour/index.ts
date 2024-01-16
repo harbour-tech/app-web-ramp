@@ -13,6 +13,7 @@ import {
   RemoveAddressResponse,
   SetBankAccountResponse,
 } from './gen/ramp/v1/public_pb';
+import {PartialMessage} from "@bufbuild/protobuf";
 
 export class RampClient {
   public client: PromiseClient<typeof RampService>;
@@ -51,7 +52,7 @@ export class RampClient {
     this.client = createPromiseClient(RampService, transport);
   }
 
-  public async getAccountInfo(request: GetAccountInfoRequest): Promise<GetAccountInfoResponse> {
+  public async getAccountInfo(request: PartialMessage<GetAccountInfoRequest>): Promise<GetAccountInfoResponse> {
     return this.client.getAccountInfo(request);
   }
 
