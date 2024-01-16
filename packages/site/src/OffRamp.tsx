@@ -165,7 +165,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = (
                 <p className="text-sm text-muted-foreground">
                   Alternatively send {selectedAsset!.asset?.shortName} from the <u>selected address</u> to the <u>following
                   address</u>.
-                  Please note that transfers from other addresses could cause unrecoverable loss of assets.
+                  Please note that transfers from other addresses will be bounced back, minus network fees.
                 </p>
               </div>
 
