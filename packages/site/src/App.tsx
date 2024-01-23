@@ -1,24 +1,24 @@
-import { useEffect, useState } from 'react';
-import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
-import { useRampClient } from '@/hooks/useRpc';
+import {useEffect, useState} from 'react';
+import {MetamaskActions, useMetaMask} from '@/hooks/useMetaMask';
+import {useRampClient} from '@/hooks/useRpc';
 import {
   Ecosystem,
   GetAccountInfoResponse,
   SetBankAccountRequest,
   WhitelistAddressRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
-import { Button } from '@/components/ui/button';
-import { connectSnap, getSnap, isLocalSnap } from '@/utils';
-import { Separator } from '@radix-ui/react-separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { OnRamp } from '@/OnRamp';
-import { Snap } from '@/types';
-import { Wallet } from '@/components/Wallets';
-import { OffRamp } from '@/OffRamp';
+import {Button} from '@/components/ui/button';
+import {connectSnap, getSnap, isLocalSnap, requestPersonalSing} from '@/utils';
+import {Separator} from '@radix-ui/react-separator';
+import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {OnRamp} from '@/OnRamp';
+import {Snap} from '@/types';
+import {Wallet} from '@/components/Wallets';
+import {OffRamp} from '@/OffRamp';
 
-import { BankAccount } from '@/types/bankAccount';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { RocketIcon } from 'lucide-react';
+import {BankAccount} from '@/types/bankAccount';
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import {RocketIcon} from 'lucide-react';
 import splash from '@/assets/splash.png';
 
 function App() {
@@ -100,7 +100,10 @@ function App() {
           address: wallet.address,
           ecosystem: Ecosystem.ETHEREUM,
         }),
-        async (_) => 'not implemented',
+        async (address) => {
+          let result = await requestPersonalSing(address, address)
+          return result?.signature!
+        },
       );
     } catch (e) {
       console.log(e);
@@ -120,8 +123,6 @@ function App() {
     }
     await load();
   };
-
-  console.log(accountInfo?.result)
 
   return (
     <div>

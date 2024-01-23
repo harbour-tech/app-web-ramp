@@ -15,8 +15,9 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
+
   switch (request.method) {
-    case 'sign_request':
+    case 'sign_request': {
       const privateKey = await snap.request({
         method: 'snap_getEntropy',
         params: {
@@ -34,6 +35,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         signatureType: "keccak256/secp256k1",
         encoding: "hex",
       }
+    }
     default:
       throw new Error('Method not found.');
   }
