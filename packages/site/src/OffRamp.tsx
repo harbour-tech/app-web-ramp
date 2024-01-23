@@ -1,6 +1,9 @@
 import {
-  GetAccountInfoResponse_Account, GetAccountInfoResponse_Wallet,
-  GetAccountInfoResponse_Wallet_RampAsset, IbanCoordinates, ScanCoordinates
+  GetAccountInfoResponse_Account,
+  GetAccountInfoResponse_Wallet,
+  GetAccountInfoResponse_Wallet_RampAsset,
+  IbanCoordinates,
+  ScanCoordinates
 } from "@/harbour/gen/ramp/v1/public_pb";
 import React, {FunctionComponent, useState} from "react";
 import {Wallet, Wallets} from "@/components/Wallets";
@@ -17,7 +20,7 @@ import Metamask from "@/assets/metamask.svg"
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account,
-  onAddWallet: (wallet: Wallet) => void
+  onAddWallet: (wallet: Wallet) => Promise<void>
   onSaveBankAccount: (account: BankAccount) => void
 }
 

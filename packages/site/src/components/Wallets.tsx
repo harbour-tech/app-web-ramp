@@ -8,7 +8,8 @@ import {requestAccounts} from "@/utils";
 import {
   Dialog,
   DialogContent,
-  DialogDescription, DialogFooter,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -20,7 +21,7 @@ export interface WalletsProps {
   wallets: GetAccountInfoResponse_Wallet[],
   selectedWallet?: GetAccountInfoResponse_Wallet,
   onWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void
-  onAddWallet: (wallet: Wallet) => void
+  onAddWallet: (wallet: Wallet) => Promise<void>
   description: string
 }
 
@@ -75,7 +76,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
 
 interface AddWalletProps {
   existing: string[]
-  onAdd: (wallet: Wallet) => void
+  onAdd: (wallet: Wallet) => Promise<void>
 }
 
 export const AddWallet: FunctionComponent<AddWalletProps> = ({existing, onAdd}) => {
@@ -90,8 +91,8 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({existing, onAdd}) 
     }
   }
 
-  const handleAdd = () => {
-    onAdd(address!)
+  const handleAdd = async () => {
+    await onAdd(address!)
     setOpen(false)
   }
 
@@ -105,7 +106,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({existing, onAdd}) 
       try{
         const result = await requestAccounts();
         if (result){
-          result.forEach(v => v && address.push(v))
+          result.accounts!.forEach(v => v && address.push(v))
         }
       } catch (e) {
         console.log("canceled")
