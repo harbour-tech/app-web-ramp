@@ -13,7 +13,7 @@ import {BankAccount} from "@/types/bankAccount";
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account,
-  onAddWallet: (wallet: Wallet) =>void
+  onAddWallet: (wallet: Wallet) => Promise<void>
 }
 
 export const OnRamp: FunctionComponent<OnRampProps> = ({account, onAddWallet}) => {
