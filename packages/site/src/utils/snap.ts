@@ -79,11 +79,11 @@ export const singRequest = async (body: string) => {
   });
 };
 
-interface PersonalSingResponse {
+interface PersonalSignResponse {
   signature: string
 }
 
-export const requestPersonalSing = async (message: string, account: string): Promise<PersonalSingResponse> => {
+export const requestPersonalSign = async (message: string, account: string): Promise<PersonalSignResponse> => {
   let challenge = bytesToHex(stringToBytes(message))
   let signature = await window.ethereum.request<Hex>({
     method: 'personal_sign',

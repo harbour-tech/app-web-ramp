@@ -8,7 +8,7 @@ import {
   WhitelistAddressRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import {Button} from '@/components/ui/button';
-import {connectSnap, getSnap, isLocalSnap, requestPersonalSing} from '@/utils';
+import {connectSnap, getSnap, isLocalSnap, requestPersonalSign} from '@/utils';
 import {Separator} from '@radix-ui/react-separator';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
 import {OnRamp} from '@/OnRamp';
@@ -101,7 +101,7 @@ function App() {
           ecosystem: Ecosystem.ETHEREUM,
         }),
         async (address) => {
-          let result = await requestPersonalSing(address, address)
+          let result = await requestPersonalSign(address, address)
           return result?.signature!
         },
       );
