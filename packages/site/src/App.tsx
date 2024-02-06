@@ -5,7 +5,6 @@ import {
   Ecosystem,
   GetAccountInfoResponse,
   SetBankAccountRequest,
-  WhitelistAddressRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import {Button} from '@/components/ui/button';
 import {connectSnap, getSnap, isLocalSnap, requestPersonalSign} from '@/utils';
@@ -94,12 +93,11 @@ function App() {
 
   const handleAddWallet = async (wallet: Wallet) => {
     try {
-      await rampClient.whitelistAddress(
-        new WhitelistAddressRequest({
+      await rampClient.whitelistAddress({
           name: wallet.name,
           address: wallet.address,
           ecosystem: Ecosystem.ETHEREUM,
-        }),
+        },
         async (address) => {
           let result = await requestPersonalSign(address, address)
           return result?.signature!

@@ -1,6 +1,10 @@
-import React, { PropsWithChildren, useContext } from "react";
-import {singRequest} from "../utils";
-import RampClient, {SignerFunction} from "../harbour";
+import React, {PropsWithChildren, useContext} from "react";
+import {singRequest} from "@/utils";
+import RampClient, {
+  EthereumSignature,
+  Signature,
+  SignerFunction,
+} from "../harbour";
 
 export const RampClientContext = React.createContext<RampClient| null>(null);
 
@@ -17,19 +21,15 @@ export const useRampClient = function (): RampClient {
 
 
 export const RampClientProvider: React.FC<PropsWithChildren> = ({children}) => {
-  const signer: SignerFunction = async (data: string) => {
+  const signer: SignerFunction = async (data: string) : Promise<Signature> => {
     const result = await singRequest(data)
     return {
       signature: result?.signature!,
-      publicKey: result?.publicKey!
+      publicKey: result?.publicKey!,
+      ...EthereumSignature,
     }
   }
-  const client =  new RampClient(
-    "/api/",
-    "keccak256/secp256k1",
-    "hex",
-    signer
-  );
+  const client =  new RampClient("/api/", signer);
 
   RampClientContext.displayName = "AuthContextContext";
   return <RampClientContext.Provider value={client}>{children}</RampClientContext.Provider>
