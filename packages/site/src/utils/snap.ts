@@ -1,9 +1,9 @@
-import type {MetaMaskInpageProvider} from '@metamask/providers';
+import type { MetaMaskInpageProvider } from '@metamask/providers';
 
-import {defaultSnapOrigin} from '@/config';
-import type {GetSnapsResponse, Snap} from '@/types';
-import type {Hex} from '@metamask/utils';
-import {assert, bytesToHex, stringToBytes} from "@metamask/utils";
+import { defaultSnapOrigin } from '@/config';
+import type { GetSnapsResponse, Snap } from '@/types';
+import type { Hex } from '@metamask/utils';
+import { assert, bytesToHex, stringToBytes } from '@metamask/utils';
 
 /**
  * Get the installed snaps in MetaMask.
@@ -59,10 +59,10 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
  * Invoke the "hello" method from the example snap.
  */
 interface SingResponse {
-  publicKey: string
-  signature: string
-  signatureType: string
-  encoding: string
+  publicKey: string;
+  signature: string;
+  signatureType: string;
+  encoding: string;
 }
 export const singRequest = async (body: string) => {
   return await window.ethereum.request<SingResponse>({
@@ -73,52 +73,57 @@ export const singRequest = async (body: string) => {
         method: 'sign_request',
         params: {
           message: body,
-        }
-      }
+        },
+      },
     },
   });
 };
 
 interface PersonalSignResponse {
-  signature: string
+  signature: string;
 }
 
-export const requestPersonalSign = async (message: string, account: string): Promise<PersonalSignResponse> => {
-  let challenge = bytesToHex(stringToBytes(message))
+export const requestPersonalSign = async (
+  message: string,
+  account: string,
+): Promise<PersonalSignResponse> => {
+  let challenge = bytesToHex(stringToBytes(message));
   let signature = await window.ethereum.request<Hex>({
     method: 'personal_sign',
-    params: [challenge, account]
+    params: [challenge, account],
   });
   assert(signature, 'Ethereum provider did not return a signature.');
   return {
     signature: signature,
-  }
+  };
 };
 
 interface RequestAccountsResponse {
-  accounts: string[]
+  accounts: string[];
 }
 
 export const requestAccounts = async (): Promise<RequestAccountsResponse> => {
   try {
     await window.ethereum.request<string[]>({
       method: 'wallet_revokePermissions',
-      params: [{
-        "eth_accounts": {}
-      }],
+      params: [
+        {
+          eth_accounts: {},
+        },
+      ],
     });
   } catch (e) {
     console.log(e);
   }
 
   let accountsRes = await window.ethereum.request<string[]>({
-      method: 'eth_requestAccounts',
-      params: [],
-    });
-  let accounts = accountsRes!.map(a => a!)
+    method: 'eth_requestAccounts',
+    params: [],
+  });
+  let accounts = accountsRes!.map((a) => a!);
   return {
     accounts: accounts!,
-  }
+  };
 };
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

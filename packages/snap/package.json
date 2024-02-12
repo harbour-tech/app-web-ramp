@@ -2,11 +2,16 @@
   "name": "@harbour-fi/ramp-snap",
   "version": "0.1.2",
   "description": "Ramp it by Harbour",
+  "homepage": "https://github.com/harbour-tech/app-web-ramp#readme",
+  "bugs": {
+    "url": "https://github.com/harbour-tech/app-web-ramp/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/harbour-tech/app-web-ramp.git"
   },
   "license": "(MIT-0 OR Apache-2.0)",
+  "author": "",
   "main": "./dist/bundle.js",
   "files": [
     "dist/",
@@ -64,10 +69,5 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "bugs": {
-    "url": "https://github.com/harbour-tech/app-web-ramp/issues"
-  },
-  "homepage": "https://github.com/harbour-tech/app-web-ramp#readme",
-  "author": ""
+  }
 }
