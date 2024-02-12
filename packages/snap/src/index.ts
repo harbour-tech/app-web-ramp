@@ -1,5 +1,5 @@
-import type {OnRpcRequestHandler} from '@metamask/snaps-sdk';
-import {keccak256, toUtf8Bytes, Wallet} from 'ethers';
+import type { OnRpcRequestHandler } from '@metamask/snaps-sdk';
+import { keccak256, toUtf8Bytes, Wallet } from 'ethers';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -15,7 +15,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
-
   switch (request.method) {
     case 'sign_request': {
       const privateKey = await snap.request({
@@ -27,14 +26,16 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       });
       const wallet = new Wallet(privateKey);
       const params = request.params as SignMessageParams;
-      const signature = wallet.signingKey.sign(keccak256(toUtf8Bytes(params.message))).serialized
+      const signature = wallet.signingKey.sign(
+        keccak256(toUtf8Bytes(params.message)),
+      ).serialized;
 
       return {
         publicKey: wallet.signingKey.publicKey,
         signature: signature,
-        signatureType: "keccak256/secp256k1",
-        encoding: "hex",
-      }
+        signatureType: 'keccak256/secp256k1',
+        encoding: 'hex',
+      };
     }
     default:
       throw new Error('Method not found.');

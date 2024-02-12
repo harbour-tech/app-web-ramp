@@ -1,4 +1,4 @@
-import {Dispatch, ReactNode, Reducer, useContext} from 'react';
+import { Dispatch, ReactNode, Reducer, useContext } from 'react';
 import { createContext, useEffect, useReducer } from 'react';
 
 import type { Snap } from '../types';
@@ -32,11 +32,11 @@ export const useMetaMask = () => {
 
   if (!metaMask) {
     throw new Error(
-      "Cannot call useMetaMask unless your component is within a MetaMaskProvider"
+      'Cannot call useMetaMask unless your component is within a MetaMaskProvider',
     );
   }
   return metaMask;
-}
+};
 
 export enum MetamaskActions {
   SetInstalled = 'SetInstalled',
