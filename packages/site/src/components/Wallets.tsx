@@ -1,10 +1,16 @@
-import React, {FunctionComponent, useEffect, useState} from "react";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {GemIcon} from "lucide-react";
-import {Button} from "@/components/ui/button";
-import {GetAccountInfoResponse_Wallet} from "@/harbour/gen/ramp/v1/public_pb";
-import {cn} from "@/lib/utils";
-import {requestAccounts} from "@/utils";
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { GemIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { GetAccountInfoResponse_Wallet } from '@/harbour/gen/ramp/v1/public_pb';
+import { cn } from '@/lib/utils';
+import { requestAccounts } from '@/utils';
 import {
   Dialog,
   DialogContent,
@@ -12,37 +18,40 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from "@/components/ui/dialog";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 export interface WalletsProps {
-  wallets: GetAccountInfoResponse_Wallet[],
-  selectedWallet?: GetAccountInfoResponse_Wallet,
-  onWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void
-  onAddWallet: (wallet: Wallet) => Promise<void>
-  description: string
+  wallets: GetAccountInfoResponse_Wallet[];
+  selectedWallet?: GetAccountInfoResponse_Wallet;
+  onWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void;
+  onAddWallet: (wallet: Wallet) => Promise<void>;
+  description: string;
 }
 
 export const Wallets: FunctionComponent<WalletsProps> = ({
-                                                           wallets,
-                                                           selectedWallet,
-                                                           onWalletSelected,
-                                                           onAddWallet,
-                                                           description}) => {
-
+  wallets,
+  selectedWallet,
+  onWalletSelected,
+  onAddWallet,
+  description,
+}) => {
   const style = (wallet: GetAccountInfoResponse_Wallet) => {
-    if (wallet.ecosystem == selectedWallet?.ecosystem && wallet.address == selectedWallet?.address) {
-      return "bg-accent text-accent-foreground"
+    if (
+      wallet.ecosystem == selectedWallet?.ecosystem &&
+      wallet.address == selectedWallet?.address
+    ) {
+      return 'bg-accent text-accent-foreground';
     } else {
-      return "hover:bg-accent hover:text-accent-foreground"
+      return 'hover:bg-accent hover:text-accent-foreground';
     }
-  }
+  };
 
   const handleSelect = (wallet: GetAccountInfoResponse_Wallet) => {
-    onWalletSelected(wallet)
-  }
+    onWalletSelected(wallet);
+  };
 
   return (
     <Card className="shadow">
@@ -51,88 +60,95 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-1">
-        {wallets.map(wallet => (
-          <div onClick={() => handleSelect(wallet)}
-               key={wallet.ecosystem+ ":" + wallet.address}
-               className={cn("-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all", style(wallet))}
+        {wallets.map((wallet) => (
+          <div
+            onClick={() => handleSelect(wallet)}
+            key={wallet.ecosystem + ':' + wallet.address}
+            className={cn(
+              '-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all cursor-pointer',
+              style(wallet),
+            )}
           >
-            <GemIcon className="mt-px h-5 w-5"/> {/*TODO: map network to icon*/}
+            <GemIcon className="mt-px h-5 w-5" />{' '}
+            {/*TODO: map network to icon*/}
             <div className="space-y-1">
-              <p
-                className="text-sm font-medium leading-none">{wallet.name ? wallet.name : wallet.address.substring(0, 6)}</p>
-              <p className="text-sm text-muted-foreground">
-                {wallet.address}
+              <p className="text-sm font-medium leading-none">
+                {wallet.name ? wallet.name : wallet.address.substring(0, 6)}
               </p>
+              <p className="text-sm text-muted-foreground">{wallet.address}</p>
             </div>
           </div>
         ))}
 
-
-        <AddWallet existing={wallets.map(w => w.address)} onAdd={onAddWallet}/>
+        <AddWallet
+          existing={wallets.map((w) => w.address)}
+          onAdd={onAddWallet}
+        />
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
 interface AddWalletProps {
-  existing: string[]
-  onAdd: (wallet: Wallet) => Promise<void>
+  existing: string[];
+  onAdd: (wallet: Wallet) => Promise<void>;
 }
 
-export const AddWallet: FunctionComponent<AddWalletProps> = ({existing, onAdd}) => {
+export const AddWallet: FunctionComponent<AddWalletProps> = ({
+  existing,
+  onAdd,
+}) => {
   const [open, setOpen] = useState(false);
 
-  const [address, setAddress] = useState<Wallet | undefined>(undefined)
+  const [address, setAddress] = useState<Wallet | undefined>(undefined);
 
   const handleOpenChange = async (open: boolean) => {
-    setOpen(open)
+    setOpen(open);
     if (open) {
-
     }
-  }
+  };
 
   const handleAdd = async () => {
-    await onAdd(address!)
-    setOpen(false)
-  }
+    await onAdd(address!);
+    setOpen(false);
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     async function load() {
       if (!open) {
-        return
+        return;
       }
-      setAddress(undefined)
-      let address: string[] = []
-      try{
+      setAddress(undefined);
+      let address: string[] = [];
+      try {
         const result = await requestAccounts();
-        if (result){
-          result.accounts!.forEach(v => v && address.push(v))
+        if (result) {
+          result.accounts!.forEach((v) => v && address.push(v));
         }
       } catch (e) {
-        console.log("canceled")
+        console.log('canceled');
 
-        setOpen(false)
-        return
+        setOpen(false);
+        return;
       }
 
-      const addr = address.find(a => !existing.includes(a!))
+      const addr = address.find((a) => !existing.includes(a!));
       if (addr) {
         setAddress({
           address: addr,
-          name: "MetaMask Wallet"
-        })
+          name: 'MetaMask Wallet',
+        });
       }
-
     }
     load();
-  },[open])
+  }, [open]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({
       name: e.target.value,
       address: address!.address,
-    })
-  }
+    });
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -143,40 +159,53 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({existing, onAdd}) 
         <DialogHeader>
           <DialogTitle>Add Metamask Wallet</DialogTitle>
           <DialogDescription>
-            You can add as many Ethereum wallets as you want but they all must be owned by you!
+            You can add as many Ethereum wallets as you want but they all must
+            be owned by you!
           </DialogDescription>
         </DialogHeader>
-        {!address &&
-          <div className="text-center">
-            Please Select address on the right
-          </div>
-        }
-        {address &&
+        {!address && (
+          <div className="text-center">Please Select address on the right</div>
+        )}
+        {address && (
           <>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="link" className="text-right">Address</Label>
-                <Input id="link" defaultValue={address.address} readOnly className="col-span-3"/>
+                <Label htmlFor="link" className="text-right">
+                  Address
+                </Label>
+                <Input
+                  id="link"
+                  defaultValue={address.address}
+                  readOnly
+                  className="col-span-3"
+                />
               </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="link" className="text-right">Wallet Name</Label>
-              <Input id="link" value={address.name} className="col-span-3" autoFocus={true} onChange={handleNameChange}/>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="link" className="text-right">
+                  Wallet Name
+                </Label>
+                <Input
+                  id="link"
+                  value={address.name}
+                  className="col-span-3"
+                  autoFocus={true}
+                  onChange={handleNameChange}
+                />
+              </div>
             </div>
-          </div>
-          <DialogFooter >
+            <DialogFooter>
               <Button type="button" variant="default" onClick={handleAdd}>
                 Add wallet
               </Button>
             </DialogFooter>
           </>
-        }
+        )}
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
 export interface Wallet {
-  name: string
-  address: string
+  name: string;
+  address: string;
 }
-

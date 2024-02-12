@@ -1,24 +1,30 @@
-import {useEffect, useState} from 'react';
-import {MetamaskActions, useMetaMask} from '@/hooks/useMetaMask';
-import {useRampClient} from '@/hooks/useRpc';
+import { useEffect, useState } from 'react';
+import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
+import { useRampClient } from '@/hooks/useRpc';
 import {
   Ecosystem,
   GetAccountInfoResponse,
   SetBankAccountRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
-import {Button} from '@/components/ui/button';
-import {connectSnap, getSnap, isLocalSnap, requestPersonalSign} from '@/utils';
-import {Separator} from '@radix-ui/react-separator';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
-import {OnRamp} from '@/OnRamp';
-import {Snap} from '@/types';
-import {Wallet} from '@/components/Wallets';
-import {OffRamp} from '@/OffRamp';
+import { Button } from '@/components/ui/button';
+import {
+  connectSnap,
+  getSnap,
+  isLocalSnap,
+  requestPersonalSign,
+} from '@/utils';
+import { Separator } from '@radix-ui/react-separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { OnRamp } from '@/OnRamp';
+import { Snap } from '@/types';
+import { Wallet } from '@/components/Wallets';
+import { OffRamp } from '@/OffRamp';
 
-import {BankAccount} from '@/types/bankAccount';
-import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
-import {RocketIcon} from 'lucide-react';
+import { BankAccount } from '@/types/bankAccount';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { RocketIcon } from 'lucide-react';
 import splash from '@/assets/splash.png';
+import { toast } from 'react-toastify';
 
 function App() {
   const [metamask, metamaskDispatch] = useMetaMask();
@@ -50,10 +56,8 @@ function App() {
       //       iban: "DE1233231231",
       //     })
       //   }
-
       //response.result.value.wallets[0].address = "0x73c2D5103898a0a850886314B6099b4DE03FC0Bb";
       //response.result.value.wallets[0].name = "Stepan's Metamask";
-
       // response.result.value.offrampBankAccount = {
       //   case: 'offrampIban',
       //   value: new IbanCoordinates({
@@ -68,7 +72,7 @@ function App() {
     // }
 
     setAccountInfo(response);
-  }
+  };
 
   useEffect(() => {
     if (metamask.installedSnap) {
@@ -93,14 +97,15 @@ function App() {
 
   const handleAddWallet = async (wallet: Wallet) => {
     try {
-      await rampClient.whitelistAddress({
+      await rampClient.whitelistAddress(
+        {
           name: wallet.name,
           address: wallet.address,
           ecosystem: Ecosystem.ETHEREUM,
         },
         async (address) => {
-          let result = await requestPersonalSign(address, address)
-          return result?.signature!
+          let result = await requestPersonalSign(address, address);
+          return result?.signature!;
         },
       );
     } catch (e) {
@@ -111,13 +116,32 @@ function App() {
 
   const handleSaveBankAccount = async (account: BankAccount) => {
     try {
-      await rampClient.setBankAccount(
-        new SetBankAccountRequest({
-          bankAccount: account,
-        }),
-      );
+      await rampClient
+        .setBankAccount(
+          new SetBankAccountRequest({
+            bankAccount: account,
+          }),
+        )
+        .then((res) => {
+          if (res.errors) {
+            res.errors.forEach((error) => {
+              let errorMessage = 'Problem with saving bank number';
+              switch (error) {
+                case 1:
+                  errorMessage = 'Invalid short code';
+                  break;
+                case 2:
+                  errorMessage = 'Invalid bank number';
+                  break;
+                default:
+                  break;
+              }
+              toast.error(errorMessage);
+            });
+          }
+        });
     } catch (e) {
-      console.log(e);
+      toast.error('Unknown error');
     }
     await load();
   };
