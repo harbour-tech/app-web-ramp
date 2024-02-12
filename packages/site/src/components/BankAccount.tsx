@@ -6,6 +6,7 @@ import {
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import { BankAccount as Account } from '@/types/bankAccount';
+import { PencilIcon } from 'lucide-react';
 
 export interface BankAccountProps {
   account: Account;
@@ -107,13 +108,15 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange }) => {
   };
 
   return (
-    <>
-      <div className="w-full max-w-sm items-center">
+    <div className="flex gap-4">
+      <div className="w-1/3 max-w-sm items-center">
         <Label htmlFor="sortCode">Sort Code</Label>
         <Input
           type="text"
           id="sortCode"
-          placeholder="Sort Code"
+          placeholder="000000"
+          maxLength={6}
+          pattern="\d+"
           readOnly={!onChange}
           value={scan.sortCode}
           onChange={onSortCodeChange}
@@ -121,15 +124,20 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange }) => {
       </div>
       <div className="w-full max-w-sm items-center">
         <Label htmlFor="accountNumber">Account Number</Label>
-        <Input
-          type="text"
-          id="accountNumber"
-          placeholder="Account Number"
-          readOnly={!onChange}
-          value={scan.accountNumber}
-          onChange={onAccountNumberChange}
-        />
+        <div className="flex items-center gap-4">
+          <Input
+            type="text"
+            id="accountNumber"
+            placeholder="123456789"
+            maxLength={30}
+            pattern="\d+"
+            readOnly={!onChange}
+            value={scan.accountNumber}
+            onChange={onAccountNumberChange}
+          />
+          <PencilIcon className="stroke-gray-300" />
+        </div>
       </div>
-    </>
+    </div>
   );
 };
