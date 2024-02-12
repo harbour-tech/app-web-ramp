@@ -46,17 +46,15 @@ export const Assets: FunctionComponent<AssetsProps> = ({
           <div
             key={asset.asset!.shortName}
             className={cn(
-              '-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all',
+              '-mx-2 flex space-x-4 rounded-md p-2 transition-all items-center cursor-pointer',
               style(asset),
             )}
             onClick={() => handleClick(asset)}
           >
-            <CircleDollarSignIcon className="mt-px h-5 w-5" />{' '}
+            <CircleDollarSignIcon className="h-5 w-5" />{' '}
             {/*TODO: map asset onto icon*/}
-            <div className="space-y-1">
-              <p className="text-sm font-medium leading-none">
-                {asset.asset!.shortName}
-              </p>
+            <div className="space-y-1 flex items-center">
+              <p className="text-sm font-medium">{asset.asset!.shortName}</p>
               <p className="text-sm text-muted-foreground"></p>
             </div>
           </div>
