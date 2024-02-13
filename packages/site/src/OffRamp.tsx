@@ -5,7 +5,7 @@ import {
   IbanCoordinates,
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useRef, useState } from 'react';
 import { Wallet, Wallets } from '@/components/Wallets';
 import { Assets } from '@/components/Assets';
 import {
@@ -21,7 +21,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
 import BankAccount from '@/types/bankAccount';
-import { WalletIcon } from 'lucide-react';
+import { CopyIcon, WalletIcon } from 'lucide-react';
 import { ethers, parseUnits } from 'ethers';
 import Metamask from '@/assets/metamask.svg';
 import { toast } from 'react-toastify';
@@ -131,6 +131,22 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value);
   };
+
+  const textToCopyRef = useRef<HTMLInputElement | null>(null);
+  const copyToClipboard = () => {
+    if (textToCopyRef.current) {
+      textToCopyRef.current.select();
+      navigator.clipboard.writeText(textToCopyRef.current.value).then(
+        () => {
+          toast.success('Address copied to clipboard');
+        },
+        (error) => {
+          toast.success(`Unable to copy to clipboard, ${error}`);
+        },
+      );
+      window.getSelection()?.removeAllRanges();
+    }
+  };
   return (
     <div className="flex flex-row gap-8">
       {needSetBankAccount && (
@@ -180,7 +196,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                 assets={selectedWallet?.assets!}
                 onSelected={setSelectedAsset}
                 selected={selectedAsset}
-                description="Step 2: Choose the asset you want to offramp"
+                description="Step 2: Choose the asset and chain you want to offramp"
               />
             )}
           </div>
@@ -210,6 +226,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                       disabled={false}
                     />
                   </div>
+                  <CardDescription>Receive GBP on:</CardDescription>
                   <div className="w-full max-w-sm items-center">
                     <BankAccountComponent
                       account={getOffRampBankAccount(account)}
@@ -256,14 +273,23 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                     </div>
                   </div>
                   <div className="w-full max-w-sm items-center">
-                    <Label htmlFor="address">Address</Label>
-                    <Input
-                      type="text"
-                      id="address"
-                      placeholder="address"
-                      readOnly={true}
-                      value={selectedAsset.offRamp?.address}
-                    />
+                    <Label htmlFor="address">
+                      Magic Ramp Address for {selectedAsset.asset?.shortName}
+                    </Label>
+                    <div className="flex items-center gap-4">
+                      <Input
+                        type="text"
+                        id="address"
+                        placeholder="address"
+                        readOnly={true}
+                        value={selectedAsset.offRamp?.address}
+                        ref={textToCopyRef}
+                      />
+                      <CopyIcon
+                        onClick={copyToClipboard}
+                        className="cursor-pointer"
+                      />
+                    </div>
                   </div>
                 </CardFooter>
               </Card>
