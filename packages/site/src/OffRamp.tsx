@@ -216,7 +216,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                       Amount {selectedAsset!.asset?.shortName}
                     </Label>
                     <Input
-                      type="number"
+                      type="text"
                       id="amount"
                       placeholder={`amount in ${
                         selectedAsset!.asset?.shortName
