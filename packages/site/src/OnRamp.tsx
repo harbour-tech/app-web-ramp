@@ -3,7 +3,7 @@ import {
   GetAccountInfoResponse_Wallet,
   GetAccountInfoResponse_Wallet_RampAsset,
 } from '@/harbour/gen/ramp/v1/public_pb';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useRef, useState } from 'react';
 import { Wallet, Wallets } from '@/components/Wallets';
 import { Assets } from '@/components/Assets';
 import {
@@ -17,6 +17,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
 import { BankAccount } from '@/types/bankAccount';
+import { CopyIcon } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -58,6 +60,21 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     iban: 'EUR',
     scan: 'GBP',
   }[getOnRampBankAccount().case];
+  const textToCopyRef = useRef<HTMLInputElement | null>(null);
+  const copyToClipboard = () => {
+    if (textToCopyRef.current) {
+      textToCopyRef.current.select();
+      navigator.clipboard.writeText(textToCopyRef.current.value).then(
+        () => {
+          toast.success('Payment Reference copied to clipboard');
+        },
+        (error) => {
+          toast.success(`Unable to copy to clipboard, ${error}`);
+        },
+      );
+      window.getSelection()?.removeAllRanges();
+    }
+  };
 
   return (
     <div className="flex flex-row gap-8">
@@ -109,12 +126,19 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
               <div className="w-full max-w-sm items-center">
                 <Label htmlFor="ref">Payment Reference</Label>
                 {selectedAsset && (
-                  <Input
-                    type="text"
-                    id="ref"
-                    readOnly={true}
-                    value={selectedAsset.onRamp?.paymentReference}
-                  />
+                  <div className="flex items-center gap-4">
+                    <Input
+                      type="text"
+                      id="ref"
+                      readOnly={true}
+                      value={selectedAsset.onRamp?.paymentReference}
+                      ref={textToCopyRef}
+                    />
+                    <CopyIcon
+                      onClick={copyToClipboard}
+                      className="cursor-pointer"
+                    />
+                  </div>
                 )}
               </div>
             </CardContent>
