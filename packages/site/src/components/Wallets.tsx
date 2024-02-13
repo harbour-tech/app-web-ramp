@@ -164,7 +164,9 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
           </DialogDescription>
         </DialogHeader>
         {!address && (
-          <div className="text-center">Please Select address on the right</div>
+          <div className="text-center">
+            Please select the address in MetaMask
+          </div>
         )}
         {address && (
           <>
