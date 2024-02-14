@@ -3,6 +3,7 @@ import {
   GetAccountInfoResponse_Wallet,
   GetAccountInfoResponse_Wallet_RampAsset,
   IbanCoordinates,
+  Network,
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import React, { FunctionComponent, useRef, useState } from 'react';
@@ -25,6 +26,13 @@ import { CopyIcon, WalletIcon } from 'lucide-react';
 import { ethers, parseUnits } from 'ethers';
 import Metamask from '@/assets/metamask.svg';
 import { toast } from 'react-toastify';
+import {
+  AVALANCHE_FUJI_PARAMS,
+  AVALANCHE_MAINNET_PARAMS,
+  Erc20Token,
+  ETHEREUM_MAINNET_PARAMS,
+  switchNetwork,
+} from '@/utils';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -47,20 +55,52 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
 
   async function handleTransfer() {
     const provider = new ethers.BrowserProvider(window.ethereum);
+    let erc20Asset: Erc20Token;
+    switch (selectedAsset?.asset?.network) {
+      case Network.ETHEREUM_MAINNET:
+        await switchNetwork(ETHEREUM_MAINNET_PARAMS);
+        erc20Asset = {
+          address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+          abi: [
+            'function balanceOf(address _owner) public view returns (uint256 balance)',
+            'function transfer(address _to, uint256 _value) public returns (bool success)',
+          ],
+        };
+        break;
+      case Network.AVAX_C_MAINNET:
+        await switchNetwork(AVALANCHE_MAINNET_PARAMS);
+        erc20Asset = {
+          address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+          abi: [
+            'function balanceOf(address _owner) public view returns (uint256 balance)',
+            'function transfer(address _to, uint256 _value) public returns (bool success)',
+          ],
+        };
+        break;
+      case Network.AVAX_FUJI:
+        await switchNetwork(AVALANCHE_FUJI_PARAMS);
+        erc20Asset = {
+          address: '0x5425890298aed601595a70AB815c96711a31Bc65',
+          abi: [
+            'function balanceOf(address _owner) public view returns (uint256 balance)',
+            'function transfer(address _to, uint256 _value) public returns (bool success)',
+          ],
+        };
+        break;
+      default:
+        throw `unsupported network: ${selectedAsset?.asset?.network}`;
+    }
     const signer = await provider.getSigner(selectedWallet!.address);
 
-    const usdc = {
-      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-      abi: [
-        'function balanceOf(address _owner) public view returns (uint256 balance)',
-        'function transfer(address _to, uint256 _value) public returns (bool success)',
-      ],
-    };
     console.log(selectedAsset!.offRamp!.address);
 
-    const usdcContract = new ethers.Contract(usdc.address, usdc.abi, signer);
+    const usdcContract = new ethers.Contract(
+      erc20Asset.address,
+      erc20Asset.abi,
+      signer,
+    );
     const xAmount = parseUnits(amount, 6);
-    const tx = await usdcContract
+    await usdcContract
       .transfer(selectedAsset!.offRamp!.address, xAmount, {
         /*gasPrice: 0*/
       })
@@ -79,8 +119,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
           }
         }
       });
-    const receipt = await tx.wait();
-    console.log(receipt);
   }
 
   const handleSelectWalletClick = (wallet: GetAccountInfoResponse_Wallet) => {
