@@ -6,7 +6,7 @@ import App from '@/App';
 export const Root: FunctionComponent<PropsWithChildren> = () => {
   return (
     <div className="container">
-      <div className="flex justify-center items-end  gap-2 py-8 md:py-8 md:pb-8 lg:py-8 lg:pb-8">
+      <div className="flex justify-center items-end  gap-2 pt-8">
         <section className="max-w-[680px] flex-col items-center">
           <h1 className="text-center leading-tight tracking-tighter text-6xl lg:leading-[1.1] hidden md:block">
             Magic Ramp

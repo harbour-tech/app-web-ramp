@@ -162,6 +162,11 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     getOffRampBankAccount(account),
   );
 
+  const currency = {
+    iban: 'EUR',
+    scan: 'GBP',
+  }[getOffRampBankAccount(account).case];
+
   const onChangeBankAccount = (account: BankAccount) => {
     setBankAccount(account);
   };
@@ -171,7 +176,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
 
   const validateAmountFormat = (value: string) => {
-    const regex = /^\d*\.?\d*$/;
+    const regex = /^\d+(\.\d+)?$/;
     if (!regex.test(value)) {
       return 'Use only numbers and optionally one decimal point separator';
     }
@@ -194,7 +199,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     }
   };
   return (
-    <div className="flex flex-row gap-8">
+    <div className="flex items-start gap-8">
       {needSetBankAccount && (
         <>
           <div className="basis-1/3 grid gap-4"></div>
@@ -273,7 +278,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                       validate={validateAmountFormat}
                     />
                   </div>
-                  <CardDescription>Receive GBP on:</CardDescription>
+                  <CardDescription>Receive {currency} on:</CardDescription>
                   <div className="w-full max-w-sm items-center">
                     <BankAccountComponent
                       account={getOffRampBankAccount(account)}
