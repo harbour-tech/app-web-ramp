@@ -132,6 +132,14 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     setAmount(e.target.value);
   };
 
+  const validateAmountFormat = (value: string) => {
+    const regex = /^\d*\.?\d*$/;
+    if (!regex.test(value)) {
+      return 'Use only numbers and optionally one decimal point separator';
+    }
+    return null;
+  };
+
   const textToCopyRef = useRef<HTMLInputElement | null>(null);
   const copyToClipboard = () => {
     if (textToCopyRef.current) {
@@ -155,7 +163,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
           <div className="basis-1/3 grid gap-4">
             <Card className="shadow">
               <CardHeader className="pb-3">
-                <CardTitle>Setup you bank account</CardTitle>
+                <CardTitle>Setup your bank account</CardTitle>
                 <CardDescription>
                   Set bank account you want your funds to be transferred to.
                 </CardDescription>
@@ -224,6 +232,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                       value={amount}
                       onChange={handleAmountChange}
                       disabled={false}
+                      validate={validateAmountFormat}
                     />
                   </div>
                   <CardDescription>Receive GBP on:</CardDescription>
@@ -272,7 +281,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                       </p>
                     </div>
                   </div>
-                  <div className="w-full max-w-sm items-center">
+                  <div className="flex-row w-full max-w-sm items-center">
                     <Label htmlFor="address">
                       Magic Ramp Address for {selectedAsset.asset?.shortName}
                     </Label>
