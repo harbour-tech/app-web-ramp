@@ -153,7 +153,9 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="mt-4">Add wallet</Button>
+        <Button className="mt-4" disabled={existing.length > 0}>
+          Add wallet
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>

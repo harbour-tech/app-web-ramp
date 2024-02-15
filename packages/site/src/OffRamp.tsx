@@ -51,7 +51,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const [selectedAsset, setSelectedAsset] = useState<
     GetAccountInfoResponse_Wallet_RampAsset | undefined
   >(undefined);
-  const [amount, setAmount] = useState('5.43');
+  const [amount, setAmount] = useState('0');
 
   async function handleTransfer() {
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -282,6 +282,12 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   <div className="w-full max-w-sm items-center">
                     <BankAccountComponent
                       account={getOffRampBankAccount(account)}
+                      withEditButton
+                      onEditButtonClick={() =>
+                        toast.info(
+                          'Bank account editing disabled during beta testing.',
+                        )
+                      }
                     />
                   </div>
                   <div>
@@ -291,7 +297,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                       disabled={false}
                     >
                       <img src={Metamask} className="mr-2 h-4 w-4" />
-                      Send with MetaMask
+                      Sign with MetaMask
                     </Button>
                   </div>
                 </CardContent>
@@ -317,8 +323,8 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                       )}
                       <p className="text-sm text-muted-foreground">
                         Alternatively send {selectedAsset!.asset?.shortName}{' '}
-                        from the <u>selected address</u> to the{' '}
-                        <u>following address</u>. Please note that transfers
+                        from a <u>whitelisted address</u> to the{' '}
+                        <u>Magic Ramp address</u>. Please note that transfers
                         from other addresses will be bounced back, minus network
                         fees.
                       </p>
@@ -326,7 +332,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   </div>
                   <div className="flex-row w-full max-w-sm items-center">
                     <Label htmlFor="address">
-                      Magic Ramp Address for {selectedAsset.asset?.shortName}
+                      Magic Ramp address for {selectedAsset.asset?.shortName}
                     </Label>
                     <div className="flex items-center gap-4">
                       <Input
