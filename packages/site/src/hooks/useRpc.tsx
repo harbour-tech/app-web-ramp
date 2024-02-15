@@ -25,8 +25,8 @@ export const RampClientProvider: React.FC<PropsWithChildren> = ({
   const signer: SignerFunction = async (data: string): Promise<Signature> => {
     const result = await singRequest(data);
     return {
-      signature: result?.signature!,
-      publicKey: result?.publicKey!,
+      signature: result?.signature as string,
+      publicKey: result?.publicKey as string,
       ...EthereumSignature,
     };
   };

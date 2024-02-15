@@ -87,8 +87,8 @@ export const requestPersonalSign = async (
   message: string,
   account: string,
 ): Promise<PersonalSignResponse> => {
-  let challenge = bytesToHex(stringToBytes(message));
-  let signature = await window.ethereum.request<Hex>({
+  const challenge = bytesToHex(stringToBytes(message));
+  const signature = await window.ethereum.request<Hex>({
     method: 'personal_sign',
     params: [challenge, account],
   });
@@ -116,11 +116,11 @@ export const requestAccounts = async (): Promise<RequestAccountsResponse> => {
     console.log(e);
   }
 
-  let accountsRes = await window.ethereum.request<string[]>({
+  const accountsRes = await window.ethereum.request<string[]>({
     method: 'eth_requestAccounts',
     params: [],
   });
-  let accounts = accountsRes!.map((a) => a!);
+  const accounts = accountsRes!.map((a) => a!);
   return {
     accounts: accounts!,
   };
