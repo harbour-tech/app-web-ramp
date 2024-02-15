@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { toast } from 'react-toastify';
 
 export interface WalletsProps {
   wallets: GetAccountInfoResponse_Wallet[];
@@ -104,8 +105,6 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
 
   const handleOpenChange = async (open: boolean) => {
     setOpen(open);
-    if (open) {
-    }
   };
 
   const handleAdd = async () => {
@@ -119,15 +118,29 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
         return;
       }
       setAddress(undefined);
-      let address: string[] = [];
+      const address: string[] = [];
       try {
         const result = await requestAccounts();
         if (result) {
           result.accounts!.forEach((v) => v && address.push(v));
         }
+        setOpen(false);
+        toast.success('Wallets added');
       } catch (e) {
-        console.log('canceled');
-
+        const code = e?.code || 0;
+        if (code === -32002) {
+          alert(
+            'There is pending request to connect to MetaMask, please approve/reject it first by clicking on the MetaMask extension icon.',
+          );
+        }
+        if (code === 4001) {
+          toast.error(
+            'You rejected the request to connect to MetaMask wallets.',
+          );
+        }
+        if (code !== 4001 && code !== -32002) {
+          toast.error('Failed to connect to MetaMask, unknown error');
+        }
         setOpen(false);
         return;
       }

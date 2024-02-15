@@ -53,12 +53,18 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   >(undefined);
   const [amount, setAmount] = useState('5.43');
 
+  const handleSwitchNetworkError = () => {
+    toast.error('There was problem with switching newtork');
+  };
+
   async function handleTransfer() {
     const provider = new ethers.BrowserProvider(window.ethereum);
     let erc20Asset: Erc20Token;
     switch (selectedAsset?.asset?.network) {
       case Network.ETHEREUM_MAINNET:
-        await switchNetwork(ETHEREUM_MAINNET_PARAMS);
+        await switchNetwork(ETHEREUM_MAINNET_PARAMS).catch(
+          handleSwitchNetworkError,
+        );
         erc20Asset = {
           address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
           abi: [
@@ -68,7 +74,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         };
         break;
       case Network.AVAX_C_MAINNET:
-        await switchNetwork(AVALANCHE_MAINNET_PARAMS);
+        await switchNetwork(AVALANCHE_MAINNET_PARAMS).catch(
+          handleSwitchNetworkError,
+        );
         erc20Asset = {
           address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
           abi: [
@@ -78,7 +86,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         };
         break;
       case Network.AVAX_FUJI:
-        await switchNetwork(AVALANCHE_FUJI_PARAMS);
+        await switchNetwork(AVALANCHE_FUJI_PARAMS).catch(
+          handleSwitchNetworkError,
+        );
         erc20Asset = {
           address: '0x5425890298aed601595a70AB815c96711a31Bc65',
           abi: [
@@ -90,7 +100,23 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       default:
         throw `unsupported network: ${selectedAsset?.asset?.network}`;
     }
-    const signer = await provider.getSigner(selectedWallet!.address);
+    const signer = await provider
+      .getSigner(selectedWallet!.address)
+      .catch((e) => {
+        console.log(123, { e: JSON.stringify(e) });
+        if (e?.error?.code === -32002) {
+          alert(
+            'There is pending request to connect to MetaMask, please approve/reject it first by clicking on the MetaMask extension icon.',
+          );
+          return;
+        }
+        console.log(e?.code);
+        if (e?.code === 'ACTION_REJECTED') {
+          toast.error('User rejected the request');
+          return;
+        }
+        toast.error('Failed to connect to MetaMask signer');
+      });
 
     console.log(selectedAsset!.offRamp!.address);
 
@@ -104,11 +130,10 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       .transfer(selectedAsset!.offRamp!.address, xAmount, {
         /*gasPrice: 0*/
       })
-      .then((res) => {
-        console.log({ res });
+      .then(() => {
+        toast.success('Success, transaction sent');
       })
       .catch((err) => {
-        console.log({ err });
         if (err.reason) {
           if (err.reason.includes('amount exceeds balance')) {
             toast.error('Insuficient balance on MetaMask account');
@@ -117,6 +142,10 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
               `Error sending with MetaMask: ${err.reason || 'unknown'}`,
             );
           }
+        } else {
+          toast.error(
+            `Error sending with MetaMask: ${err.message || 'unknown'}`,
+          );
         }
       });
   }

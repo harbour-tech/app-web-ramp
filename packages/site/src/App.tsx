@@ -39,6 +39,7 @@ function App() {
     try {
       response = await rampClient.getAccountInfo({});
     } catch (e) {
+      toast.error('Failed to load account info');
       throw e;
     }
 
@@ -84,32 +85,35 @@ function App() {
     try {
       await connectSnap();
       const installedSnap = await getSnap();
-
       metamaskDispatch({
         type: MetamaskActions.SetInstalled,
         payload: installedSnap,
       });
+      toast.success('Snap connected to MetaMask');
     } catch (error) {
-      console.error(error);
+      toast.error('Failed to connect to MetaMask');
       metamaskDispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
 
   const handleAddWallet = async (wallet: Wallet) => {
     try {
-      await rampClient.whitelistAddress(
+      const res = await rampClient.whitelistAddress(
         {
           name: wallet.name,
           address: wallet.address,
           ecosystem: Ecosystem.ETHEREUM,
         },
         async (address) => {
-          let result = await requestPersonalSign(address, address);
-          return result?.signature!;
+          const result = await requestPersonalSign(address, address);
+          return result?.signature;
         },
       );
+      if (res) {
+        toast.success('Wallet added');
+      }
     } catch (e) {
-      console.log(e);
+      toast.error('Failed to add wallet');
     }
     await load();
   };
@@ -138,6 +142,8 @@ function App() {
               }
               toast.error(errorMessage);
             });
+          } else {
+            toast.success('Bank account saved');
           }
         });
     } catch (e) {
@@ -161,7 +167,10 @@ function App() {
         <Separator className="my-4" />
         {!isMetaMaskReady && (
           <Button asChild>
-            <a href="/login" target="_blank">
+            <a
+              href="https://chromewebstore.google.com/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk"
+              target="_blank"
+            >
               Install MetaMask
             </a>
           </Button>
