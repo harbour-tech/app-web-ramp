@@ -103,19 +103,18 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     const signer = await provider
       .getSigner(selectedWallet!.address)
       .catch((e) => {
-        console.log(123, { e: JSON.stringify(e) });
         if (e?.error?.code === -32002) {
           alert(
             'There is pending request to connect to MetaMask, please approve/reject it first by clicking on the MetaMask extension icon.',
           );
-          return;
+          throw e;
         }
-        console.log(e?.code);
         if (e?.code === 'ACTION_REJECTED') {
           toast.error('User rejected the request');
-          return;
+          throw e;
         }
         toast.error('Failed to connect to MetaMask signer');
+        throw e;
       });
 
     console.log(selectedAsset!.offRamp!.address);
