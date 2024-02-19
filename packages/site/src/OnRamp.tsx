@@ -78,7 +78,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
 
   return (
     <div className="flex items-start gap-8">
-      <div className="basis-1/3 grid gap-4">
+      <div className="basis-1/3">
         <Wallets
           wallets={account.wallets}
           selectedWallet={selectedWallet}

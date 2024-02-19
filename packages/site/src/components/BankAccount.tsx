@@ -145,7 +145,7 @@ const Scan: FunctionComponent<ScanProps> = ({
 
   return (
     <div className="flex gap-4">
-      <div className="w-1/3 max-w-sm items-center">
+      <div className="w-3/5 items-center">
         <Label htmlFor="sortCode">Sort Code</Label>
         <Input
           type="text"
@@ -158,7 +158,7 @@ const Scan: FunctionComponent<ScanProps> = ({
           onChange={onSortCodeChange}
         />
       </div>
-      <div className="w-full max-w-sm items-center">
+      <div className="w-full items-center">
         <Label htmlFor="accountNumber">Account Number</Label>
         <div className="flex items-center gap-4">
           <Input
