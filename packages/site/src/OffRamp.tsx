@@ -147,6 +147,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
           );
         }
       });
+    setAmount('0');
   }
 
   const handleSelectWalletClick = (wallet: GetAccountInfoResponse_Wallet) => {
