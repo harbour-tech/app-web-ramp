@@ -66,17 +66,19 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
             onClick={() => handleSelect(wallet)}
             key={wallet.ecosystem + ':' + wallet.address}
             className={cn(
-              '-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all cursor-pointer',
               style(wallet),
+              'flex flex-row space-x-2 rounded-md p-2 cursor-pointer',
             )}
           >
-            <GemIcon className="mt-px h-5 w-5" />{' '}
+            <GemIcon className="h-5 w-5" />
             {/*TODO: map network to icon*/}
-            <div className="space-y-1">
+            <div className="space-y-1 flex flex-col overflow-hidden max-w-xs">
               <p className="text-sm font-medium leading-none">
                 {wallet.name ? wallet.name : wallet.address.substring(0, 6)}
               </p>
-              <p className="text-sm text-muted-foreground">{wallet.address}</p>
+              <p className="text-sm text-muted-foreground truncate">
+                {wallet.address}
+              </p>
             </div>
           </div>
         ))}
@@ -166,7 +168,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="mt-4" disabled={existing.length > 0}>
+        <Button className="mt-4 w-full" disabled={existing.length > 0}>
           Add wallet
         </Button>
       </DialogTrigger>
