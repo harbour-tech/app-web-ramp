@@ -66,22 +66,19 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
             onClick={() => handleSelect(wallet)}
             key={wallet.ecosystem + ':' + wallet.address}
             className={cn(
-              'flex-1 space-x-4 items-center rounded-md p-2 cursor-pointer overflow-hidden',
               style(wallet),
+              'flex flex-row space-x-2 rounded-md p-2 cursor-pointer',
             )}
           >
-            <GemIcon className="h-5 w-5 bg-red" />{' '}
+            <GemIcon className="h-5 w-5" />
             {/*TODO: map network to icon*/}
-            <div className="space-y-1 flex-row bg-orange">
+            <div className="space-y-1 flex flex-col overflow-hidden max-w-xs">
               <p className="text-sm font-medium leading-none">
                 {wallet.name ? wallet.name : wallet.address.substring(0, 6)}
               </p>
               <p className="text-sm text-muted-foreground truncate">
                 {wallet.address}
               </p>
-              {/* <p className="text-sm text-muted-foreground truncate">
-                lalalasdasdasdasswdasdasfssdfsddfsjkdf83452397sdf897sd98f7sd89f7s
-              </p> */}
             </div>
           </div>
         ))}
@@ -175,8 +172,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
           Add wallet
         </Button>
       </DialogTrigger>
-      {/* <DialogContent className="sm:max-w-[600px]"> */}
-      <DialogContent>
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Add Metamask Wallet</DialogTitle>
           <DialogDescription>
