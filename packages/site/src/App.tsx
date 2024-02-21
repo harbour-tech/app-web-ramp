@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useMemo, useState } from 'react';
 import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
 import { useRampClient } from '@/hooks/useRpc';
 import {
@@ -152,6 +153,63 @@ function App() {
     await load();
   };
 
+  const content = useMemo(() => {
+    if (accountInfo?.result.case == 'authentication') {
+      return (
+        <div className="grid justify-items-center">
+          <Alert className="mt-10 sm:max-w-[700px]">
+            <RocketIcon className="h-4 w-4" />
+            <AlertTitle>This is private beta</AlertTitle>
+            <AlertDescription>
+              We are working hard on the letting magic happen. We strongly
+              encourage you to come back later. See you soon!
+            </AlertDescription>
+          </Alert>
+        </div>
+      );
+    }
+    if (accountInfo?.result.case == 'account') {
+      return (
+        <Tabs defaultValue="onramp" className="grid gap-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="onramp">On Ramp</TabsTrigger>
+            <TabsTrigger value="offramp">Off Ramp</TabsTrigger>
+          </TabsList>
+          <TabsContent value="onramp">
+            <OnRamp
+              account={accountInfo.result.value}
+              onAddWallet={handleAddWallet}
+            ></OnRamp>
+          </TabsContent>
+          <TabsContent value="offramp" className="grid gap-4">
+            <OffRamp
+              account={accountInfo.result.value}
+              onAddWallet={handleAddWallet}
+              onSaveBankAccount={handleSaveBankAccount}
+            ></OffRamp>
+          </TabsContent>
+        </Tabs>
+      );
+    }
+
+    return (
+      <div className="grid justify-items-center">
+        <Alert className="mt-10 sm:max-w-[700px]">
+          <RocketIcon className="h-4 w-4" />
+          <AlertTitle>Please open MetaMask</AlertTitle>
+          <AlertDescription>
+            Please open MetaMask extension and login to your account
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }, [
+    accountInfo?.result.case,
+    accountInfo?.result.value,
+    handleAddWallet,
+    handleSaveBankAccount,
+  ]);
+
   return (
     <div>
       <div className="">
@@ -189,42 +247,7 @@ function App() {
           </>
         )}
       </div>
-
-      {accountInfo?.result.case == 'authentication' && (
-        <div className="grid justify-items-center">
-          <Alert className="mt-10 sm:max-w-[700px]">
-            <RocketIcon className="h-4 w-4" />
-            <AlertTitle>This is private beta</AlertTitle>
-            <AlertDescription>
-              We are working hard on the letting magic happen. We strongly
-              encourage you to come back later. See you soon!
-            </AlertDescription>
-          </Alert>
-        </div>
-      )}
-      {accountInfo?.result.case == 'account' && (
-        <>
-          <Tabs defaultValue="onramp" className="grid gap-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="onramp">On Ramp</TabsTrigger>
-              <TabsTrigger value="offramp">Off Ramp</TabsTrigger>
-            </TabsList>
-            <TabsContent value="onramp">
-              <OnRamp
-                account={accountInfo.result.value}
-                onAddWallet={handleAddWallet}
-              ></OnRamp>
-            </TabsContent>
-            <TabsContent value="offramp" className="grid gap-4">
-              <OffRamp
-                account={accountInfo.result.value}
-                onAddWallet={handleAddWallet}
-                onSaveBankAccount={handleSaveBankAccount}
-              ></OffRamp>
-            </TabsContent>
-          </Tabs>
-        </>
-      )}
+      {content}
     </div>
   );
 }
