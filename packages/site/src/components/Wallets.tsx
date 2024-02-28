@@ -126,7 +126,6 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
         if (result) {
           result.accounts!.forEach((v) => v && address.push(v));
         }
-        setOpen(false);
         toast.success('Wallets added');
       } catch (e) {
         const code = e?.code || 0;
@@ -153,6 +152,8 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
           address: addr,
           name: 'MetaMask Wallet',
         });
+      } else {
+        toast.error('No new wallet found');
       }
     }
     load();
@@ -164,6 +165,8 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
       address: address!.address,
     });
   };
+
+  console.log({ address });
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -194,7 +197,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
                 </Label>
                 <Input
                   id="link"
-                  defaultValue={address.address}
+                  value={address.address}
                   readOnly
                   className="col-span-3"
                 />
