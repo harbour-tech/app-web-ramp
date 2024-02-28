@@ -26,6 +26,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RocketIcon } from 'lucide-react';
 import splash from '@/assets/splash.png';
 import { toast } from 'react-toastify';
+import { computeAddress, keccak256, SigningKey } from 'ethers';
 
 function App() {
   const [metamask, metamaskDispatch] = useMetaMask();
@@ -107,6 +108,17 @@ function App() {
         },
         async (address) => {
           const result = await requestPersonalSign(address, address);
+          let digest =
+            '\x19Ethereum Signed Message:\n' + address.length + address;
+          digest = keccak256(new TextEncoder().encode(digest));
+          let recoveredPublicKey = SigningKey.recoverPublicKey(
+            digest,
+            result?.signature,
+          );
+          let recoveredAddr = computeAddress(recoveredPublicKey);
+          console.log(`Address: ${recoveredAddr}`);
+          console.log(`Public Key: ${recoveredPublicKey}`);
+
           return result?.signature;
         },
       );
@@ -114,6 +126,7 @@ function App() {
         toast.success('Wallet added');
       }
     } catch (e) {
+      console.log(e);
       toast.error('Failed to add wallet');
     }
     await load();

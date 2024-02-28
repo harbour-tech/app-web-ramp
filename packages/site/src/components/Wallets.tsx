@@ -126,7 +126,6 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
         if (result) {
           result.accounts!.forEach((v) => v && address.push(v));
         }
-        toast.success('Wallets added');
       } catch (e) {
         const code = e?.code || 0;
         if (code === -32002) {
@@ -165,8 +164,6 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
       address: address!.address,
     });
   };
-
-  console.log({ address });
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

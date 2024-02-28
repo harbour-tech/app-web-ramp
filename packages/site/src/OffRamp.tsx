@@ -117,8 +117,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         throw e;
       });
 
-    console.log(selectedAsset!.offRamp!.address);
-
     const usdcContract = new ethers.Contract(
       erc20Asset.address,
       erc20Asset.abi,
