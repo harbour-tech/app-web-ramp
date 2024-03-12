@@ -115,6 +115,10 @@ function App() {
             digest,
             result?.signature,
           );
+          recoveredPublicKey = SigningKey.computePublicKey(
+            recoveredPublicKey,
+            true,
+          );
           let recoveredAddr = computeAddress(recoveredPublicKey);
           console.log(`Address: ${recoveredAddr}`);
           console.log(`Public Key: ${recoveredPublicKey}`);

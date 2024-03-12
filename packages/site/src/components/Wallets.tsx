@@ -168,7 +168,10 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="mt-4 w-full" disabled={existing.length > 0}>
+        <Button
+          className="mt-4 w-full"
+          disabled={existing.length > 0 && import.meta.env.VITE_SINGLE_WALLET}
+        >
           Add wallet
         </Button>
       </DialogTrigger>
