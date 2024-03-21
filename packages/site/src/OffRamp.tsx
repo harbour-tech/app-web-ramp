@@ -1,5 +1,6 @@
 import {
   GetAccountInfoResponse_Account,
+  GetAccountInfoResponse_Asset,
   GetAccountInfoResponse_Wallet,
   GetAccountInfoResponse_Wallet_RampAsset,
   IbanCoordinates,
@@ -31,6 +32,7 @@ import {
   AVALANCHE_MAINNET_PARAMS,
   Erc20Token,
   ETHEREUM_MAINNET_PARAMS,
+  requestAccounts,
   switchNetwork,
 } from '@/utils';
 
@@ -49,6 +51,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     GetAccountInfoResponse_Wallet | undefined
   >(undefined);
   const [selectedAsset, setSelectedAsset] = useState<
+    GetAccountInfoResponse_Asset | undefined
+  >(undefined);
+  const [offRampAsset, setOffRampAsset] = useState<
     GetAccountInfoResponse_Wallet_RampAsset | undefined
   >(undefined);
   const [amount, setAmount] = useState('0');
@@ -59,8 +64,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
 
   async function handleTransfer() {
     const provider = new ethers.BrowserProvider(window.ethereum);
+
     let erc20Asset: Erc20Token;
-    switch (selectedAsset?.asset?.network) {
+    switch (offRampAsset?.asset?.network) {
       case Network.ETHEREUM_MAINNET:
         await switchNetwork(ETHEREUM_MAINNET_PARAMS).catch(
           handleSwitchNetworkError,
@@ -98,8 +104,17 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         };
         break;
       default:
-        throw `unsupported network: ${selectedAsset?.asset?.network}`;
+        throw `unsupported network: ${offRampAsset?.asset?.network}`;
     }
+
+    if (!(await provider.hasSigner(selectedWallet!.address))) {
+      await requestAccounts();
+      if (!(await provider.hasSigner(selectedWallet!.address))) {
+        alert(`No access to account ${selectedWallet!.address}`);
+        throw '';
+      }
+    }
+
     const signer = await provider
       .getSigner(selectedWallet!.address)
       .catch((e) => {
@@ -124,7 +139,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     );
     const xAmount = parseUnits(amount, 6);
     await usdcContract
-      .transfer(selectedAsset!.offRamp!.address, xAmount, {
+      .transfer(offRampAsset!.offRamp!.address, xAmount, {
         /*gasPrice: 0*/
       })
       .then(() => {
@@ -148,9 +163,17 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     setAmount('0');
   }
 
+  const handleSelectAsset = (asset: GetAccountInfoResponse_Asset) => {
+    setSelectedAsset(asset);
+    setSelectedWallet(undefined);
+  };
+
   const handleSelectWalletClick = (wallet: GetAccountInfoResponse_Wallet) => {
     setSelectedWallet(wallet);
-    setSelectedAsset(undefined);
+    const asset = wallet.assets.find(
+      (ra) => ra.asset!.assetId == selectedAsset!.assetId,
+    );
+    setOffRampAsset(asset);
   };
   const needSetBankAccount = !account.offrampBankAccount.case;
 
@@ -259,27 +282,28 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       )}
       {account.offrampBankAccount.case && (
         <>
-          <div className="basis-1/3 grid gap-4">
-            <Wallets
-              wallets={account.wallets}
-              selectedWallet={selectedWallet}
-              onWalletSelected={handleSelectWalletClick}
-              onAddWallet={onAddWallet}
-              description="Step 1: Choose the wallet you want to offramp assets from"
+          <div className="basis-1/3">
+            <Assets
+              assets={account.assets}
+              onSelected={handleSelectAsset}
+              selected={selectedAsset}
+              description="Step 2: Choose the asset and chain you want to offramp"
             />
           </div>
-          <div className="basis-1/3">
-            {selectedWallet?.assets && (
-              <Assets
-                assets={selectedWallet?.assets!}
-                onSelected={setSelectedAsset}
-                selected={selectedAsset}
-                description="Step 2: Choose the asset and chain you want to offramp"
+          <div className="basis-1/3 grid gap-4">
+            {selectedAsset && (
+              <Wallets
+                protocol={selectedAsset.protocol}
+                wallets={account.wallets}
+                selectedWallet={selectedWallet}
+                onWalletSelected={handleSelectWalletClick}
+                onAddWallet={onAddWallet}
+                description="Step 1: Choose the wallet you want to offramp assets from"
               />
             )}
           </div>
           <div className="basis-1/3">
-            {selectedAsset && (
+            {offRampAsset && (
               <Card className="shadow">
                 <CardHeader className="pb-3">
                   <CardTitle>Crypto Transactions Details</CardTitle>
@@ -291,13 +315,13 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                 <CardContent className="grid gap-4">
                   <div className="w-full max-w-sm items-center">
                     <Label htmlFor="amount">
-                      Amount {selectedAsset!.asset?.shortName}
+                      Amount {offRampAsset!.asset?.shortName}
                     </Label>
                     <Input
                       type="text"
                       id="amount"
                       placeholder={`amount in ${
-                        selectedAsset!.asset?.shortName
+                        offRampAsset!.asset?.shortName
                       }`}
                       value={amount}
                       onChange={handleAmountChange}
@@ -349,8 +373,8 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         </p>
                       )}
                       <p className="text-sm text-muted-foreground">
-                        Alternatively send {selectedAsset!.asset?.shortName}{' '}
-                        from a <u>whitelisted address</u> to the{' '}
+                        Alternatively send {offRampAsset!.asset?.shortName} from
+                        a <u>whitelisted address</u> to the{' '}
                         <u>Magic Ramp address</u>. Please note that transfers
                         from other addresses will be bounced back, minus network
                         fees.
@@ -359,7 +383,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   </div>
                   <div className="flex-row w-full max-w-sm items-center">
                     <Label htmlFor="address">
-                      Magic Ramp address for {selectedAsset.asset?.shortName}
+                      Magic Ramp address for {offRampAsset.asset?.shortName}
                     </Label>
                     <div className="flex items-center gap-4">
                       <Input
@@ -367,7 +391,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         id="address"
                         placeholder="address"
                         readOnly={true}
-                        value={selectedAsset.offRamp?.address}
+                        value={offRampAsset.offRamp?.address}
                         ref={textToCopyRef}
                       />
                       <CopyIcon

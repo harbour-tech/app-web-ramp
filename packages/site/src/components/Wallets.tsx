@@ -8,7 +8,10 @@ import {
 } from '@/components/ui/card';
 import { GemIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { GetAccountInfoResponse_Wallet } from '@/harbour/gen/ramp/v1/public_pb';
+import {
+  GetAccountInfoResponse_Wallet,
+  Protocol,
+} from '@/harbour/gen/ramp/v1/public_pb';
 import { cn } from '@/lib/utils';
 import { requestAccounts } from '@/utils';
 import {
@@ -25,6 +28,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'react-toastify';
 
 export interface WalletsProps {
+  protocol: Protocol;
   wallets: GetAccountInfoResponse_Wallet[];
   selectedWallet?: GetAccountInfoResponse_Wallet;
   onWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void;
@@ -33,6 +37,7 @@ export interface WalletsProps {
 }
 
 export const Wallets: FunctionComponent<WalletsProps> = ({
+  protocol,
   wallets,
   selectedWallet,
   onWalletSelected,
@@ -41,7 +46,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
 }) => {
   const style = (wallet: GetAccountInfoResponse_Wallet) => {
     if (
-      wallet.ecosystem == selectedWallet?.ecosystem &&
+      wallet.protocol == selectedWallet?.protocol &&
       wallet.address == selectedWallet?.address
     ) {
       return 'bg-accent text-accent-foreground';
@@ -53,6 +58,10 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
   const handleSelect = (wallet: GetAccountInfoResponse_Wallet) => {
     onWalletSelected(wallet);
   };
+  const handleAddWallet = async (wallet: Wallet) => {
+    wallet.name;
+    return onAddWallet(wallet);
+  };
 
   return (
     <Card className="shadow">
@@ -61,31 +70,46 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-1">
-        {wallets.map((wallet) => (
-          <div
-            onClick={() => handleSelect(wallet)}
-            key={wallet.ecosystem + ':' + wallet.address}
-            className={cn(
-              style(wallet),
-              'flex flex-row space-x-2 rounded-md p-2 cursor-pointer',
-            )}
-          >
-            <GemIcon className="h-5 w-5" />
-            {/*TODO: map network to icon*/}
-            <div className="space-y-1 flex flex-col overflow-hidden max-w-xs">
-              <p className="text-sm font-medium leading-none">
-                {wallet.name ? wallet.name : wallet.address.substring(0, 6)}
-              </p>
-              <p className="text-sm text-muted-foreground truncate">
-                {wallet.address}
-              </p>
+        {wallets
+          .filter((w) => w.protocol == protocol)
+          .map((wallet) => (
+            <div
+              onClick={() => handleSelect(wallet)}
+              key={wallet.protocol + ':' + wallet.address}
+              className={cn(
+                style(wallet),
+                'flex flex-row space-x-2 rounded-md p-2 cursor-pointer',
+              )}
+            >
+              <GemIcon className="h-5 w-5" />
+              {/*TODO: map network to icon*/}
+              <div className="space-y-1 flex flex-col overflow-hidden max-w-xs">
+                <p className="text-sm font-medium leading-none">
+                  {wallet.name ? wallet.name : wallet.address.substring(0, 6)}
+                  {false && (
+                    <p className="font-thin">
+                      {
+                        {
+                          [Protocol.UNSPECIFIED]: '',
+                          [Protocol.ETHEREUM]: 'Ethereum',
+                          [Protocol.AVAX]: 'Avalance',
+                          [Protocol.TERRA]: 'Terra',
+                        }[wallet.protocol]
+                      }
+                    </p>
+                  )}
+                </p>
+                <p className="text-sm text-muted-foreground truncate">
+                  {wallet.address}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
         <AddWallet
+          protocol={protocol}
           existing={wallets.map((w) => w.address)}
-          onAdd={onAddWallet}
+          onAdd={handleAddWallet}
         />
       </CardContent>
     </Card>
@@ -93,11 +117,13 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
 };
 
 interface AddWalletProps {
+  protocol: Protocol;
   existing: string[];
   onAdd: (wallet: Wallet) => Promise<void>;
 }
 
 export const AddWallet: FunctionComponent<AddWalletProps> = ({
+  protocol,
   existing,
   onAdd,
 }) => {
@@ -148,6 +174,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
       const addr = address.find((a) => !existing.includes(a!));
       if (addr) {
         setAddress({
+          protocol: protocol,
           address: addr,
           name: 'MetaMask Wallet',
         });
@@ -160,6 +187,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({
+      protocol: protocol,
       name: e.target.value,
       address: address!.address,
     });
@@ -228,6 +256,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
 };
 
 export interface Wallet {
+  protocol: Protocol;
   name: string;
   address: string;
 }

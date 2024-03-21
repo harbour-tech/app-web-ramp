@@ -5,13 +5,13 @@ import { RampService } from './gen/ramp/v1/public_connect';
 
 import {
   GetAccountInfoRequest,
-  WhitelistAddressRequest,
-  RemoveAddressRequest,
-  SetBankAccountRequest,
   GetAccountInfoResponse,
-  WhitelistAddressResponse,
+  RemoveAddressRequest,
   RemoveAddressResponse,
+  SetBankAccountRequest,
   SetBankAccountResponse,
+  WhitelistAddressRequest,
+  WhitelistAddressResponse,
 } from './gen/ramp/v1/public_pb';
 import { PartialMessage } from '@bufbuild/protobuf';
 
@@ -68,19 +68,10 @@ export class RampClient {
    * Crypto assets can only be on-ramped to address which belongs to the user. In order to proof address belongs to the
    * user, address need to be signed with private key of this address.
    * @param request - whitelisting parameters
-   * @param signer - function returns signature for the whitelisting address
    */
   public async whitelistAddress(
     request: PartialMessage<WhitelistAddressRequest>,
-    signer: (address: string) => Promise<string>,
   ): Promise<WhitelistAddressResponse> {
-    const signature = await signer(request.address!);
-
-    if (!signature) {
-      throw 'signature is required';
-    }
-
-    request.addressSignature = signature;
     return this.client.whitelistAddress(request);
   }
 
@@ -127,7 +118,7 @@ export enum SigningAlgorithm {
  */
 export enum EncodingAlgorithm {
   Hex = 'hex',
-  Base64 = 'base64',
+  Base64 = 'secp256k1',
 }
 
 /**

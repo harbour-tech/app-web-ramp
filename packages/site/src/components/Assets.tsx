@@ -8,13 +8,13 @@ import {
 } from '@/components/ui/card';
 import { CircleDollarSignIcon } from 'lucide-react';
 
-import { GetAccountInfoResponse_Wallet_RampAsset } from '@/harbour/gen/ramp/v1/public_pb';
+import { GetAccountInfoResponse_Asset } from '@/harbour/gen/ramp/v1/public_pb';
 import { cn } from '@/lib/utils';
 
 export interface AssetsProps {
-  assets: GetAccountInfoResponse_Wallet_RampAsset[];
-  selected?: GetAccountInfoResponse_Wallet_RampAsset;
-  onSelected: (asset: GetAccountInfoResponse_Wallet_RampAsset) => void;
+  assets: GetAccountInfoResponse_Asset[];
+  selected?: GetAccountInfoResponse_Asset;
+  onSelected: (asset: GetAccountInfoResponse_Asset) => void;
   description: string;
 }
 
@@ -24,15 +24,15 @@ export const Assets: FunctionComponent<AssetsProps> = ({
   onSelected,
   description,
 }) => {
-  const style = (asset: GetAccountInfoResponse_Wallet_RampAsset) => {
-    if (asset!.asset!.shortName == selected?.asset?.shortName) {
+  const style = (asset: GetAccountInfoResponse_Asset) => {
+    if (asset!.shortName == selected?.shortName) {
       return 'bg-accent text-accent-foreground';
     } else {
       return 'hover:bg-accent hover:text-accent-foreground';
     }
   };
-  const handleClick = (wallet: GetAccountInfoResponse_Wallet_RampAsset) => {
-    onSelected(wallet);
+  const handleClick = (asset: GetAccountInfoResponse_Asset) => {
+    onSelected(asset);
   };
 
   return (
@@ -44,7 +44,7 @@ export const Assets: FunctionComponent<AssetsProps> = ({
       <CardContent className="grid gap-1">
         {assets.map((asset) => (
           <div
-            key={asset.asset!.shortName}
+            key={asset!.shortName}
             className={cn(
               '-mx-2 flex space-x-4 rounded-md p-2 transition-all items-center cursor-pointer',
               style(asset),
@@ -54,7 +54,7 @@ export const Assets: FunctionComponent<AssetsProps> = ({
             <CircleDollarSignIcon className="h-5 w-5" />{' '}
             {/*TODO: map asset onto icon*/}
             <div className="space-y-1 flex items-center">
-              <p className="text-sm font-medium">{asset.asset!.shortName}</p>
+              <p className="text-sm font-medium">{asset.shortName}</p>
               <p className="text-sm text-muted-foreground"></p>
             </div>
           </div>

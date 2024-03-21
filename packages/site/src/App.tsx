@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
 import { useRampClient } from '@/hooks/useRpc';
 import {
-  Ecosystem,
   GetAccountInfoResponse,
   SetBankAccountRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
@@ -26,7 +25,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RocketIcon } from 'lucide-react';
 import splash from '@/assets/splash.png';
 import { toast } from 'react-toastify';
-import { computeAddress, keccak256, SigningKey } from 'ethers';
+import { keccak256, SigningKey } from 'ethers';
 
 function App() {
   const [metamask, metamaskDispatch] = useMetaMask();
@@ -100,32 +99,33 @@ function App() {
 
   const handleAddWallet = async (wallet: Wallet) => {
     try {
-      const res = await rampClient.whitelistAddress(
-        {
-          name: wallet.name,
-          address: wallet.address,
-          ecosystem: Ecosystem.ETHEREUM,
-        },
-        async (address) => {
-          const result = await requestPersonalSign(address, address);
-          let digest =
-            '\x19Ethereum Signed Message:\n' + address.length + address;
-          digest = keccak256(new TextEncoder().encode(digest));
-          let recoveredPublicKey = SigningKey.recoverPublicKey(
-            digest,
-            result?.signature,
-          );
-          recoveredPublicKey = SigningKey.computePublicKey(
-            recoveredPublicKey,
-            true,
-          );
-          let recoveredAddr = computeAddress(recoveredPublicKey);
-          console.log(`Address: ${recoveredAddr}`);
-          console.log(`Public Key: ${recoveredPublicKey}`);
-
-          return result?.signature;
-        },
+      const result = await requestPersonalSign(wallet.address, wallet.address);
+      let digest =
+        '\x19Ethereum Signed Message:\n' +
+        wallet.address.length +
+        wallet.address;
+      digest = keccak256(new TextEncoder().encode(digest));
+      let compressedPublicKey = SigningKey.recoverPublicKey(
+        digest,
+        result?.signature,
       );
+      compressedPublicKey = SigningKey.computePublicKey(
+        compressedPublicKey,
+        true,
+      );
+      // let recoveredAddr = computeAddress(compressedPublicKey);
+      // console.log(`Original address: ${wallet.address}`);
+      // console.log(`Recovered Address: ${recoveredAddr}`);
+      // console.log(`Public Key: ${compressedPublicKey}`);
+
+      const res = await rampClient.whitelistAddress({
+        protocol: wallet.protocol,
+        name: wallet.name,
+        address: wallet.address,
+        publicKey: compressedPublicKey,
+        addressSignature: result!.signature,
+      });
+
       if (res) {
         toast.success('Wallet added');
       }
