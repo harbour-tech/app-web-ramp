@@ -63,6 +63,8 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
     return onAddWallet(wallet);
   };
 
+  const protocolWallets = wallets.filter((w) => w.protocol == protocol);
+
   return (
     <Card className="shadow">
       <CardHeader className="pb-3">
@@ -70,45 +72,43 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-1">
-        {wallets
-          .filter((w) => w.protocol == protocol)
-          .map((wallet) => (
-            <div
-              onClick={() => handleSelect(wallet)}
-              key={wallet.protocol + ':' + wallet.address}
-              className={cn(
-                style(wallet),
-                'flex flex-row space-x-2 rounded-md p-2 cursor-pointer',
-              )}
-            >
-              <GemIcon className="h-5 w-5" />
-              {/*TODO: map network to icon*/}
-              <div className="space-y-1 flex flex-col overflow-hidden max-w-xs">
-                <p className="text-sm font-medium leading-none">
-                  {wallet.name ? wallet.name : wallet.address.substring(0, 6)}
-                  {false && (
-                    <p className="font-thin">
+        {protocolWallets.map((wallet) => (
+          <div
+            onClick={() => handleSelect(wallet)}
+            key={wallet.protocol + ':' + wallet.address}
+            className={cn(
+              style(wallet),
+              'flex flex-row space-x-2 rounded-md p-2 cursor-pointer',
+            )}
+          >
+            <GemIcon className="h-5 w-5" />
+            {/*TODO: map network to icon*/}
+            <div className="space-y-1 flex flex-col overflow-hidden max-w-xs">
+              <p className="text-sm font-medium leading-none">
+                {wallet.name ? wallet.name : wallet.address.substring(0, 6)}
+                {false && (
+                  <p className="font-thin">
+                    {
                       {
-                        {
-                          [Protocol.UNSPECIFIED]: '',
-                          [Protocol.ETHEREUM]: 'Ethereum',
-                          [Protocol.AVAX]: 'Avalance',
-                          [Protocol.TERRA]: 'Terra',
-                        }[wallet.protocol]
-                      }
-                    </p>
-                  )}
-                </p>
-                <p className="text-sm text-muted-foreground truncate">
-                  {wallet.address}
-                </p>
-              </div>
+                        [Protocol.UNSPECIFIED]: '',
+                        [Protocol.ETHEREUM]: 'Ethereum',
+                        [Protocol.AVAX]: 'Avalance',
+                        [Protocol.TERRA]: 'Terra',
+                      }[wallet.protocol]
+                    }
+                  </p>
+                )}
+              </p>
+              <p className="text-sm text-muted-foreground truncate">
+                {wallet.address}
+              </p>
             </div>
-          ))}
+          </div>
+        ))}
 
         <AddWallet
           protocol={protocol}
-          existing={wallets.map((w) => w.address)}
+          existing={protocolWallets.map((w) => w.address)}
           onAdd={handleAddWallet}
         />
       </CardContent>
