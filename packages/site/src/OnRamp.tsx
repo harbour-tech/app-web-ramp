@@ -1,5 +1,6 @@
 import {
   GetAccountInfoResponse_Account,
+  GetAccountInfoResponse_Asset,
   GetAccountInfoResponse_Wallet,
   GetAccountInfoResponse_Wallet_RampAsset,
 } from '@/harbour/gen/ramp/v1/public_pb';
@@ -33,13 +34,26 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     GetAccountInfoResponse_Wallet | undefined
   >(undefined);
   const [selectedAsset, setSelectedAsset] = useState<
+    GetAccountInfoResponse_Asset | undefined
+  >(undefined);
+
+  const [onRampAsset, setOnRampAsset] = useState<
     GetAccountInfoResponse_Wallet_RampAsset | undefined
   >(undefined);
 
   const handleSelectWalletClick = (wallet: GetAccountInfoResponse_Wallet) => {
     setSelectedWallet(wallet);
-    setSelectedAsset(undefined);
+    const asset = wallet.assets.find(
+      (ra) => ra.asset!.assetId == selectedAsset!.assetId,
+    );
+    setOnRampAsset(asset);
   };
+
+  const handleSelectAsset = (asset: GetAccountInfoResponse_Asset) => {
+    setSelectedAsset(asset);
+    setSelectedWallet(undefined);
+  };
+
   const getOnRampBankAccount = (): BankAccount => {
     switch (account.onrampBankAccount.case) {
       case 'onrampIban':
@@ -79,32 +93,34 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   return (
     <div className="flex items-start gap-8">
       <div className="basis-1/3">
-        <Wallets
-          wallets={account.wallets}
-          selectedWallet={selectedWallet}
-          onWalletSelected={handleSelectWalletClick}
-          onAddWallet={onAddWallet}
-          description="Step 1: Choose the wallet you want to onramp assets to"
+        <Assets
+          assets={account?.assets!}
+          onSelected={handleSelectAsset}
+          selected={selectedAsset}
+          description="Step 2: Choose the asset you want to onramp"
         />
       </div>
       <div className="basis-1/3">
-        {selectedWallet?.assets && (
-          <Assets
-            assets={selectedWallet?.assets!}
-            onSelected={setSelectedAsset}
-            selected={selectedAsset}
-            description="Step 2: Choose the asset you want to onramp"
+        {selectedAsset && (
+          <Wallets
+            protocol={selectedAsset.protocol}
+            wallets={account.wallets}
+            selectedWallet={selectedWallet}
+            onWalletSelected={handleSelectWalletClick}
+            onAddWallet={onAddWallet}
+            description="Step 1: Choose the wallet you want to onramp assets to"
           />
         )}
       </div>
+
       <div className="basis-1/3">
-        {selectedAsset && (
+        {onRampAsset && (
           <Card className="shadow">
             <CardHeader className="pb-3">
               <CardTitle>Magic Ramp Details</CardTitle>
               <CardDescription>
                 Step 3: Transfer {currency} to these details to receive{' '}
-                {selectedAsset.asset!.shortName} on your selected wallet.
+                {onRampAsset.asset!.shortName} on your selected wallet.
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
@@ -131,7 +147,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       type="text"
                       id="ref"
                       readOnly={true}
-                      value={selectedAsset.onRamp?.paymentReference}
+                      value={onRampAsset!.onRamp!.paymentReference}
                       ref={textToCopyRef}
                     />
                     <CopyIcon
