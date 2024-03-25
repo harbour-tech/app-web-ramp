@@ -104,9 +104,9 @@ function App() {
         '\x19Ethereum Signed Message:\n' +
         wallet.address.length +
         wallet.address;
-      digest = keccak256(new TextEncoder().encode(digest));
+      const digestHash = keccak256(new TextEncoder().encode(digest));
       let compressedPublicKey = SigningKey.recoverPublicKey(
-        digest,
+        digestHash,
         result?.signature,
       );
       compressedPublicKey = SigningKey.computePublicKey(
