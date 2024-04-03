@@ -108,7 +108,9 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
 
         <AddWallet
           protocol={protocol}
-          existing={wallets.map((w) => w.address)}
+          existing={wallets
+            .filter((w) => w.protocol == protocol)
+            .map((w) => w.address)}
           onAdd={handleAddWallet}
         />
       </CardContent>
