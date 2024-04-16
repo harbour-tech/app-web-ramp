@@ -7,7 +7,7 @@
     "url": "https://github.com/harbour-tech/app-web-ramp.git"
   },
   "source": {
-    "shasum": "xITvfSx3ojF9O8tbXZYqoPb86hKC8z3qBr+4WIXqdBw=",
+    "shasum": "/1EDVXQFtp16tOznqJ93ScPvgq5pHhrO5qKWP5gGzP4=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -19,6 +19,7 @@
   },
   "initialPermissions": {
     "snap_getEntropy": {},
+    "snap_manageAccounts": {},
     "endowment:ethereum-provider": {},
     "endowment:rpc": {
       "dapps": true,
