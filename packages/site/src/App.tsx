@@ -4,6 +4,7 @@ import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
 import { useRampClient } from '@/hooks/useRpc';
 import {
   GetAccountInfoResponse,
+  Protocol,
   SetBankAccountRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,11 @@ import splash from '@/assets/splash.png';
 import { toast } from 'react-toastify';
 import { keccak256, SigningKey } from 'ethers';
 
+const SupportedNetworks = new Map<Protocol, Protocol>([
+  [Protocol.ETHEREUM, Protocol.ETHEREUM],
+  [Protocol.AVAX, Protocol.AVAX],
+]);
+
 function App() {
   const [metamask, metamaskDispatch] = useMetaMask();
   const rampClient = useRampClient();
@@ -45,6 +51,11 @@ function App() {
     }
 
     if (response.result.case == 'account') {
+      // filter out unnecessary assets
+      response.result.value.cryptoAssets =
+        response.result.value.cryptoAssets.filter((a) =>
+          SupportedNetworks.has(a.protocol),
+        );
       // response.result.value.onrampBankAccount = {
       //   case:"onrampScan",
       //   value: new ScanCoordinates({

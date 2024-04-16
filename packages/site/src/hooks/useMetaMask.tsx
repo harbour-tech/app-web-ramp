@@ -1,5 +1,12 @@
-import { Dispatch, ReactNode, Reducer, useContext } from 'react';
-import { createContext, useEffect, useReducer } from 'react';
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  Reducer,
+  useContext,
+  useEffect,
+  useReducer,
+} from 'react';
 
 import type { Snap } from '../types';
 import { detectSnaps, getSnap, isFlask } from '../utils';
@@ -81,11 +88,10 @@ const reducer: Reducer<MetamaskState, MetamaskDispatch> = (state, action) => {
  * @returns JSX.
  */
 export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   if (typeof window === 'undefined') {
     return <>{children}</>;
   }
-
-  const [state, dispatch] = useReducer(reducer, initialState);
 
   // Find MetaMask Provider and search for Snaps
   // Also checks if MetaMask version is Flask

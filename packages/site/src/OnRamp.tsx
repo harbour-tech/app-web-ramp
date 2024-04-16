@@ -1,6 +1,6 @@
 import {
   GetAccountInfoResponse_Account,
-  GetAccountInfoResponse_Asset,
+  GetAccountInfoResponse_CryptoAsset,
   GetAccountInfoResponse_Wallet,
   GetAccountInfoResponse_Wallet_RampAsset,
 } from '@/harbour/gen/ramp/v1/public_pb';
@@ -34,7 +34,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     GetAccountInfoResponse_Wallet | undefined
   >(undefined);
   const [selectedAsset, setSelectedAsset] = useState<
-    GetAccountInfoResponse_Asset | undefined
+    GetAccountInfoResponse_CryptoAsset | undefined
   >(undefined);
 
   const [onRampAsset, setOnRampAsset] = useState<
@@ -49,7 +49,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     setOnRampAsset(asset);
   };
 
-  const handleSelectAsset = (asset: GetAccountInfoResponse_Asset) => {
+  const handleSelectAsset = (asset: GetAccountInfoResponse_CryptoAsset) => {
     setSelectedAsset(asset);
     setSelectedWallet(undefined);
   };
@@ -94,7 +94,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     <div className="flex items-start gap-8">
       <div className="basis-1/3">
         <Assets
-          assets={account?.assets!}
+          assets={account?.cryptoAssets!}
           onSelected={handleSelectAsset}
           selected={selectedAsset}
           description="Step 2: Choose the asset you want to onramp"
