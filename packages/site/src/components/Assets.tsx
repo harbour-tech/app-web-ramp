@@ -8,13 +8,13 @@ import {
 } from '@/components/ui/card';
 import { CircleDollarSignIcon } from 'lucide-react';
 
-import { GetAccountInfoResponse_Asset } from '@/harbour/gen/ramp/v1/public_pb';
+import { GetAccountInfoResponse_CryptoAsset } from '@/harbour/gen/ramp/v1/public_pb';
 import { cn } from '@/lib/utils';
 
 export interface AssetsProps {
-  assets: GetAccountInfoResponse_Asset[];
-  selected?: GetAccountInfoResponse_Asset;
-  onSelected: (asset: GetAccountInfoResponse_Asset) => void;
+  assets: GetAccountInfoResponse_CryptoAsset[];
+  selected?: GetAccountInfoResponse_CryptoAsset;
+  onSelected: (asset: GetAccountInfoResponse_CryptoAsset) => void;
   description: string;
 }
 
@@ -24,14 +24,14 @@ export const Assets: FunctionComponent<AssetsProps> = ({
   onSelected,
   description,
 }) => {
-  const style = (asset: GetAccountInfoResponse_Asset) => {
+  const style = (asset: GetAccountInfoResponse_CryptoAsset) => {
     if (asset!.shortName == selected?.shortName) {
       return 'bg-accent text-accent-foreground';
     } else {
       return 'hover:bg-accent hover:text-accent-foreground';
     }
   };
-  const handleClick = (asset: GetAccountInfoResponse_Asset) => {
+  const handleClick = (asset: GetAccountInfoResponse_CryptoAsset) => {
     onSelected(asset);
   };
 

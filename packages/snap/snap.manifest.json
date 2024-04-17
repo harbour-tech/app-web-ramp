@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Ramp it by Harbour",
   "proposedName": "Harbour Ramp",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/harbour-tech/app-web-ramp.git"
   },
   "source": {
-    "shasum": "DG63XgJGsGc3JQ7sVG6QMf28GBBKRWYByf+LVqhGC+8=",
+    "shasum": "/1EDVXQFtp16tOznqJ93ScPvgq5pHhrO5qKWP5gGzP4=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -19,6 +19,7 @@
   },
   "initialPermissions": {
     "snap_getEntropy": {},
+    "snap_manageAccounts": {},
     "endowment:ethereum-provider": {},
     "endowment:rpc": {
       "dapps": true,

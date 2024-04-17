@@ -1,6 +1,6 @@
 import {
   GetAccountInfoResponse_Account,
-  GetAccountInfoResponse_Asset,
+  GetAccountInfoResponse_CryptoAsset,
   GetAccountInfoResponse_Wallet,
   GetAccountInfoResponse_Wallet_RampAsset,
   IbanCoordinates,
@@ -51,7 +51,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     GetAccountInfoResponse_Wallet | undefined
   >(undefined);
   const [selectedAsset, setSelectedAsset] = useState<
-    GetAccountInfoResponse_Asset | undefined
+    GetAccountInfoResponse_CryptoAsset | undefined
   >(undefined);
   const [offRampAsset, setOffRampAsset] = useState<
     GetAccountInfoResponse_Wallet_RampAsset | undefined
@@ -163,7 +163,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     setAmount('0');
   }
 
-  const handleSelectAsset = (asset: GetAccountInfoResponse_Asset) => {
+  const handleSelectAsset = (asset: GetAccountInfoResponse_CryptoAsset) => {
     setSelectedAsset(asset);
     setSelectedWallet(undefined);
   };
@@ -284,7 +284,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         <>
           <div className="basis-1/3">
             <Assets
-              assets={account.assets}
+              assets={account.cryptoAssets}
               onSelected={handleSelectAsset}
               selected={selectedAsset}
               description="Step 2: Choose the asset and chain you want to offramp"
