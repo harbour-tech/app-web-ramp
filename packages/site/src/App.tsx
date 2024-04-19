@@ -34,6 +34,7 @@ const SupportedNetworks = new Map<Protocol, Protocol>([
 ]);
 
 function App() {
+  const [isOnboardingVisible, setIsOnboardingVisible] = useState(true);
   const [metamask, metamaskDispatch] = useMetaMask();
   const rampClient = useRampClient();
   const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(
@@ -240,7 +241,7 @@ function App() {
 
   return (
     <div>
-      <div className="">
+      <div>
         <h2 className="text-2xl font-bold tracking-tight">
           Say goodbye to the hassle and costs of on and off ramping
         </h2>
