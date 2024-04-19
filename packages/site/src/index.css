@@ -29,6 +29,35 @@ body {
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
+
+    --gray-glass-90: theme("backgroundImage.gray-glass-90");
+    --orange-fog: theme("backgroundImage.orange-fog");
+    --blue-fog: theme("backgroundImage.blue-fog");
+    --light-glass-70: theme("backgroundImage.light-glass-70");
+    --night: theme("backgroundImage.night");
+    --blueberryFog: theme("backgroundImage.blueberry-fog");
+    --gray-glass: theme("backgroundImage.gray-glass");
+    --light-glass: theme("backgroundImage.light-glass");
+    --black-gradient: theme("backgroundImage.black-gradient");
+    --rainbow: theme("backgroundImage.rainbow");
+
+    --sky: theme("colors.sky");
+    --snow: theme("colors.snow");
+    --lightSky: theme("colors.lightSky");
+    --gray50: theme("colors.gray.50");
+    --gray100: theme("colors.gray.100");
+    --gray200: theme("colors.gray.200");
+    --gray300: theme("colors.gray.300");
+    --gray400: theme("colors.gray.400");
+    --gray500: theme("colors.gray.500");
+    --gray600: theme("colors.gray.600");
+    --orange: theme("colors.orange");
+    --raspberry: theme("colors.raspberry");
+    --grapefruit: theme("colors.grapefruit");
+    --blueberry: theme("colors.blueberry");
+    --brightBlueberry: theme("colors.brightBlueberry");
+    --disabledNightBlue: theme("colors.disabledNightBlue");
+    --red: theme("colors.red");
   }
 
   .dark {
@@ -64,4 +93,157 @@ body {
 
 .dark body #logo {
   filter: invert();
+}
+
+/* Safari fix hiding input's autofill indicator that doesn't fit our designs */
+input::-webkit-contacts-auto-fill-button {
+  background-color: transparent;
+}
+
+@font-face {
+  font-family: Albert Sans;
+  src: url(/src/assets/AlbertSans-Regular.ttf);
+}
+@font-face {
+  font-family: Montserrat;
+  src: url(/src/assets/Montserrat-Regular.ttf);
+}
+
+@font-face {
+  font-family: Space Grotesk;
+  src: url(/src/assets/SpaceGrotesk-Regular.ttf) format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Space Grotesk;
+  src: url(/src/assets/SpaceGrotesk-Bold.ttf) format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Space Grotesk;
+  src: url(/src/assets/SpaceGrotesk-SemiBold.ttf) format("truetype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: Space Grotesk;
+  src: url(/src/assets/SpaceGrotesk-Light.ttf) format("truetype");
+  font-weight: 300;
+}
+
+.heading1 {
+  @apply text-[38px] not-italic font-normal leading-[42px] tracking-[-2px] capitalize;
+  font-family: Space Grotesk;
+}
+
+.heading2 {
+  @apply text-[28px] not-italic font-normal leading-[34px] tracking-[-1px] capitalize;
+  font-family: Space Grotesk;
+}
+
+.heading3 {
+  @apply text-2xl not-italic font-medium leading-8 tracking-[-1px] capitalize;
+  font-family: Space Grotesk;
+}
+
+.heading4 {
+  @apply text-2xl not-italic font-light leading-8 tracking-[-1px] capitalize;
+  font-family: Space Grotesk;
+}
+
+.heading5 {
+  @apply text-xl not-italic font-normal leading-6 tracking-[-1px] capitalize;
+  font-family: Space Grotesk;
+}
+
+.subtitle1 {
+  @apply text-base not-italic font-medium leading-5 tracking-[-1px];
+  font-family: Albert Sans;
+}
+
+.subtitle2 {
+  @apply text-base not-italic font-normal leading-5 tracking-[-1px] capitalize;
+  font-family: Space Grotesk;
+}
+
+.subtitle3 {
+  @apply text-base not-italic font-medium leading-6 tracking-[1px] uppercase;
+  font-family: Albert Sans;
+}
+
+.subtitle4 {
+  @apply text-base not-italic font-medium leading-5 tracking-[-1px] capitalize;
+  font-family: Space Grotesk;
+}
+
+.body1 {
+  @apply text-sm not-italic font-medium leading-[normal];
+  font-family: Montserrat;
+}
+
+.body2 {
+  @apply text-sm not-italic font-normal leading-4 capitalize;
+  font-family: Albert Sans;
+}
+
+.body3 {
+  @apply text-sm not-italic font-medium leading-5;
+  font-family: Albert Sans;
+}
+
+.body4 {
+  @apply text-xs not-italic font-semibold leading-[14px] tracking-[1px] uppercase;
+  font-family: Albert Sans;
+}
+
+.body5 {
+  @apply text-sm not-italic font-normal leading-4;
+  font-family: Albert Sans;
+}
+
+.caption1 {
+  @apply text-xs not-italic font-medium leading-[14px] tracking-[1px] uppercase;
+  font-family: Albert Sans;
+}
+
+.caption2 {
+  @apply text-xs not-italic font-normal leading-4;
+  font-family: Albert Sans;
+}
+
+.caption3 {
+  @apply text-[11px] not-italic font-normal leading-[13px] capitalize;
+  font-family: Albert Sans;
+}
+
+.caption4 {
+  @apply text-[11px] not-italic font-medium leading-[13px] tracking-[1px] uppercase;
+  font-family: Albert Sans;
+}
+
+.navigation {
+  @apply text-xs not-italic font-medium leading-[14px];
+  font-family: Albert Sans;
+}
+
+.gradient-gray-glass-90 {
+  background: var(--gray-glass-90);
+}
+
+.gradient-orange-fog {
+  background: var(--orange-fog);
+}
+
+.gradient-light-glass-70 {
+  background: var(--light-glass-70);
+}
+
+.gradient-night {
+  background: var(--night);
+}
+
+.gradient-rainbow {
+  background: var(--rainbow);
 }

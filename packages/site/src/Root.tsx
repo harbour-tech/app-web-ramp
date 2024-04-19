@@ -7,11 +7,11 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
   return (
     <div className="container">
       <div className="flex justify-center items-end  gap-2 pt-8">
-        <section className="max-w-[680px] flex-col items-center">
-          <h1 className="text-center leading-tight tracking-tighter text-6xl lg:leading-[1.1] hidden md:block">
+        <section className="max-w-[680px] flex-col justify-center items-center">
+          <h1 className="text-center tracking-tighter text-6xl md:block">
             Magic Ramp
           </h1>
-          <div className="flex justify-start py-2 gap-2 items-center">
+          <div className="flex py-2 gap-2 items-center justify-center">
             <div className="text-2xl">by</div>
             <svg
               id="logo"
