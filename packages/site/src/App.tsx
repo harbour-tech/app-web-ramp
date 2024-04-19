@@ -239,12 +239,12 @@ function App() {
   ]);
 
   return (
-    <div>
-      <div className="">
-        <h2 className="text-2xl font-bold tracking-tight">
+    <>
+      <div className="max-w-[400px]">
+        <h3 className="heading3 mb-2">
           Say goodbye to the hassle and costs of on and off ramping
-        </h2>
-        <p className="text-muted-foreground">
+        </h3>
+        <p className="text-muted-foreground caption1">
           Experience seamless transfers between your bank account and MetaMask
           wallet with Harbour
         </p>
@@ -268,15 +268,15 @@ function App() {
       <div>
         {!metamask.installedSnap && (
           <>
-            <Button onClick={handleConnectClick}>Install Snap</Button>
-            <div className="flex justify-center">
-              <img width="600" src={splash} className="mt-8" />
+            <Button onClick={handleConnectClick}>Enable Magic Ramping</Button>
+            <div className="flex justify-end">
+              <img width="600" src={splash} className="mt-4" />
             </div>
           </>
         )}
       </div>
       {content}
-    </div>
+    </>
   );
 }
 
