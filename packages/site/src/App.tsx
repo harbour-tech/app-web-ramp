@@ -222,7 +222,7 @@ function App() {
 
     return (
       <div className="grid justify-items-center">
-        <Alert className="mt-10 sm:max-w-[700px]">
+        <Alert className="mt-2 sm:max-w-[700px]">
           <RocketIcon className="h-4 w-4" />
           <AlertTitle>Please open MetaMask</AlertTitle>
           <AlertDescription>
@@ -240,7 +240,7 @@ function App() {
 
   return (
     <>
-      <div className="max-w-[400px]">
+      <div className="max-w-[430px] mt-4">
         <h3 className="heading3 mb-2">
           Say goodbye to the hassle and costs of on and off ramping
         </h3>
@@ -270,7 +270,7 @@ function App() {
           <>
             <Button onClick={handleConnectClick}>Enable Magic Ramping</Button>
             <div className="flex justify-end">
-              <img width="600" src={splash} className="mt-4" />
+              <img width="820" src={splash} className="-mt-40" />
             </div>
           </>
         )}
