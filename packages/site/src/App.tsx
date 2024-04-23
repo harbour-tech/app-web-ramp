@@ -268,7 +268,9 @@ function App() {
       <div>
         {!metamask.installedSnap && (
           <>
-            <Button onClick={handleConnectClick}>Enable Magic Ramping</Button>
+            <Button variant={'primary'} onClick={handleConnectClick}>
+              Enable Magic Ramping
+            </Button>
             <div className="flex justify-end">
               <img width="820" src={splash} className="-mt-40" />
             </div>

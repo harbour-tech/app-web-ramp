@@ -179,7 +179,7 @@ input::-webkit-contacts-auto-fill-button {
 }
 
 .body1 {
-  @apply text-sm not-italic font-medium leading-[normal];
+  @apply text-sm not-italic font-medium leading-[normal] uppercase;
   font-family: Montserrat;
 }
 
