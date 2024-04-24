@@ -94,6 +94,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
                           [Protocol.ETHEREUM]: 'Ethereum',
                           [Protocol.AVAX]: 'Avalance',
                           [Protocol.TERRA]: 'Terra',
+                          [Protocol.POLYGON]: 'Polygon',
                         }[wallet.protocol]
                       }
                     </p>
