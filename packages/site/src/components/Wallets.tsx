@@ -246,7 +246,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" variant="default" onClick={handleAdd}>
+              <Button type="button" variant="primary" onClick={handleAdd}>
                 Add wallet
               </Button>
             </DialogFooter>
