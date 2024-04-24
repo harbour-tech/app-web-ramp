@@ -31,6 +31,7 @@ import { keccak256, SigningKey } from 'ethers';
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
   [Protocol.AVAX, Protocol.AVAX],
+  [Protocol.POLYGON, Protocol.POLYGON],
 ]);
 
 function App() {

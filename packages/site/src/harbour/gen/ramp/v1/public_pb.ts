@@ -10,8 +10,8 @@ import type {
   JsonValue,
   PartialMessage,
   PlainMessage,
-} from '@bufbuild/protobuf';
-import { Message, proto3 } from '@bufbuild/protobuf';
+} from "@bufbuild/protobuf";
+import { Message, proto3 } from "@bufbuild/protobuf";
 
 /**
  * @generated from enum ramp.v1.Ecosystem
@@ -37,10 +37,10 @@ export enum Ecosystem {
   COSMOS = 20,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Ecosystem)
-proto3.util.setEnumType(Ecosystem, 'ramp.v1.Ecosystem', [
-  { no: 0, name: 'ECOSYSTEM_UNSPECIFIED' },
-  { no: 10, name: 'ECOSYSTEM_ETHEREUM' },
-  { no: 20, name: 'ECOSYSTEM_COSMOS' },
+proto3.util.setEnumType(Ecosystem, "ramp.v1.Ecosystem", [
+  { no: 0, name: "ECOSYSTEM_UNSPECIFIED" },
+  { no: 10, name: "ECOSYSTEM_ETHEREUM" },
+  { no: 20, name: "ECOSYSTEM_COSMOS" },
 ]);
 
 /**
@@ -66,13 +66,19 @@ export enum Protocol {
    * @generated from enum value: PROTOCOL_TERRA = 30;
    */
   TERRA = 30,
+
+  /**
+   * @generated from enum value: PROTOCOL_POLYGON = 40;
+   */
+  POLYGON = 40,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Protocol)
-proto3.util.setEnumType(Protocol, 'ramp.v1.Protocol', [
-  { no: 0, name: 'PROTOCOL_UNSPECIFIED' },
-  { no: 10, name: 'PROTOCOL_ETHEREUM' },
-  { no: 20, name: 'PROTOCOL_AVAX' },
-  { no: 30, name: 'PROTOCOL_TERRA' },
+proto3.util.setEnumType(Protocol, "ramp.v1.Protocol", [
+  { no: 0, name: "PROTOCOL_UNSPECIFIED" },
+  { no: 10, name: "PROTOCOL_ETHEREUM" },
+  { no: 20, name: "PROTOCOL_AVAX" },
+  { no: 30, name: "PROTOCOL_TERRA" },
+  { no: 40, name: "PROTOCOL_POLYGON" },
 ]);
 
 /**
@@ -94,9 +100,9 @@ export enum AssetId {
   USDC = 10,
 }
 // Retrieve enum metadata with: proto3.getEnumType(AssetId)
-proto3.util.setEnumType(AssetId, 'ramp.v1.AssetId', [
-  { no: 0, name: 'ASSET_ID_UNSPECIFIED' },
-  { no: 10, name: 'ASSET_ID_USDC' },
+proto3.util.setEnumType(AssetId, "ramp.v1.AssetId", [
+  { no: 0, name: "ASSET_ID_UNSPECIFIED" },
+  { no: 10, name: "ASSET_ID_USDC" },
 ]);
 
 /**
@@ -132,15 +138,27 @@ export enum Network {
    * @generated from enum value: NETWORK_TERRA2_MAINNET = 50;
    */
   TERRA2_MAINNET = 50,
+
+  /**
+   * @generated from enum value: NETWORK_POLYGON_MAINNET = 60;
+   */
+  POLYGON_MAINNET = 60,
+
+  /**
+   * @generated from enum value: NETWORK_POLYGON_AMOY = 70;
+   */
+  POLYGON_AMOY = 70,
 }
 // Retrieve enum metadata with: proto3.getEnumType(Network)
-proto3.util.setEnumType(Network, 'ramp.v1.Network', [
-  { no: 0, name: 'NETWORK_UNSPECIFIED' },
-  { no: 10, name: 'NETWORK_ETHEREUM_MAINNET' },
-  { no: 20, name: 'NETWORK_ETHEREUM_SEPOLIA' },
-  { no: 30, name: 'NETWORK_AVAX_FUJI' },
-  { no: 40, name: 'NETWORK_AVAX_C_MAINNET' },
-  { no: 50, name: 'NETWORK_TERRA2_MAINNET' },
+proto3.util.setEnumType(Network, "ramp.v1.Network", [
+  { no: 0, name: "NETWORK_UNSPECIFIED" },
+  { no: 10, name: "NETWORK_ETHEREUM_MAINNET" },
+  { no: 20, name: "NETWORK_ETHEREUM_SEPOLIA" },
+  { no: 30, name: "NETWORK_AVAX_FUJI" },
+  { no: 40, name: "NETWORK_AVAX_C_MAINNET" },
+  { no: 50, name: "NETWORK_TERRA2_MAINNET" },
+  { no: 60, name: "NETWORK_POLYGON_MAINNET" },
+  { no: 70, name: "NETWORK_POLYGON_AMOY" },
 ]);
 
 /**
@@ -153,7 +171,7 @@ export class PingRequest extends Message<PingRequest> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.PingRequest';
+  static readonly typeName = "ramp.v1.PingRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => []);
 
   static fromBinary(
@@ -192,7 +210,7 @@ export class PingResponse extends Message<PingResponse> {
   /**
    * @generated from field: string message = 10;
    */
-  message = '';
+  message = "";
 
   constructor(data?: PartialMessage<PingResponse>) {
     super();
@@ -200,9 +218,9 @@ export class PingResponse extends Message<PingResponse> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.PingResponse';
+  static readonly typeName = "ramp.v1.PingResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 10, name: 'message', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 10, name: "message", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(
@@ -244,7 +262,7 @@ export class GetAccountInfoRequest extends Message<GetAccountInfoRequest> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.GetAccountInfoRequest';
+  static readonly typeName = "ramp.v1.GetAccountInfoRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => []);
 
   static fromBinary(
@@ -291,7 +309,7 @@ export class GetAccountInfoResponse extends Message<GetAccountInfoResponse> {
          * @generated from field: ramp.v1.GetAccountInfoResponse.Authentication authentication = 20;
          */
         value: GetAccountInfoResponse_Authentication;
-        case: 'authentication';
+        case: "authentication";
       }
     | {
         /**
@@ -300,7 +318,7 @@ export class GetAccountInfoResponse extends Message<GetAccountInfoResponse> {
          * @generated from field: ramp.v1.GetAccountInfoResponse.Account account = 30;
          */
         value: GetAccountInfoResponse_Account;
-        case: 'account';
+        case: "account";
       }
     | { case: undefined; value?: undefined } = { case: undefined };
 
@@ -310,21 +328,21 @@ export class GetAccountInfoResponse extends Message<GetAccountInfoResponse> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.GetAccountInfoResponse';
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 20,
-      name: 'authentication',
-      kind: 'message',
+      name: "authentication",
+      kind: "message",
       T: GetAccountInfoResponse_Authentication,
-      oneof: 'result',
+      oneof: "result",
     },
     {
       no: 30,
-      name: 'account',
-      kind: 'message',
+      name: "account",
+      kind: "message",
       T: GetAccountInfoResponse_Account,
-      oneof: 'result',
+      oneof: "result",
     },
   ]);
 
@@ -372,7 +390,7 @@ export class GetAccountInfoResponse_Authentication extends Message<GetAccountInf
    *
    * @generated from field: string authentication_url = 10;
    */
-  authenticationUrl = '';
+  authenticationUrl = "";
 
   constructor(data?: PartialMessage<GetAccountInfoResponse_Authentication>) {
     super();
@@ -380,12 +398,12 @@ export class GetAccountInfoResponse_Authentication extends Message<GetAccountInf
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.GetAccountInfoResponse.Authentication';
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.Authentication";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'authentication_url',
-      kind: 'scalar',
+      name: "authentication_url",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
   ]);
@@ -458,7 +476,7 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
          * @generated from field: ramp.v1.ScanCoordinates onramp_scan = 100;
          */
         value: ScanCoordinates;
-        case: 'onrampScan';
+        case: "onrampScan";
       }
     | {
         /**
@@ -467,7 +485,7 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
          * @generated from field: ramp.v1.IbanCoordinates onramp_iban = 110;
          */
         value: IbanCoordinates;
-        case: 'onrampIban';
+        case: "onrampIban";
       }
     | { case: undefined; value?: undefined } = { case: undefined };
 
@@ -484,7 +502,7 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
          * @generated from field: ramp.v1.ScanCoordinates offramp_scan = 200;
          */
         value: ScanCoordinates;
-        case: 'offrampScan';
+        case: "offrampScan";
       }
     | {
         /**
@@ -493,7 +511,7 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
          * @generated from field: ramp.v1.IbanCoordinates offramp_iban = 210;
          */
         value: IbanCoordinates;
-        case: 'offrampIban';
+        case: "offrampIban";
       }
     | { case: undefined; value?: undefined } = { case: undefined };
 
@@ -502,7 +520,7 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
    *
    * @generated from field: string account_holder = 20;
    */
-  accountHolder = '';
+  accountHolder = "";
 
   /**
    * list of supported addresses
@@ -517,53 +535,53 @@ export class GetAccountInfoResponse_Account extends Message<GetAccountInfoRespon
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.GetAccountInfoResponse.Account';
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.Account";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'wallets',
-      kind: 'message',
+      name: "wallets",
+      kind: "message",
       T: GetAccountInfoResponse_Wallet,
       repeated: true,
     },
     {
       no: 100,
-      name: 'onramp_scan',
-      kind: 'message',
+      name: "onramp_scan",
+      kind: "message",
       T: ScanCoordinates,
-      oneof: 'onramp_bank_account',
+      oneof: "onramp_bank_account",
     },
     {
       no: 110,
-      name: 'onramp_iban',
-      kind: 'message',
+      name: "onramp_iban",
+      kind: "message",
       T: IbanCoordinates,
-      oneof: 'onramp_bank_account',
+      oneof: "onramp_bank_account",
     },
     {
       no: 200,
-      name: 'offramp_scan',
-      kind: 'message',
+      name: "offramp_scan",
+      kind: "message",
       T: ScanCoordinates,
-      oneof: 'offramp_bank_account',
+      oneof: "offramp_bank_account",
     },
     {
       no: 210,
-      name: 'offramp_iban',
-      kind: 'message',
+      name: "offramp_iban",
+      kind: "message",
       T: IbanCoordinates,
-      oneof: 'offramp_bank_account',
+      oneof: "offramp_bank_account",
     },
     {
       no: 20,
-      name: 'account_holder',
-      kind: 'scalar',
+      name: "account_holder",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 30,
-      name: 'crypto_assets',
-      kind: 'message',
+      name: "crypto_assets",
+      kind: "message",
       T: GetAccountInfoResponse_CryptoAsset,
       repeated: true,
     },
@@ -633,7 +651,7 @@ export class GetAccountInfoResponse_CryptoAsset extends Message<GetAccountInfoRe
    *
    * @generated from field: string short_name = 30;
    */
-  shortName = '';
+  shortName = "";
 
   constructor(data?: PartialMessage<GetAccountInfoResponse_CryptoAsset>) {
     super();
@@ -641,15 +659,15 @@ export class GetAccountInfoResponse_CryptoAsset extends Message<GetAccountInfoRe
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.GetAccountInfoResponse.CryptoAsset';
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.CryptoAsset";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 5, name: 'protocol', kind: 'enum', T: proto3.getEnumType(Protocol) },
-    { no: 10, name: 'network', kind: 'enum', T: proto3.getEnumType(Network) },
-    { no: 20, name: 'asset_id', kind: 'enum', T: proto3.getEnumType(AssetId) },
+    { no: 5, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
+    { no: 10, name: "network", kind: "enum", T: proto3.getEnumType(Network) },
+    { no: 20, name: "asset_id", kind: "enum", T: proto3.getEnumType(AssetId) },
     {
       no: 30,
-      name: 'short_name',
-      kind: 'scalar',
+      name: "short_name",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
   ]);
@@ -704,7 +722,7 @@ export class GetAccountInfoResponse_Wallet extends Message<GetAccountInfoRespons
    *
    * @generated from field: string name = 5;
    */
-  name = '';
+  name = "";
 
   /**
    * @generated from field: ramp.v1.Protocol protocol = 10;
@@ -716,7 +734,7 @@ export class GetAccountInfoResponse_Wallet extends Message<GetAccountInfoRespons
    *
    * @generated from field: string address = 20;
    */
-  address = '';
+  address = "";
 
   /**
    * assets available for on- and off- ramping
@@ -731,15 +749,15 @@ export class GetAccountInfoResponse_Wallet extends Message<GetAccountInfoRespons
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.GetAccountInfoResponse.Wallet';
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 5, name: 'name', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
-    { no: 10, name: 'protocol', kind: 'enum', T: proto3.getEnumType(Protocol) },
-    { no: 20, name: 'address', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 5, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 10, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
+    { no: 20, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     {
       no: 30,
-      name: 'assets',
-      kind: 'message',
+      name: "assets",
+      kind: "message",
       T: GetAccountInfoResponse_Wallet_RampAsset,
       repeated: true,
     },
@@ -808,24 +826,24 @@ export class GetAccountInfoResponse_Wallet_RampAsset extends Message<GetAccountI
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.GetAccountInfoResponse.Wallet.RampAsset';
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet.RampAsset";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'asset',
-      kind: 'message',
+      name: "asset",
+      kind: "message",
       T: GetAccountInfoResponse_CryptoAsset,
     },
     {
       no: 20,
-      name: 'on_ramp',
-      kind: 'message',
+      name: "on_ramp",
+      kind: "message",
       T: GetAccountInfoResponse_Wallet_OnRamp,
     },
     {
       no: 30,
-      name: 'off_ramp',
-      kind: 'message',
+      name: "off_ramp",
+      kind: "message",
       T: GetAccountInfoResponse_Wallet_OffRamp,
     },
   ]);
@@ -883,7 +901,7 @@ export class GetAccountInfoResponse_Wallet_OnRamp extends Message<GetAccountInfo
    *
    * @generated from field: string payment_reference = 10;
    */
-  paymentReference = '';
+  paymentReference = "";
 
   /**
    * can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
@@ -913,30 +931,30 @@ export class GetAccountInfoResponse_Wallet_OnRamp extends Message<GetAccountInfo
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.GetAccountInfoResponse.Wallet.OnRamp';
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet.OnRamp";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'payment_reference',
-      kind: 'scalar',
+      name: "payment_reference",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 30,
-      name: 'estimated_rate',
-      kind: 'scalar',
+      name: "estimated_rate",
+      kind: "scalar",
       T: 2 /* ScalarType.FLOAT */,
     },
     {
       no: 40,
-      name: 'estimated_network_fee',
-      kind: 'message',
+      name: "estimated_network_fee",
+      kind: "message",
       T: GetAccountInfoResponse_Wallet_Fee,
     },
     {
       no: 50,
-      name: 'processing_fee',
-      kind: 'message',
+      name: "processing_fee",
+      kind: "message",
       T: GetAccountInfoResponse_Wallet_Fee,
     },
   ]);
@@ -994,7 +1012,7 @@ export class GetAccountInfoResponse_Wallet_OffRamp extends Message<GetAccountInf
    *
    * @generated from field: string address = 10;
    */
-  address = '';
+  address = "";
 
   /**
    * can be slightly different as rate is taken at the moment funds hit Harbour wallet / bank account
@@ -1016,19 +1034,19 @@ export class GetAccountInfoResponse_Wallet_OffRamp extends Message<GetAccountInf
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.GetAccountInfoResponse.Wallet.OffRamp';
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet.OffRamp";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 10, name: 'address', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 10, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     {
       no: 30,
-      name: 'estimated_rate',
-      kind: 'scalar',
+      name: "estimated_rate",
+      kind: "scalar",
       T: 2 /* ScalarType.FLOAT */,
     },
     {
       no: 50,
-      name: 'processing_fee',
-      kind: 'message',
+      name: "processing_fee",
+      kind: "message",
       T: GetAccountInfoResponse_Wallet_Fee,
     },
   ]);
@@ -1086,14 +1104,14 @@ export class GetAccountInfoResponse_Wallet_Fee extends Message<GetAccountInfoRes
    *
    * @generated from field: string fix = 10;
    */
-  fix = '';
+  fix = "";
 
   /**
    * percentage part of a fee, could be zero, e.g. 0.50%
    *
    * @generated from field: string percent = 20;
    */
-  percent = '';
+  percent = "";
 
   constructor(data?: PartialMessage<GetAccountInfoResponse_Wallet_Fee>) {
     super();
@@ -1101,10 +1119,10 @@ export class GetAccountInfoResponse_Wallet_Fee extends Message<GetAccountInfoRes
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.GetAccountInfoResponse.Wallet.Fee';
+  static readonly typeName = "ramp.v1.GetAccountInfoResponse.Wallet.Fee";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 10, name: 'fix', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
-    { no: 20, name: 'percent', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 10, name: "fix", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "percent", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(
@@ -1155,7 +1173,7 @@ export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
    *
    * @generated from field: string name = 10;
    */
-  name = '';
+  name = "";
 
   /**
    * Ethereum, Avalanche, Terra and etc.
@@ -1171,7 +1189,7 @@ export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
    *
    * @generated from field: string address = 30;
    */
-  address = '';
+  address = "";
 
   /**
    * address must be derived from the provided public key
@@ -1181,7 +1199,7 @@ export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
    *
    * @generated from field: string public_key = 35;
    */
-  publicKey = '';
+  publicKey = "";
 
   /**
    * the address should be signed with its private key
@@ -1189,7 +1207,7 @@ export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
    *
    * @generated from field: string address_signature = 40;
    */
-  addressSignature = '';
+  addressSignature = "";
 
   constructor(data?: PartialMessage<WhitelistAddressRequest>) {
     super();
@@ -1197,21 +1215,21 @@ export class WhitelistAddressRequest extends Message<WhitelistAddressRequest> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.WhitelistAddressRequest';
+  static readonly typeName = "ramp.v1.WhitelistAddressRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 10, name: 'name', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
-    { no: 20, name: 'protocol', kind: 'enum', T: proto3.getEnumType(Protocol) },
-    { no: 30, name: 'address', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 10, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
+    { no: 30, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     {
       no: 35,
-      name: 'public_key',
-      kind: 'scalar',
+      name: "public_key",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 40,
-      name: 'address_signature',
-      kind: 'scalar',
+      name: "address_signature",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
   ]);
@@ -1261,7 +1279,7 @@ export class WhitelistAddressResponse extends Message<WhitelistAddressResponse> 
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.WhitelistAddressResponse';
+  static readonly typeName = "ramp.v1.WhitelistAddressResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => []);
 
   static fromBinary(
@@ -1313,7 +1331,7 @@ export class RemoveAddressRequest extends Message<RemoveAddressRequest> {
    *
    * @generated from field: string address = 30;
    */
-  address = '';
+  address = "";
 
   constructor(data?: PartialMessage<RemoveAddressRequest>) {
     super();
@@ -1321,15 +1339,15 @@ export class RemoveAddressRequest extends Message<RemoveAddressRequest> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.RemoveAddressRequest';
+  static readonly typeName = "ramp.v1.RemoveAddressRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 20,
-      name: 'ecosystem',
-      kind: 'enum',
+      name: "ecosystem",
+      kind: "enum",
       T: proto3.getEnumType(Ecosystem),
     },
-    { no: 30, name: 'address', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 30, name: "address", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(
@@ -1371,7 +1389,7 @@ export class RemoveAddressResponse extends Message<RemoveAddressResponse> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.RemoveAddressResponse';
+  static readonly typeName = "ramp.v1.RemoveAddressResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => []);
 
   static fromBinary(
@@ -1420,7 +1438,7 @@ export class SetBankAccountRequest extends Message<SetBankAccountRequest> {
          * @generated from field: ramp.v1.ScanCoordinates scan = 10;
          */
         value: ScanCoordinates;
-        case: 'scan';
+        case: "scan";
       }
     | {
         /**
@@ -1429,7 +1447,7 @@ export class SetBankAccountRequest extends Message<SetBankAccountRequest> {
          * @generated from field: ramp.v1.IbanCoordinates iban = 20;
          */
         value: IbanCoordinates;
-        case: 'iban';
+        case: "iban";
       }
     | { case: undefined; value?: undefined } = { case: undefined };
 
@@ -1439,21 +1457,21 @@ export class SetBankAccountRequest extends Message<SetBankAccountRequest> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.SetBankAccountRequest';
+  static readonly typeName = "ramp.v1.SetBankAccountRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'scan',
-      kind: 'message',
+      name: "scan",
+      kind: "message",
       T: ScanCoordinates,
-      oneof: 'bank_account',
+      oneof: "bank_account",
     },
     {
       no: 20,
-      name: 'iban',
-      kind: 'message',
+      name: "iban",
+      kind: "message",
       T: IbanCoordinates,
-      oneof: 'bank_account',
+      oneof: "bank_account",
     },
   ]);
 
@@ -1504,12 +1522,12 @@ export class SetBankAccountResponse extends Message<SetBankAccountResponse> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.SetBankAccountResponse';
+  static readonly typeName = "ramp.v1.SetBankAccountResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'errors',
-      kind: 'enum',
+      name: "errors",
+      kind: "enum",
       T: proto3.getEnumType(SetBankAccountResponse_Error),
       repeated: true,
     },
@@ -1583,11 +1601,11 @@ export enum SetBankAccountResponse_Error {
 // Retrieve enum metadata with: proto3.getEnumType(SetBankAccountResponse_Error)
 proto3.util.setEnumType(
   SetBankAccountResponse_Error,
-  'ramp.v1.SetBankAccountResponse.Error',
+  "ramp.v1.SetBankAccountResponse.Error",
   [
-    { no: 0, name: 'ERROR_UNSPECIFIED' },
-    { no: 1, name: 'ERROR_BANK_CODE_INVALID' },
-    { no: 2, name: 'ERROR_BANK_NUMBER_INVALID' },
+    { no: 0, name: "ERROR_UNSPECIFIED" },
+    { no: 1, name: "ERROR_BANK_CODE_INVALID" },
+    { no: 2, name: "ERROR_BANK_NUMBER_INVALID" },
   ],
 );
 
@@ -1598,7 +1616,7 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
   /**
    * @generated from field: string crypto_asset_id = 10;
    */
-  cryptoAssetId = '';
+  cryptoAssetId = "";
 
   /**
    * @generated from oneof ramp.v1.EstimateOnRampFeeRequest.amount
@@ -1611,7 +1629,7 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
          * @generated from field: string fiat_asset_amount = 20;
          */
         value: string;
-        case: 'fiatAssetAmount';
+        case: "fiatAssetAmount";
       }
     | { case: undefined; value?: undefined } = { case: undefined };
 
@@ -1621,20 +1639,20 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.EstimateOnRampFeeRequest';
+  static readonly typeName = "ramp.v1.EstimateOnRampFeeRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'crypto_asset_id',
-      kind: 'scalar',
+      name: "crypto_asset_id",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 20,
-      name: 'fiat_asset_amount',
-      kind: 'scalar',
+      name: "fiat_asset_amount",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
-      oneof: 'amount',
+      oneof: "amount",
     },
   ]);
 
@@ -1680,40 +1698,40 @@ export class EstimateOnRampFeeResponse extends Message<EstimateOnRampFeeResponse
   /**
    * @generated from field: string crypto_asset_id = 10;
    */
-  cryptoAssetId = '';
+  cryptoAssetId = "";
 
   /**
    * denominated in user's fiat currency
    *
    * @generated from field: string fiat_asset_amount = 20;
    */
-  fiatAssetAmount = '';
+  fiatAssetAmount = "";
 
   /**
    * denominated in crypto_asset
    *
    * @generated from field: string crypto_asset_amount = 30;
    */
-  cryptoAssetAmount = '';
+  cryptoAssetAmount = "";
 
   /**
    * @generated from field: string exchange_rate = 40;
    */
-  exchangeRate = '';
+  exchangeRate = "";
 
   /**
    * denominated in user's fiat currency
    *
    * @generated from field: string network_fee_amount = 50;
    */
-  networkFeeAmount = '';
+  networkFeeAmount = "";
 
   /**
    * denominated in user's fiat currency
    *
    * @generated from field: string processing_fee_amount = 60;
    */
-  processingFeeAmount = '';
+  processingFeeAmount = "";
 
   constructor(data?: PartialMessage<EstimateOnRampFeeResponse>) {
     super();
@@ -1721,42 +1739,42 @@ export class EstimateOnRampFeeResponse extends Message<EstimateOnRampFeeResponse
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.EstimateOnRampFeeResponse';
+  static readonly typeName = "ramp.v1.EstimateOnRampFeeResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'crypto_asset_id',
-      kind: 'scalar',
+      name: "crypto_asset_id",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 20,
-      name: 'fiat_asset_amount',
-      kind: 'scalar',
+      name: "fiat_asset_amount",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 30,
-      name: 'crypto_asset_amount',
-      kind: 'scalar',
+      name: "crypto_asset_amount",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 40,
-      name: 'exchange_rate',
-      kind: 'scalar',
+      name: "exchange_rate",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 50,
-      name: 'network_fee_amount',
-      kind: 'scalar',
+      name: "network_fee_amount",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 60,
-      name: 'processing_fee_amount',
-      kind: 'scalar',
+      name: "processing_fee_amount",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
   ]);
@@ -1803,7 +1821,7 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
   /**
    * @generated from field: string crypto_asset_id = 10;
    */
-  cryptoAssetId = '';
+  cryptoAssetId = "";
 
   /**
    * @generated from oneof ramp.v1.EstimateOffRampFeeRequest.amount
@@ -1816,7 +1834,7 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
          * @generated from field: string crypto_asset_amount = 20;
          */
         value: string;
-        case: 'cryptoAssetAmount';
+        case: "cryptoAssetAmount";
       }
     | { case: undefined; value?: undefined } = { case: undefined };
 
@@ -1826,20 +1844,20 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.EstimateOffRampFeeRequest';
+  static readonly typeName = "ramp.v1.EstimateOffRampFeeRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'crypto_asset_id',
-      kind: 'scalar',
+      name: "crypto_asset_id",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 20,
-      name: 'crypto_asset_amount',
-      kind: 'scalar',
+      name: "crypto_asset_amount",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
-      oneof: 'amount',
+      oneof: "amount",
     },
   ]);
 
@@ -1885,33 +1903,33 @@ export class EstimateOffRampFeeResponse extends Message<EstimateOffRampFeeRespon
   /**
    * @generated from field: string crypto_asset_id = 10;
    */
-  cryptoAssetId = '';
+  cryptoAssetId = "";
 
   /**
    * denominated in user's fiat currency
    *
    * @generated from field: string fiat_asset_amount = 20;
    */
-  fiatAssetAmount = '';
+  fiatAssetAmount = "";
 
   /**
    * denominated in crypto_asset
    *
    * @generated from field: string crypto_asset_amount = 30;
    */
-  cryptoAssetAmount = '';
+  cryptoAssetAmount = "";
 
   /**
    * @generated from field: string exchange_rate = 40;
    */
-  exchangeRate = '';
+  exchangeRate = "";
 
   /**
    * denominated in user's fiat currency
    *
    * @generated from field: string processing_fee_amount = 60;
    */
-  processingFeeAmount = '';
+  processingFeeAmount = "";
 
   constructor(data?: PartialMessage<EstimateOffRampFeeResponse>) {
     super();
@@ -1919,36 +1937,36 @@ export class EstimateOffRampFeeResponse extends Message<EstimateOffRampFeeRespon
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.EstimateOffRampFeeResponse';
+  static readonly typeName = "ramp.v1.EstimateOffRampFeeResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'crypto_asset_id',
-      kind: 'scalar',
+      name: "crypto_asset_id",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 20,
-      name: 'fiat_asset_amount',
-      kind: 'scalar',
+      name: "fiat_asset_amount",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 30,
-      name: 'crypto_asset_amount',
-      kind: 'scalar',
+      name: "crypto_asset_amount",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 40,
-      name: 'exchange_rate',
-      kind: 'scalar',
+      name: "exchange_rate",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
     {
       no: 60,
-      name: 'processing_fee_amount',
-      kind: 'scalar',
+      name: "processing_fee_amount",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
   ]);
@@ -1997,14 +2015,14 @@ export class ScanCoordinates extends Message<ScanCoordinates> {
    *
    * @generated from field: string account_number = 10;
    */
-  accountNumber = '';
+  accountNumber = "";
 
   /**
    * always 6 digits (if using an input mask such as ##-##-##, remove the dashes before submitting)
    *
    * @generated from field: string sort_code = 20;
    */
-  sortCode = '';
+  sortCode = "";
 
   constructor(data?: PartialMessage<ScanCoordinates>) {
     super();
@@ -2012,15 +2030,15 @@ export class ScanCoordinates extends Message<ScanCoordinates> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.ScanCoordinates';
+  static readonly typeName = "ramp.v1.ScanCoordinates";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     {
       no: 10,
-      name: 'account_number',
-      kind: 'scalar',
+      name: "account_number",
+      kind: "scalar",
       T: 9 /* ScalarType.STRING */,
     },
-    { no: 20, name: 'sort_code', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 20, name: "sort_code", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(
@@ -2061,7 +2079,7 @@ export class IbanCoordinates extends Message<IbanCoordinates> {
    *
    * @generated from field: string iban = 10;
    */
-  iban = '';
+  iban = "";
 
   constructor(data?: PartialMessage<IbanCoordinates>) {
     super();
@@ -2069,9 +2087,9 @@ export class IbanCoordinates extends Message<IbanCoordinates> {
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = 'ramp.v1.IbanCoordinates';
+  static readonly typeName = "ramp.v1.IbanCoordinates";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 10, name: 'iban', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 10, name: "iban", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(
