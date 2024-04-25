@@ -31,7 +31,7 @@ import {
   AVALANCHE_FUJI_PARAMS,
   AVALANCHE_MAINNET_PARAMS,
   Erc20Token,
-  ETHEREUM_MAINNET_PARAMS,
+  ETHEREUM_MAINNET_PARAMS, POLYGON_AMOY_PARAMS, POLYGON_MAINNET_PARAMS,
   requestAccounts,
   switchNetwork,
 } from '@/utils';
@@ -103,8 +103,32 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
           ],
         };
         break;
+      case Network.POLYGON_MAINNET:
+        await switchNetwork(POLYGON_MAINNET_PARAMS).catch(
+          handleSwitchNetworkError,
+        );
+        erc20Asset = {
+          address: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
+          abi: [
+            'function balanceOf(address _owner) public view returns (uint256 balance)',
+            'function transfer(address _to, uint256 _value) public returns (bool success)',
+          ],
+        };
+        break;
+      case Network.POLYGON_AMOY:
+        await switchNetwork(POLYGON_AMOY_PARAMS).catch(
+          handleSwitchNetworkError,
+        );
+        erc20Asset = {
+          address: '0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582',
+          abi: [
+            'function balanceOf(address _owner) public view returns (uint256 balance)',
+            'function transfer(address _to, uint256 _value) public returns (bool success)',
+          ],
+        };
+        break;
       default:
-        throw `unsupported network: ${offRampAsset?.asset?.network}`;
+        throw ` unsupported network: ${offRampAsset?.asset?.network}`;
     }
 
     if (!(await provider.hasSigner(selectedWallet!.address))) {

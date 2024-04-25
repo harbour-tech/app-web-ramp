@@ -42,9 +42,33 @@ export const AVALANCHE_FUJI_PARAMS: NetworkParams = {
   blockExplorerUrls: ['https://testnet.snowtrace.io/'],
 };
 
+export const POLYGON_MAINNET_PARAMS: NetworkParams = {
+  chainId: '0x89',
+  chainName: 'Polygon Amoy',
+  nativeCurrency: {
+    name: 'Matic Polygon',
+    symbol: 'MATIC',
+    decimals: 18,
+  },
+  rpcUrls: ['https://polygon-rpc.com/'],
+  blockExplorerUrls: ['https://polygonscan.com/'],
+};
+
+export const POLYGON_AMOY_PARAMS: NetworkParams = {
+  chainId: '0x13882',
+  chainName: 'Polygon Amoy',
+  nativeCurrency: {
+    name: 'Matic Polygon',
+    symbol: 'MATIC',
+    decimals: 18,
+  },
+  rpcUrls: ['https://rpc-amoy.polygon.technology/'],
+  blockExplorerUrls: ['https://www.oklink.com/amoy'],
+};
+
 export async function switchNetwork(params: NetworkParams) {
   try {
-    await window.ethereum.request({
+    await window.ethereum.requeяst({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: params.chainId }],
     });
