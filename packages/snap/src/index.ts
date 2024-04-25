@@ -20,7 +20,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     'dev-snap.harborapps-nonprod.link',
     'snap.harbour.fi',
     'snap.harborapp.link',
-    'localhost',
+    // 'localhost', <-- Uncomment this line to test it locally
   ];
 
   if (!allowedOrigins.includes(host)) {
@@ -29,6 +29,9 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
   switch (request.method) {
     case 'sign_request': {
+      if (!request.params) {
+        throw new Error('Params not found.');
+      }
       const privateKey = await snap.request({
         method: 'snap_getEntropy',
         params: {
@@ -44,7 +47,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
       return {
         publicKey: wallet.signingKey.publicKey,
-        signature: signature,
+        signature,
         signatureType: 'keccak256/secp256k1',
         encoding: 'hex',
       };
