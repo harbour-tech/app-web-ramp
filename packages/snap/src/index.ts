@@ -15,6 +15,18 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
+  const host = new URL(origin).hostname;
+  const allowedOrigins = [
+    'dev-snap.harborapps-nonprod.link',
+    'snap.harbour.fi',
+    'snap.harborapp.link',
+    'localhost',
+  ];
+
+  if (!allowedOrigins.includes(host)) {
+    throw new Error(`Origin not allowed. Current origin hostname: ${host}`);
+  }
+
   switch (request.method) {
     case 'sign_request': {
       const privateKey = await snap.request({

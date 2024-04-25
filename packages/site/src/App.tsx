@@ -27,14 +27,15 @@ import { RocketIcon } from 'lucide-react';
 import splash from '@/assets/splash.png';
 import { toast } from 'react-toastify';
 import { keccak256, SigningKey } from 'ethers';
+import { useOnboardingModal } from '@/contexts/OnboardingModal/useOnboardingModal';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
   [Protocol.AVAX, Protocol.AVAX],
 ]);
 
-function App() {
-  const [isOnboardingVisible, setIsOnboardingVisible] = useState(true);
+const App = () => {
+  const { openOnboardingModal } = useOnboardingModal();
   const [metamask, metamaskDispatch] = useMetaMask();
   const rampClient = useRampClient();
   const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(
@@ -188,11 +189,17 @@ function App() {
         <div className="grid justify-items-center">
           <Alert className="mt-10 sm:max-w-[700px]">
             <RocketIcon className="h-4 w-4" />
-            <AlertTitle>This is private beta</AlertTitle>
-            <AlertDescription>
-              We are working hard on the letting magic happen. We strongly
-              encourage you to come back later. See you soon!
-            </AlertDescription>
+            <Button
+              onClick={() => {
+                accountInfo?.result.case == 'authentication'
+                  ? openOnboardingModal(
+                      accountInfo.result.value.authenticationUrl,
+                    )
+                  : null;
+              }}
+            >
+              Start onboarding
+            </Button>
           </Alert>
         </div>
       );
@@ -279,7 +286,7 @@ function App() {
       {content}
     </div>
   );
-}
+};
 
 export default App;
 

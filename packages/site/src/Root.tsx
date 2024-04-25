@@ -1,74 +1,12 @@
-import {
-  type FunctionComponent,
-  PropsWithChildren,
-  useState,
-  useEffect,
-} from 'react';
+import { type FunctionComponent, PropsWithChildren } from 'react';
 import { RampClientProvider } from '@/hooks/useRpc';
 import { MetaMaskProvider } from '@/hooks/useMetaMask';
 import App from '@/App';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { OnboardingModalProvider } from '@/contexts/OnboardingModal/OnboardingModalContext';
 
 export const Root: FunctionComponent<PropsWithChildren> = () => {
-  const [isOnboardingVisible, setIsOnboardingVisible] = useState(false);
-  const [url, setUrl] = useState<string | null>(null);
-  const [isOnboardingLoading, setIsOnboardingLoading] = useState(false);
-
-  const onMessage = (payload: MessageEvent<unknown>) => {
-    if (!payload.origin.includes(window.location.host)) {
-      const data = payload.data;
-      if (data === 'onboardingFinished') {
-        setIsOnboardingVisible(false);
-        // TODO nav to next screen
-        // navigation.navigate('ChoosePin', { path: AuthPath.SignIn });
-      }
-      if (data === 'existingUserIdentityConfirmationFailed') {
-        setIsOnboardingVisible(false);
-      }
-      if (data === 'closeWebOnboarding') {
-        setIsOnboardingVisible(false);
-      }
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('message', onMessage);
-    return () => {
-      window.removeEventListener('message', onMessage);
-    };
-  }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setUrl(
-        'https://dev-onboarding.harborapps-nonprod.link?token=eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhdXRoX3N2YyIsInN1YiI6ImRldmljZSIsImV4cCI6MTcxMzUzODEyNiwiaWF0IjoxNzEzNTI3Mjk2LCJ1c2VyX2lkIjoiIiwiZGV2aWNlX2lkIjoiY2VmZTNlY2ItZTNhYy00YzQzLWIxYTktY2UzNTdiNjVlMWUzIiwidXNlcl9zdGF0dXMiOiIifQ.AUkdH1y912oApYKD0Iigq5qO3DVUOhCaYwcSC7ub5fLtl-sPDg4arDyGO1x5386K7CVgZMwmR_zaopYHC8wfC9VpAUOs2Gh5hE2XbNki9YTQNYCkFzJqsKqoZZq_EehnqXeIWHoKR4euZwwof-hXXGm4Dtq7o7-ixPZop9rZ4iXS-xXp',
-      );
-      setIsOnboardingVisible(true);
-    }, 4000);
-  }, []);
-
   return (
-    <>
-      <div
-        className={`absolute w-[100vw] h-[100vh] transition-all duration-1000 ease-in-out bg-black bg-opacity-30 z-10 backdrop-blur-sm flex justify-center items-center
-      ${isOnboardingVisible ? '!opacity-100' : 'opacity-0 -translate-y-full '}
-      `}
-      >
-        <div className="h-full max-h-[812px] w-[375px] relative rounded-xl overflow-hidden border-[1px] border-white">
-          {isOnboardingLoading && (
-            <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 z-0 flex justify-center items-center">
-              <LoadingSpinner className="w-[50px] h-[50px]" />
-            </div>
-          )}
-          {url && (
-            <iframe
-              className="h-full max-h-[812px] w-[375px] bg-transparent"
-              src={url}
-              onLoad={() => setIsOnboardingLoading(false)}
-            />
-          )}
-        </div>
-      </div>
+    <OnboardingModalProvider>
       <div className="container">
         <div className="flex justify-center items-end  gap-2 pt-8">
           <section className="max-w-[680px] flex-col items-center">
@@ -132,6 +70,6 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
           </RampClientProvider>
         </MetaMaskProvider>
       </div>
-    </>
+    </OnboardingModalProvider>
   );
 };
