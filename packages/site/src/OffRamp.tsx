@@ -128,7 +128,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         };
         break;
       default:
-        throw ` unsupported network: ${offRampAsset?.asset?.network}`;
+        throw `unsupported network: ${offRampAsset?.asset?.network}`;
     }
 
     if (!(await provider.hasSigner(selectedWallet!.address))) {
