@@ -2,8 +2,8 @@
 DEV_BUCKET="harbour-site-dev-snap-e89f141"
 DEV_DIST_ID="E2J5FXIGVU5J0B"
 # PROD environment
-PROD_BUCKET="harbour-site-snap-ff93849"
-PROD_DIST_ID="E1GQ4SV71XWELP"
+PROD_BUCKET="site-snap-harbour-fi-013e336"
+PROD_DIST_ID="E2LTT3YBWEFXKV"
 
 
 .PHONY: app/deploy/dev

@@ -32,6 +32,7 @@ import { useOnboardingModal } from '@/contexts/OnboardingModal';
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
   [Protocol.AVAX, Protocol.AVAX],
+  [Protocol.POLYGON, Protocol.POLYGON],
 ]);
 
 const App = () => {
@@ -191,7 +192,7 @@ const App = () => {
     if (accountInfo?.result.case == 'authentication') {
       return (
         <div className="grid justify-items-center">
-          <Alert className="mt-10 sm:max-w-[700px]">
+          <Alert className="mt-10 sm:max-w-[700px] flex justify-center">
             <Button
               onClick={() => {
                 accountInfo?.result.case == 'authentication'
@@ -211,7 +212,7 @@ const App = () => {
     if (accountInfo?.result.case == 'account') {
       return (
         <Tabs defaultValue="onramp" className="grid gap-4">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid grid-cols-2 w-[343px] place-self-center">
             <TabsTrigger value="onramp">On Ramp</TabsTrigger>
             <TabsTrigger value="offramp">Off Ramp</TabsTrigger>
           </TabsList>
@@ -221,7 +222,7 @@ const App = () => {
               onAddWallet={handleAddWallet}
             ></OnRamp>
           </TabsContent>
-          <TabsContent value="offramp" className="grid gap-4">
+          <TabsContent value="offramp">
             <OffRamp
               account={accountInfo.result.value}
               onAddWallet={handleAddWallet}
@@ -234,7 +235,7 @@ const App = () => {
 
     return (
       <div className="grid justify-items-center">
-        <Alert className="mt-10 sm:max-w-[700px]">
+        <Alert className="mt-2 sm:max-w-[700px]">
           <RocketIcon className="h-4 w-4" />
           <AlertTitle>Please open MetaMask</AlertTitle>
           <AlertDescription>
@@ -251,12 +252,12 @@ const App = () => {
   ]);
 
   return (
-    <div>
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">
+    <>
+      <div className="max-w-[430px] mt-4">
+        <h3 className="heading3 mb-2">
           Say goodbye to the hassle and costs of on and off ramping
-        </h2>
-        <p className="text-muted-foreground">
+        </h3>
+        <p className="text-muted-foreground caption1">
           Experience seamless transfers between your bank account and MetaMask
           wallet with Harbour
         </p>
@@ -280,15 +281,17 @@ const App = () => {
       <div>
         {!metamask.installedSnap && (
           <>
-            <Button onClick={handleConnectClick}>Install Snap</Button>
-            <div className="flex justify-center">
-              <img width="600" src={splash} className="mt-8" />
+            <Button variant={'primary'} onClick={handleConnectClick}>
+              Enable Magic Ramping
+            </Button>
+            <div className="flex justify-end">
+              <img width="820" src={splash} className="-mt-40" />
             </div>
           </>
         )}
       </div>
       {content}
-    </div>
+    </>
   );
 };
 

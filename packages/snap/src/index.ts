@@ -20,7 +20,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     'dev-snap.harborapps-nonprod.link',
     'snap.harbour.fi',
     'snap.harborapp.link',
-    // 'localhost', <-- Uncomment this line to test it locally
+    'localhost', // Uncomment this line to test it locally
   ];
 
   if (!allowedOrigins.includes(host)) {

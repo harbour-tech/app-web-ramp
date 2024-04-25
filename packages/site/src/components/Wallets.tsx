@@ -64,12 +64,12 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
   };
 
   return (
-    <Card className="shadow">
-      <CardHeader className="pb-3">
+    <Card>
+      <CardHeader>
         <CardTitle>Wallet</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-1">
+      <CardContent>
         {wallets
           .filter((w) => w.protocol == protocol)
           .map((wallet) => (
@@ -94,6 +94,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
                           [Protocol.ETHEREUM]: 'Ethereum',
                           [Protocol.AVAX]: 'Avalance',
                           [Protocol.TERRA]: 'Terra',
+                          [Protocol.POLYGON]: 'Polygon',
                         }[wallet.protocol]
                       }
                     </p>
@@ -246,7 +247,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" variant="default" onClick={handleAdd}>
+              <Button type="button" variant="primary" onClick={handleAdd}>
                 Add wallet
               </Button>
             </DialogFooter>
