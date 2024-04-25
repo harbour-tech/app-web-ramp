@@ -200,7 +200,7 @@ function App() {
     if (accountInfo?.result.case == 'account') {
       return (
         <Tabs defaultValue="onramp" className="grid gap-4">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid grid-cols-2 w-[343px] place-self-center">
             <TabsTrigger value="onramp">On Ramp</TabsTrigger>
             <TabsTrigger value="offramp">Off Ramp</TabsTrigger>
           </TabsList>
@@ -210,7 +210,7 @@ function App() {
               onAddWallet={handleAddWallet}
             ></OnRamp>
           </TabsContent>
-          <TabsContent value="offramp" className="grid gap-4">
+          <TabsContent value="offramp">
             <OffRamp
               account={accountInfo.result.value}
               onAddWallet={handleAddWallet}
