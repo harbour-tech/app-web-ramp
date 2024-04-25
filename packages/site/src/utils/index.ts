@@ -44,7 +44,7 @@ export const AVALANCHE_FUJI_PARAMS: NetworkParams = {
 
 export const POLYGON_MAINNET_PARAMS: NetworkParams = {
   chainId: '0x89',
-  chainName: 'Polygon Amoy',
+  chainName: 'Polygon Mainnet',
   nativeCurrency: {
     name: 'Matic Polygon',
     symbol: 'MATIC',
