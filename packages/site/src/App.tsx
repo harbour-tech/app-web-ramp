@@ -27,7 +27,7 @@ import { RocketIcon } from 'lucide-react';
 import splash from '@/assets/splash.png';
 import { toast } from 'react-toastify';
 import { keccak256, SigningKey } from 'ethers';
-import { useOnboardingModal } from '@/contexts/OnboardingModal/useOnboardingModal';
+import { useOnboardingModal } from '@/contexts/OnboardingModal';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
@@ -35,7 +35,7 @@ const SupportedNetworks = new Map<Protocol, Protocol>([
 ]);
 
 const App = () => {
-  const { openOnboardingModal } = useOnboardingModal();
+  const { openOnboardingModal, setOnFinishCallback } = useOnboardingModal();
   const [metamask, metamaskDispatch] = useMetaMask();
   const rampClient = useRampClient();
   const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(
@@ -94,6 +94,10 @@ const App = () => {
       load();
     }
   }, [metamask.installedSnap, rampClient]);
+
+  useEffect(() => {
+    setOnFinishCallback(() => load());
+  }, []);
 
   const handleConnectClick = async () => {
     try {
@@ -188,7 +192,6 @@ const App = () => {
       return (
         <div className="grid justify-items-center">
           <Alert className="mt-10 sm:max-w-[700px]">
-            <RocketIcon className="h-4 w-4" />
             <Button
               onClick={() => {
                 accountInfo?.result.case == 'authentication'
@@ -198,7 +201,8 @@ const App = () => {
                   : null;
               }}
             >
-              Start onboarding
+              <RocketIcon className="h-4 w-4 mr-2 stroke-white" /> Start
+              onboarding
             </Button>
           </Alert>
         </div>

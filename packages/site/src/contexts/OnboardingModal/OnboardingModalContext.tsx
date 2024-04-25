@@ -1,8 +1,10 @@
 import { LoadingSpinner } from '@/components/LoadingSpinner';
-import { ReactNode, createContext, useEffect, useState } from 'react';
+import { ReactNode, createContext, useEffect, useRef, useState } from 'react';
 
 interface OnboardingModalContextType {
   openOnboardingModal: (url: string) => void;
+  setOnFinishCallback: (callback: () => void) => void;
+  closeOnboardingModal: () => void;
 }
 
 export const OnboardingModalContext = createContext<OnboardingModalContextType>(
@@ -15,6 +17,7 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
   const [isOnboardingVisible, setIsOnboardingVisible] = useState(false);
   const [isOnboardingLoading, setIsOnboardingLoading] = useState(false);
   const [url, setUrl] = useState<string | null>(null);
+  const callbackRef = useRef<() => void>();
 
   const onMessage = (payload: MessageEvent<unknown>) => {
     if (!payload.origin.includes(window.location.host)) {
@@ -22,7 +25,6 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
       if (data === 'onboardingFinished') {
         setIsOnboardingVisible(false);
         // TODO nav to next screen
-        // navigation.navigate('ChoosePin', { path: AuthPath.SignIn });
       }
       if (data === 'existingUserIdentityConfirmationFailed') {
         setIsOnboardingVisible(false);
@@ -30,6 +32,7 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
       if (data === 'closeWebOnboarding') {
         setIsOnboardingVisible(false);
       }
+      callbackRef.current?.();
     }
   };
 
@@ -46,8 +49,19 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
     setIsOnboardingVisible(true);
   };
 
+  const setOnFinishCallback = (callback?: () => void) => {
+    callbackRef.current = callback;
+  };
+
+  const closeOnboardingModal = () => {
+    setIsOnboardingVisible(false);
+    setUrl(null);
+  };
+
   return (
-    <OnboardingModalContext.Provider value={{ openOnboardingModal }}>
+    <OnboardingModalContext.Provider
+      value={{ openOnboardingModal, setOnFinishCallback, closeOnboardingModal }}
+    >
       <div
         className={`absolute w-[100vw] h-[100vh] transition-all duration-1000 ease-in-out bg-black bg-opacity-30 z-10 backdrop-blur-sm flex justify-center items-center
       ${isOnboardingVisible ? '!opacity-100' : 'opacity-0 -translate-y-full '}
