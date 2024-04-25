@@ -254,7 +254,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         <>
           <div className="basis-1/3 grid gap-4"></div>
           <div className="basis-1/3 grid gap-4">
-            <Card className="shadow">
+            <Card>
               <CardHeader className="pb-3">
                 <CardTitle>Setup your bank account</CardTitle>
                 <CardDescription>
@@ -304,15 +304,15 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
           </div>
           <div className="basis-1/3">
             {offRampAsset && (
-              <Card className="shadow">
-                <CardHeader className="pb-3">
+              <Card>
+                <CardHeader>
                   <CardTitle>Crypto Transactions Details</CardTitle>
                   <CardDescription>
                     Step 3: Just enter amount and confirm transaction with
                     MetaMask.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-4">
+                <CardContent>
                   <div className="w-full max-w-sm items-center">
                     <Label htmlFor="amount">
                       Amount {offRampAsset!.asset?.shortName}

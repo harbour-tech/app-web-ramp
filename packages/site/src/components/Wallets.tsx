@@ -64,12 +64,12 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
   };
 
   return (
-    <Card className="shadow">
-      <CardHeader className="pb-3">
+    <Card>
+      <CardHeader>
         <CardTitle>Wallet</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-1">
+      <CardContent>
         {wallets
           .filter((w) => w.protocol == protocol)
           .map((wallet) => (

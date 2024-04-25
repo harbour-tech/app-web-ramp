@@ -115,15 +115,15 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
 
       <div className="basis-1/3">
         {onRampAsset && (
-          <Card className="shadow">
-            <CardHeader className="pb-3">
+          <Card>
+            <CardHeader>
               <CardTitle>Magic Ramp Details</CardTitle>
               <CardDescription>
                 Step 3: Transfer {currency} to these details to receive{' '}
                 {onRampAsset.asset!.shortName} on your selected wallet.
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4">
+            <CardContent>
               {account.onrampBankAccount.case && (
                 <BankAccountComponent account={getOnRampBankAccount()} />
               )}

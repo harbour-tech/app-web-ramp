@@ -36,12 +36,12 @@ export const Assets: FunctionComponent<AssetsProps> = ({
   };
 
   return (
-    <Card className="shadow">
-      <CardHeader className="pb-3">
+    <Card>
+      <CardHeader>
         <CardTitle>Asset</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-1">
+      <CardContent>
         {assets.map((asset) => (
           <div
             key={asset!.shortName}
