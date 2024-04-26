@@ -7,7 +7,7 @@
     "url": "https://github.com/harbour-tech/app-web-ramp.git"
   },
   "source": {
-    "shasum": "/1EDVXQFtp16tOznqJ93ScPvgq5pHhrO5qKWP5gGzP4=",
+    "shasum": "mkO867X3xDpg0/8VdAGT1Oyrl7uObjJB8Lh+h9qEw18=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

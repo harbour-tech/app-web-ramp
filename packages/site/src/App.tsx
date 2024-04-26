@@ -27,6 +27,7 @@ import { RocketIcon } from 'lucide-react';
 import splash from '@/assets/splash.png';
 import { toast } from 'react-toastify';
 import { keccak256, SigningKey } from 'ethers';
+import { useOnboardingModal } from '@/contexts/OnboardingModal';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
@@ -34,7 +35,8 @@ const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.POLYGON, Protocol.POLYGON],
 ]);
 
-function App() {
+const App = () => {
+  const { openOnboardingModal, setOnFinishCallback } = useOnboardingModal();
   const [metamask, metamaskDispatch] = useMetaMask();
   const rampClient = useRampClient();
   const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(
@@ -93,6 +95,10 @@ function App() {
       load();
     }
   }, [metamask.installedSnap, rampClient]);
+
+  useEffect(() => {
+    setOnFinishCallback(() => load());
+  }, []);
 
   const handleConnectClick = async () => {
     try {
@@ -186,13 +192,19 @@ function App() {
     if (accountInfo?.result.case == 'authentication') {
       return (
         <div className="grid justify-items-center">
-          <Alert className="mt-10 sm:max-w-[700px]">
-            <RocketIcon className="h-4 w-4" />
-            <AlertTitle>This is private beta</AlertTitle>
-            <AlertDescription>
-              We are working hard on the letting magic happen. We strongly
-              encourage you to come back later. See you soon!
-            </AlertDescription>
+          <Alert className="mt-10 sm:max-w-[700px] flex justify-center">
+            <Button
+              onClick={() => {
+                accountInfo?.result.case == 'authentication'
+                  ? openOnboardingModal(
+                      accountInfo.result.value.authenticationUrl,
+                    )
+                  : null;
+              }}
+            >
+              <RocketIcon className="h-4 w-4 mr-2 stroke-white" /> Start
+              onboarding
+            </Button>
           </Alert>
         </div>
       );
@@ -281,7 +293,7 @@ function App() {
       {content}
     </>
   );
-}
+};
 
 export default App;
 

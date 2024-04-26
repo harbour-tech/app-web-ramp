@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import type { OnRpcRequestHandler } from '@metamask/snaps-sdk';
 import { keccak256, toUtf8Bytes, Wallet } from 'ethers';
 
@@ -15,8 +16,18 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
+  const host = new URL(origin).hostname;
+  const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') ?? [];
+
+  if (!allowedOrigins.includes(host)) {
+    throw new Error(`Origin not allowed. Current origin hostname: ${host}`);
+  }
+
   switch (request.method) {
     case 'sign_request': {
+      if (!request.params) {
+        throw new Error('Params not found.');
+      }
       const privateKey = await snap.request({
         method: 'snap_getEntropy',
         params: {
@@ -32,7 +43,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
       return {
         publicKey: wallet.signingKey.publicKey,
-        signature: signature,
+        signature,
         signatureType: 'keccak256/secp256k1',
         encoding: 'hex',
       };

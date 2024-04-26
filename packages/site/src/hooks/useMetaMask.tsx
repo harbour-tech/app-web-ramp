@@ -14,7 +14,7 @@ import { detectSnaps, getSnap, isFlask } from '../utils';
 export type MetamaskState = {
   snapsDetected: boolean;
   isFlask: boolean;
-  installedSnap?: Snap;
+  installedSnap?: Snap | Promise<boolean>;
   error?: Error;
 };
 
@@ -23,6 +23,7 @@ const initialState: MetamaskState = {
   isFlask: false,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MetamaskDispatch = { type: MetamaskActions; payload: any };
 
 export const UseMetaMask = createContext<
@@ -89,9 +90,6 @@ const reducer: Reducer<MetamaskState, MetamaskDispatch> = (state, action) => {
  */
 export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  if (typeof window === 'undefined') {
-    return <>{children}</>;
-  }
 
   // Find MetaMask Provider and search for Snaps
   // Also checks if MetaMask version is Flask
@@ -149,6 +147,10 @@ export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
       }
     };
   }, [state.error]);
+
+  if (typeof window === 'undefined') {
+    return <>{children}</>;
+  }
 
   return (
     <UseMetaMask.Provider value={[state, dispatch]}>
