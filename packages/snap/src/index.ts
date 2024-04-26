@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import type { OnRpcRequestHandler } from '@metamask/snaps-sdk';
 import { keccak256, toUtf8Bytes, Wallet } from 'ethers';
 
@@ -16,12 +17,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   request,
 }) => {
   const host = new URL(origin).hostname;
-  const allowedOrigins = [
-    'dev-snap.harborapps-nonprod.link',
-    'snap.harbour.fi',
-    'snap.harborapp.link',
-    // 'localhost', // Uncomment this line to test it locally
-  ];
+  const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') ?? [];
 
   if (!allowedOrigins.includes(host)) {
     throw new Error(`Origin not allowed. Current origin hostname: ${host}`);
