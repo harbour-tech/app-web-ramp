@@ -18,8 +18,6 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
 import { BankAccount } from '@/types/bankAccount';
-import { CopyIcon } from 'lucide-react';
-import { toast } from 'react-toastify';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -74,21 +72,6 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     iban: 'EUR',
     scan: 'GBP',
   }[getOnRampBankAccount().case];
-  const textToCopyRef = useRef<HTMLInputElement | null>(null);
-  const copyToClipboard = () => {
-    if (textToCopyRef.current) {
-      textToCopyRef.current.select();
-      navigator.clipboard.writeText(textToCopyRef.current.value).then(
-        () => {
-          toast.success('Payment Reference copied to clipboard');
-        },
-        (error) => {
-          toast.success(`Unable to copy to clipboard, ${error}`);
-        },
-      );
-      window.getSelection()?.removeAllRanges();
-    }
-  };
 
   return (
     <div className="flex items-start gap-8">
@@ -148,11 +131,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       id="ref"
                       readOnly={true}
                       value={onRampAsset!.onRamp!.paymentReference}
-                      ref={textToCopyRef}
-                    />
-                    <CopyIcon
-                      onClick={copyToClipboard}
-                      className="cursor-pointer"
+                      withCopyToClipboard
                     />
                   </div>
                 )}

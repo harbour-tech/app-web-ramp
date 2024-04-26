@@ -1,47 +1,96 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import CopyIcon from '@/assets/copyIcon.svg';
+import { toast } from 'react-toastify';
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   validate?: (value: string) => string | null;
+  withCopyToClipboard?: boolean;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, validate, ...props }, ref) => {
+  (
+    { className, type, validate, withCopyToClipboard, ...props },
+    forwardedRef,
+  ) => {
     const [value, setValue] = React.useState('');
     const [error, setError] = React.useState<string | null>(null);
+    const internalRef = React.useRef<HTMLInputElement>(null);
+    const ref = forwardedRef ?? internalRef;
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      setValue(value);
-      validate && setError(validate(value));
+      const newValue = event.target.value;
+      setValue(newValue);
+      if (validate) {
+        setError(validate(newValue));
+      }
     };
 
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      validate && setError(validate(value));
+      const newValue = event.target.value;
+      if (validate) {
+        setError(validate(newValue));
+      }
+    };
+
+    const copyToClipboard = () => {
+      if ('current' in ref && ref.current) {
+        const input = ref.current;
+        input.focus();
+        input.select();
+        navigator.clipboard.writeText(input.value).then(
+          () => {
+            toast.success('Content copied to clipboard');
+          },
+          (error) => {
+            toast.error(`Unable to copy to clipboard: ${error}`);
+          },
+        );
+        window.getSelection()?.removeAllRanges();
+      }
     };
 
     return (
       <div className="flex-row w-full">
-        <input
-          type={type}
-          value={value}
-          onInput={handleInput}
-          onBlur={handleBlur}
-          className={cn(
-            'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-            className,
-            error && 'border-red',
-          )}
-          ref={ref}
-          {...props}
-        />
+        <div className="rounded-md p-px bg-gray-glass">
+          <div
+            className={cn(
+              'flex items-center w-full rounded-md bg-light-glass shadow-inner px-2',
+              className,
+              error && 'border border-red',
+            )}
+          >
+            <input
+              type={type}
+              value={value}
+              onInput={handleInput}
+              onBlur={handleBlur}
+              className={cn(
+                'flex h-10 w-full rounded-md bg-transparent px-3 py-2 body2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+                className,
+                error &&
+                  'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
+              )}
+              ref={ref}
+              {...props}
+            />
+            {withCopyToClipboard && (
+              <img
+                width={16}
+                src={CopyIcon}
+                onClick={copyToClipboard}
+                className="cursor-pointer mx-2"
+              />
+            )}
+          </div>
+        </div>
         {error && <p className="text-red text-xs mt-1 flex w-full">{error}</p>}
       </div>
     );
   },
 );
+
 Input.displayName = 'Input';
 
 export { Input };
