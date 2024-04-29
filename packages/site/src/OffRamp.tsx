@@ -7,7 +7,7 @@ import {
   Network,
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
-import React, { FunctionComponent, useRef, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { Wallet, Wallets } from '@/components/Wallets';
 import { Assets } from '@/components/Assets';
 import {
@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
 import BankAccount from '@/types/bankAccount';
-import { CopyIcon, WalletIcon } from 'lucide-react';
+import { WalletIcon } from 'lucide-react';
 import { ethers, parseUnits } from 'ethers';
 import Metamask from '@/assets/metamask.svg';
 import { toast } from 'react-toastify';
@@ -259,21 +259,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     return null;
   };
 
-  const textToCopyRef = useRef<HTMLInputElement | null>(null);
-  const copyToClipboard = () => {
-    if (textToCopyRef.current) {
-      textToCopyRef.current.select();
-      navigator.clipboard.writeText(textToCopyRef.current.value).then(
-        () => {
-          toast.success('Address copied to clipboard');
-        },
-        (error) => {
-          toast.success(`Unable to copy to clipboard, ${error}`);
-        },
-      );
-      window.getSelection()?.removeAllRanges();
-    }
-  };
   return (
     <div className="flex items-start gap-8 mb-10">
       {needSetBankAccount && (
@@ -379,15 +364,10 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   </div>
                 </CardContent>
                 <CardFooter className="grid gap-4">
-                  <div className="relative m-2">
-                    <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t"></span>
-                    </div>
-                    <div className="relative flex justify-center text-xs">
-                      <span className="bg-background px-2 text-muted-foreground">
-                        or
-                      </span>
-                    </div>
+                  <div className="flex items-center">
+                    <div className="w-full h-px bg-muted-foreground" />
+                    <span className="px-2 text-muted-foreground">or</span>
+                    <div className="w-full h-px bg-muted-foreground" />
                   </div>
 
                   <div className="flex items-center space-x-4 rounded-md border p-4">
@@ -411,20 +391,15 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                     <Label htmlFor="address">
                       Magic Ramp address for {offRampAsset.asset?.shortName}
                     </Label>
-                    <div className="flex items-center gap-4">
-                      <Input
-                        type="text"
-                        id="address"
-                        placeholder="address"
-                        readOnly={true}
-                        value={offRampAsset.offRamp?.address}
-                        ref={textToCopyRef}
-                      />
-                      <CopyIcon
-                        onClick={copyToClipboard}
-                        className="cursor-pointer"
-                      />
-                    </div>
+                    <div className="flex items-center gap-4"></div>
+                    <Input
+                      type="text"
+                      id="address"
+                      placeholder="address"
+                      readOnly={true}
+                      value={offRampAsset.offRamp?.address}
+                      withCopyToClipboard
+                    />
                   </div>
                 </CardFooter>
               </Card>
