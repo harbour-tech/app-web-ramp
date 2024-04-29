@@ -10,6 +10,12 @@ import { CircleDollarSignIcon } from 'lucide-react';
 
 import { GetAccountInfoResponse_CryptoAsset } from '@/harbour/gen/ramp/v1/public_pb';
 import { cn } from '@/lib/utils';
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@/components/ui/tooltip';
 
 export interface AssetsProps {
   assets: GetAccountInfoResponse_CryptoAsset[];
