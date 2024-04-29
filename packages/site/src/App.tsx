@@ -274,9 +274,9 @@ const App = () => {
             </a>
           </Button>
         )}
-        {shouldDisplayReconnectButton(metamask.installedSnap) && (
-          <Button onClick={handleConnectClick}>Reconnect Snap</Button>
-        )}
+        {shouldDisplayReconnectButton(
+          metamask.installedSnap as unknown as Snap,
+        ) && <Button onClick={handleConnectClick}>Reconnect Snap</Button>}
       </div>
       <div>
         {!metamask.installedSnap && (
