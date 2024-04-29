@@ -26,6 +26,7 @@
     "test": " npm run test --workspace=packages/snap"
   },
   "dependencies": {
+    "@radix-ui/react-tooltip": "^1.0.7",
     "react-toastify": "^10.0.5"
   },
   "devDependencies": {
