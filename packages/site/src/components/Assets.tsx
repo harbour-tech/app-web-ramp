@@ -6,10 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { CircleDollarSignIcon } from 'lucide-react';
+import { BusIcon, CircleDollarSignIcon } from 'lucide-react';
 
 import { GetAccountInfoResponse_CryptoAsset } from '@/harbour/gen/ramp/v1/public_pb';
 import { cn } from '@/lib/utils';
+import {
+  SelectAsset,
+  SelectAssetContent,
+  SelectAssetItem,
+  SelectAssetTrigger,
+  SelectAssetValue,
+} from './ui/selectAsset';
 
 export interface AssetsProps {
   assets: GetAccountInfoResponse_CryptoAsset[];
@@ -59,6 +66,35 @@ export const Assets: FunctionComponent<AssetsProps> = ({
             </div>
           </div>
         ))}
+        <SelectAsset>
+          <SelectAssetTrigger className="w-[280px]">
+            <SelectAssetValue placeholder="Theme" />
+          </SelectAssetTrigger>
+          <SelectAssetContent>
+            <SelectAssetItem value="light">
+              <BusIcon /> Light
+            </SelectAssetItem>
+            <SelectAssetItem value="dark">Dark</SelectAssetItem>
+            <SelectAssetItem value="system">System</SelectAssetItem>
+            {assets.map((asset) => (
+              <div
+                key={asset!.shortName}
+                className={cn(
+                  '-mx-2 flex space-x-4 rounded-md p-2 transition-all items-center cursor-pointer',
+                  style(asset),
+                )}
+                onClick={() => handleClick(asset)}
+              >
+                <CircleDollarSignIcon className="h-5 w-5" />{' '}
+                {/*TODO: map asset onto icon*/}
+                <div className="space-y-1 flex items-center">
+                  <p className="text-sm font-medium">{asset.shortName}</p>
+                  <p className="text-sm text-muted-foreground"></p>
+                </div>
+              </div>
+            ))}
+          </SelectAssetContent>
+        </SelectAsset>
       </CardContent>
     </Card>
   );
