@@ -11,7 +11,7 @@ import type {
   PartialMessage,
   PlainMessage,
 } from "@bufbuild/protobuf";
-import { Message, proto3 } from "@bufbuild/protobuf";
+import { Message, proto3, protoInt64 } from "@bufbuild/protobuf";
 
 /**
  * @generated from enum ramp.v1.Ecosystem
@@ -392,6 +392,14 @@ export class GetAccountInfoResponse_Authentication extends Message<GetAccountInf
    */
   authenticationUrl = "";
 
+  /**
+   * token expiry in seconds, the frontend is expected to close the onboarding view (but the user can come back any time)
+   * don't worry about the time skew from api latency, there's a grace period on top of this expiry
+   *
+   * @generated from field: int64 expires_in_sec = 20;
+   */
+  expiresInSec = protoInt64.zero;
+
   constructor(data?: PartialMessage<GetAccountInfoResponse_Authentication>) {
     super();
     proto3.util.initPartial(data, this);
@@ -405,6 +413,12 @@ export class GetAccountInfoResponse_Authentication extends Message<GetAccountInf
       name: "authentication_url",
       kind: "scalar",
       T: 9 /* ScalarType.STRING */,
+    },
+    {
+      no: 20,
+      name: "expires_in_sec",
+      kind: "scalar",
+      T: 3 /* ScalarType.INT64 */,
     },
   ]);
 
@@ -1614,9 +1628,14 @@ proto3.util.setEnumType(
  */
 export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> {
   /**
-   * @generated from field: string crypto_asset_id = 10;
+   * @generated from field: ramp.v1.AssetId crypto_asset_id = 10;
    */
-  cryptoAssetId = "";
+  cryptoAssetId = AssetId.UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.Protocol protocol = 15;
+   */
+  protocol = Protocol.UNSPECIFIED;
 
   /**
    * @generated from oneof ramp.v1.EstimateOnRampFeeRequest.amount
@@ -1644,9 +1663,10 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
     {
       no: 10,
       name: "crypto_asset_id",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
+      kind: "enum",
+      T: proto3.getEnumType(AssetId),
     },
+    { no: 15, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     {
       no: 20,
       name: "fiat_asset_amount",
@@ -1696,11 +1716,6 @@ export class EstimateOnRampFeeRequest extends Message<EstimateOnRampFeeRequest> 
  */
 export class EstimateOnRampFeeResponse extends Message<EstimateOnRampFeeResponse> {
   /**
-   * @generated from field: string crypto_asset_id = 10;
-   */
-  cryptoAssetId = "";
-
-  /**
    * denominated in user's fiat currency
    *
    * @generated from field: string fiat_asset_amount = 20;
@@ -1741,12 +1756,6 @@ export class EstimateOnRampFeeResponse extends Message<EstimateOnRampFeeResponse
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.EstimateOnRampFeeResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "crypto_asset_id",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
     {
       no: 20,
       name: "fiat_asset_amount",
@@ -1819,9 +1828,14 @@ export class EstimateOnRampFeeResponse extends Message<EstimateOnRampFeeResponse
  */
 export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest> {
   /**
-   * @generated from field: string crypto_asset_id = 10;
+   * @generated from field: ramp.v1.AssetId crypto_asset_id = 10;
    */
-  cryptoAssetId = "";
+  cryptoAssetId = AssetId.UNSPECIFIED;
+
+  /**
+   * @generated from field: ramp.v1.Protocol protocol = 15;
+   */
+  protocol = Protocol.UNSPECIFIED;
 
   /**
    * @generated from oneof ramp.v1.EstimateOffRampFeeRequest.amount
@@ -1849,9 +1863,10 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
     {
       no: 10,
       name: "crypto_asset_id",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
+      kind: "enum",
+      T: proto3.getEnumType(AssetId),
     },
+    { no: 15, name: "protocol", kind: "enum", T: proto3.getEnumType(Protocol) },
     {
       no: 20,
       name: "crypto_asset_amount",
@@ -1901,11 +1916,6 @@ export class EstimateOffRampFeeRequest extends Message<EstimateOffRampFeeRequest
  */
 export class EstimateOffRampFeeResponse extends Message<EstimateOffRampFeeResponse> {
   /**
-   * @generated from field: string crypto_asset_id = 10;
-   */
-  cryptoAssetId = "";
-
-  /**
    * denominated in user's fiat currency
    *
    * @generated from field: string fiat_asset_amount = 20;
@@ -1939,12 +1949,6 @@ export class EstimateOffRampFeeResponse extends Message<EstimateOffRampFeeRespon
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ramp.v1.EstimateOffRampFeeResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    {
-      no: 10,
-      name: "crypto_asset_id",
-      kind: "scalar",
-      T: 9 /* ScalarType.STRING */,
-    },
     {
       no: 20,
       name: "fiat_asset_amount",

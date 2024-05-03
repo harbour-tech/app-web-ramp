@@ -18,20 +18,20 @@ import {
   SetBankAccountResponse,
   WhitelistAddressRequest,
   WhitelistAddressResponse,
-} from './public_pb';
-import { MethodKind } from '@bufbuild/protobuf';
+} from "./public_pb";
+import { MethodKind } from "@bufbuild/protobuf";
 
 /**
  * @generated from service ramp.v1.PingService
  */
 export const PingService = {
-  typeName: 'ramp.v1.PingService',
+  typeName: "ramp.v1.PingService",
   methods: {
     /**
      * @generated from rpc ramp.v1.PingService.Ping
      */
     ping: {
-      name: 'Ping',
+      name: "Ping",
       I: PingRequest,
       O: PingResponse,
       kind: MethodKind.Unary,
@@ -43,7 +43,7 @@ export const PingService = {
  * @generated from service ramp.v1.RampService
  */
 export const RampService = {
-  typeName: 'ramp.v1.RampService',
+  typeName: "ramp.v1.RampService",
   methods: {
     /**
      * *
@@ -53,7 +53,7 @@ export const RampService = {
      * @generated from rpc ramp.v1.RampService.GetAccountInfo
      */
     getAccountInfo: {
-      name: 'GetAccountInfo',
+      name: "GetAccountInfo",
       I: GetAccountInfoRequest,
       O: GetAccountInfoResponse,
       kind: MethodKind.Unary,
@@ -66,7 +66,7 @@ export const RampService = {
      * @generated from rpc ramp.v1.RampService.WhitelistAddress
      */
     whitelistAddress: {
-      name: 'WhitelistAddress',
+      name: "WhitelistAddress",
       I: WhitelistAddressRequest,
       O: WhitelistAddressResponse,
       kind: MethodKind.Unary,
@@ -78,7 +78,7 @@ export const RampService = {
      * @generated from rpc ramp.v1.RampService.RemoveAddress
      */
     removeAddress: {
-      name: 'RemoveAddress',
+      name: "RemoveAddress",
       I: RemoveAddressRequest,
       O: RemoveAddressResponse,
       kind: MethodKind.Unary,
@@ -89,7 +89,7 @@ export const RampService = {
      * @generated from rpc ramp.v1.RampService.SetBankAccount
      */
     setBankAccount: {
-      name: 'SetBankAccount',
+      name: "SetBankAccount",
       I: SetBankAccountRequest,
       O: SetBankAccountResponse,
       kind: MethodKind.Unary,
@@ -98,7 +98,7 @@ export const RampService = {
      * @generated from rpc ramp.v1.RampService.EstimateOnRampFee
      */
     estimateOnRampFee: {
-      name: 'EstimateOnRampFee',
+      name: "EstimateOnRampFee",
       I: EstimateOnRampFeeRequest,
       O: EstimateOnRampFeeResponse,
       kind: MethodKind.Unary,
@@ -107,7 +107,7 @@ export const RampService = {
      * @generated from rpc ramp.v1.RampService.EstimateOffRampFee
      */
     estimateOffRampFee: {
-      name: 'EstimateOffRampFee',
+      name: "EstimateOffRampFee",
       I: EstimateOffRampFeeRequest,
       O: EstimateOffRampFeeResponse,
       kind: MethodKind.Unary,
