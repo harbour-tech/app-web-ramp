@@ -49,49 +49,24 @@ export const Assets: FunctionComponent<AssetsProps> = ({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        {assets.map((asset) => (
-          <div
-            key={asset!.shortName}
-            className={cn(
-              '-mx-2 flex space-x-4 rounded-md p-2 transition-all items-center cursor-pointer',
-              style(asset),
-            )}
-            onClick={() => handleClick(asset)}
-          >
-            <CircleDollarSignIcon className="h-5 w-5" />{' '}
-            {/*TODO: map asset onto icon*/}
-            <div className="space-y-1 flex items-center">
-              <p className="text-sm font-medium">{asset.shortName}</p>
-              <p className="text-sm text-muted-foreground"></p>
-            </div>
-          </div>
-        ))}
-        <SelectAsset>
-          <SelectAssetTrigger className="w-[280px]">
-            <SelectAssetValue placeholder="Theme" />
+        <SelectAsset
+          onValueChange={(value) => {
+            const asset = assets.find((asset) => asset.shortName === value);
+            if (asset) handleClick(asset);
+          }}
+        >
+          <SelectAssetTrigger>
+            <SelectAssetValue placeholder="Select Asset" />
           </SelectAssetTrigger>
           <SelectAssetContent>
-            <SelectAssetItem value="light">
-              <BusIcon /> Light
-            </SelectAssetItem>
-            <SelectAssetItem value="dark">Dark</SelectAssetItem>
-            <SelectAssetItem value="system">System</SelectAssetItem>
             {assets.map((asset) => (
-              <div
+              <SelectAssetItem
                 key={asset!.shortName}
-                className={cn(
-                  '-mx-2 flex space-x-4 rounded-md p-2 transition-all items-center cursor-pointer',
-                  style(asset),
-                )}
-                onClick={() => handleClick(asset)}
+                value={asset.shortName}
+                icon={<CircleDollarSignIcon className="h-5 w-5" />}
               >
-                <CircleDollarSignIcon className="h-5 w-5" />{' '}
-                {/*TODO: map asset onto icon*/}
-                <div className="space-y-1 flex items-center">
-                  <p className="text-sm font-medium">{asset.shortName}</p>
-                  <p className="text-sm text-muted-foreground"></p>
-                </div>
-              </div>
+                {asset.shortName}
+              </SelectAssetItem>
             ))}
           </SelectAssetContent>
         </SelectAsset>
