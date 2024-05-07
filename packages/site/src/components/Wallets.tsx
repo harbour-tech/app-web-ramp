@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { GemIcon } from 'lucide-react';
+import { CircleDollarSignIcon, GemIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   GetAccountInfoResponse_Wallet,
@@ -26,6 +26,17 @@ import {
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { toast } from 'react-toastify';
+import {
+  SelectWallet,
+  SelectWalletContent,
+  SelectWalletItem,
+  SelectWalletTrigger,
+  SelectWalletValue,
+} from './ui/selectWallet';
+import CryptoNetworkLogo_Avalanche from '@/assets/cryptoNetworkLogo_Avalanche.svg';
+import CryptoNetworkLogo_Ethereum from '@/assets/cryptoNetworkLogo_Ethereum.svg';
+import CryptoNetworkLogo_Polygon from '@/assets/cryptoNetworkLogo_Polygon.svg';
+import CryptoNetworkLogo_Terra from '@/assets/cryptoNetworkLogo_Terra.svg';
 
 export interface WalletsProps {
   protocol: Protocol;
@@ -63,6 +74,14 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
     return onAddWallet(wallet);
   };
 
+  const protocolLogos = {
+    [Protocol.UNSPECIFIED]: undefined,
+    [Protocol.AVAX]: CryptoNetworkLogo_Avalanche,
+    [Protocol.ETHEREUM]: CryptoNetworkLogo_Ethereum,
+    [Protocol.POLYGON]: CryptoNetworkLogo_Polygon,
+    [Protocol.TERRA]: CryptoNetworkLogo_Terra,
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -86,7 +105,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
               <div className="space-y-1 flex flex-col overflow-hidden max-w-xs">
                 <p className="text-sm font-medium leading-none">
                   {wallet.name ? wallet.name : wallet.address.substring(0, 6)}
-                  {false && (
+                  {true && (
                     <p className="font-thin">
                       {
                         {
@@ -97,6 +116,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
                           [Protocol.POLYGON]: 'Polygon',
                         }[wallet.protocol]
                       }
+                      <img width={24} src={protocolLogos[wallet.protocol]} />
                     </p>
                   )}
                 </p>
@@ -106,6 +126,29 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
               </div>
             </div>
           ))}
+        <SelectWallet
+          onValueChange={(value) => {
+            const selectedWallet = wallets.find((w) => w.name === value);
+            if (selectedWallet) handleSelect(selectedWallet);
+          }}
+        >
+          <SelectWalletTrigger>
+            <SelectWalletValue placeholder="Select Wallet" />
+          </SelectWalletTrigger>
+          <SelectWalletContent>
+            {wallets
+              .filter((w) => w.protocol === protocol)
+              .map((wallet) => (
+                <SelectWalletItem
+                  key={wallet.protocol + ':' + wallet.address}
+                  value={wallet.name || wallet.address}
+                  icon={<img width={24} src={protocolLogos[wallet.protocol]} />}
+                >
+                  {wallet.name || wallet.address.substring(0, 6)}{' '}
+                </SelectWalletItem>
+              ))}
+          </SelectWalletContent>
+        </SelectWallet>
 
         <AddWallet
           protocol={protocol}
