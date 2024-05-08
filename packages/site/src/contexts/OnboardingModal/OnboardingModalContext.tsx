@@ -75,6 +75,9 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
           )}
           {url && (
             <iframe
+              key={url}
+              frameBorder="0"
+              loading="lazy"
               className="h-full max-h-[812px] w-[375px] bg-transparent"
               src={url}
               onLoad={() => setIsOnboardingLoading(false)}
