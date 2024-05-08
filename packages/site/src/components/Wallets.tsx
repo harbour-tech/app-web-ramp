@@ -89,43 +89,6 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        {wallets
-          .filter((w) => w.protocol == protocol)
-          .map((wallet) => (
-            <div
-              onClick={() => handleSelect(wallet)}
-              key={wallet.protocol + ':' + wallet.address}
-              className={cn(
-                style(wallet),
-                'flex flex-row space-x-2 rounded-md p-2 cursor-pointer',
-              )}
-            >
-              <GemIcon className="h-5 w-5" />
-              {/*TODO: map network to icon*/}
-              <div className="space-y-1 flex flex-col overflow-hidden max-w-xs">
-                <p className="text-sm font-medium leading-none">
-                  {wallet.name ? wallet.name : wallet.address.substring(0, 6)}
-                  {true && (
-                    <p className="font-thin">
-                      {
-                        {
-                          [Protocol.UNSPECIFIED]: '',
-                          [Protocol.ETHEREUM]: 'Ethereum',
-                          [Protocol.AVAX]: 'Avalance',
-                          [Protocol.TERRA]: 'Terra',
-                          [Protocol.POLYGON]: 'Polygon',
-                        }[wallet.protocol]
-                      }
-                      <img width={24} src={protocolLogos[wallet.protocol]} />
-                    </p>
-                  )}
-                </p>
-                <p className="text-sm text-muted-foreground truncate">
-                  {wallet.address}
-                </p>
-              </div>
-            </div>
-          ))}
         <SelectWallet
           onValueChange={(value) => {
             const selectedWallet = wallets.find((w) => w.name === value);
@@ -143,8 +106,9 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
                   key={wallet.protocol + ':' + wallet.address}
                   value={wallet.name || wallet.address}
                   icon={<img width={24} src={protocolLogos[wallet.protocol]} />}
+                  walletAddress={wallet.address}
                 >
-                  {wallet.name || wallet.address.substring(0, 6)}{' '}
+                  {wallet.name || wallet.address.substring(0, 6)}
                 </SelectWalletItem>
               ))}
           </SelectWalletContent>

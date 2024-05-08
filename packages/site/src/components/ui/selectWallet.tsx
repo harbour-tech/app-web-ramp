@@ -118,8 +118,9 @@ const SelectWalletItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
     icon?: JSX.Element;
+    walletAddress?: string;
   }
->(({ className, children, icon, ...props }, ref) => (
+>(({ className, children, icon, walletAddress, ...props }, ref) => (
   <div className="p-px bg-gray-glass">
     <SelectPrimitive.Item
       ref={ref}
@@ -134,8 +135,15 @@ const SelectWalletItem = React.forwardRef<
           <Check className="h-4 w-4" />
         </SelectPrimitive.ItemIndicator>
       </span>
-      <div className="mr-3">{icon}</div>
-      <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+      {icon && <div className="mr-3">{icon}</div>}
+      <div className="flex-col">
+        <SelectPrimitive.ItemText className="body3">
+          {children}
+        </SelectPrimitive.ItemText>
+        {walletAddress && (
+          <p className="caption3 text-gray-100">{walletAddress}</p>
+        )}
+      </div>
     </SelectPrimitive.Item>
   </div>
 ));
