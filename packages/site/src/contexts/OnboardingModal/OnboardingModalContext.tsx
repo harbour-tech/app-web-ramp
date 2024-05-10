@@ -63,7 +63,7 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
       value={{ openOnboardingModal, setOnFinishCallback, closeOnboardingModal }}
     >
       <div
-        className={`absolute w-[100vw] h-[100vh] transition-all duration-1000 ease-in-out bg-black bg-opacity-30 z-10 backdrop-blur-sm flex justify-center items-center
+        className={`absolute w-[100vw] h-[100vh] transition-all duration-1000 ease-in-out bg-black bg-opacity-30 z-20 backdrop-blur-sm flex justify-center items-center
       ${isOnboardingVisible ? '!opacity-100' : 'opacity-0 -translate-y-full '}
       `}
       >

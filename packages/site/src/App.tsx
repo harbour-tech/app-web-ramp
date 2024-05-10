@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
 import { useRampClient } from '@/hooks/useRpc';
 import {
@@ -28,6 +28,8 @@ import splash from '@/assets/splash.png';
 import { toast } from 'react-toastify';
 import { keccak256, SigningKey } from 'ethers';
 import { useOnboardingModal } from '@/contexts/OnboardingModal';
+import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
+import MetaMaskWithLogo from '@/assets/metamaskWithName.svg?react';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
@@ -36,6 +38,7 @@ const SupportedNetworks = new Map<Protocol, Protocol>([
 ]);
 
 const App = () => {
+  const triggerModalOnceRef = useRef(false);
   const { openOnboardingModal, setOnFinishCallback } = useOnboardingModal();
   const [metamask, metamaskDispatch] = useMetaMask();
   const rampClient = useRampClient();
@@ -188,24 +191,39 @@ const App = () => {
     await load();
   };
 
+  useEffect(() => {
+    if (
+      accountInfo?.result.case == 'authentication' &&
+      !triggerModalOnceRef.current
+    ) {
+      triggerModalOnceRef.current = true;
+      openOnboardingModal(accountInfo.result.value.authenticationUrl);
+    }
+  }, [accountInfo?.result.case]);
+
   const content = useMemo(() => {
     if (accountInfo?.result.case == 'authentication') {
       return (
-        <div className="grid justify-items-center">
-          <Alert className="mt-10 sm:max-w-[700px] flex justify-center">
-            <Button
-              onClick={() => {
-                accountInfo?.result.case == 'authentication'
-                  ? openOnboardingModal(
-                      accountInfo.result.value.authenticationUrl,
-                    )
-                  : null;
-              }}
-            >
-              <RocketIcon className="h-4 w-4 mr-2 stroke-white" /> Start
-              onboarding
-            </Button>
-          </Alert>
+        <div className="flex flex-col w-[344px] gap-4">
+          <Button
+            variant="primary"
+            className="w-full"
+            onClick={() => {
+              if (accountInfo.result.case === 'authentication') {
+                openOnboardingModal(accountInfo.result.value.authenticationUrl);
+              }
+            }}
+          >
+            Enable Magic ramping
+          </Button>
+          <Note>
+            <NoteTitle>Note:</NoteTitle>
+            <NoteDescription>
+              Magic Ramping provides a new instant, low cost way to on/off ramp
+              Stablecoins into your wallet. It is currently only available to EU
+              residents.
+            </NoteDescription>
+          </Note>
         </div>
       );
     }
@@ -234,14 +252,39 @@ const App = () => {
     }
 
     return (
-      <div className="grid justify-items-center">
-        <Alert className="mt-2 sm:max-w-[700px]">
-          <RocketIcon className="h-4 w-4" />
-          <AlertTitle>Please open MetaMask</AlertTitle>
-          <AlertDescription>
-            Please open MetaMask extension and login to your account
-          </AlertDescription>
-        </Alert>
+      <div className="flex flex-col w-[344px] gap-4 p-8">
+        <Note>
+          <NoteTitle>
+            To enable Magic Ramping, please connect your MetaMask wallet.
+          </NoteTitle>
+          <NoteDescription>
+            If you are a new user we will then take you thought a very quick
+            onboarding jurney
+          </NoteDescription>
+        </Note>
+        {!isMetaMaskReady ? (
+          <Button asChild className="leading-3">
+            <a
+              href="https://chromewebstore.google.com/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk"
+              target="_blank"
+            >
+              Install <MetaMaskWithLogo className="ml-2" />
+            </a>
+          </Button>
+        ) : (
+          <Button onClick={handleConnectClick}>
+            Connect <MetaMaskWithLogo className="ml-2" />
+          </Button>
+        )}
+
+        <Note>
+          <NoteTitle>Note:</NoteTitle>
+          <NoteDescription>
+            Magic Ramping provides a new instant, low cost way to on/off ramp
+            Stablecoins into your wallet. It is currently only available to EU
+            residents.
+          </NoteDescription>
+        </Note>
       </div>
     );
   }, [
@@ -249,6 +292,7 @@ const App = () => {
     accountInfo?.result.value,
     handleAddWallet,
     handleSaveBankAccount,
+    isMetaMaskReady,
   ]);
 
   return (
@@ -262,43 +306,12 @@ const App = () => {
           wallet with Harbour
         </p>
       </div>
-      <div className="py-2">
-        <Separator className="my-4" />
-        {!isMetaMaskReady && (
-          <Button asChild>
-            <a
-              href="https://chromewebstore.google.com/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk"
-              target="_blank"
-            >
-              Install MetaMask
-            </a>
-          </Button>
-        )}
-        {shouldDisplayReconnectButton(
-          metamask.installedSnap as unknown as Snap,
-        ) && <Button onClick={handleConnectClick}>Reconnect Snap</Button>}
-      </div>
-      <div>
-        {!metamask.installedSnap && (
-          <>
-            <Button variant={'primary'} onClick={handleConnectClick}>
-              Enable Magic Ramping
-            </Button>
-            <div className="flex justify-end">
-              <img width="820" src={splash} className="-mt-40" />
-            </div>
-          </>
-        )}
-      </div>
       {content}
     </>
   );
 };
 
 export default App;
-
-const shouldDisplayReconnectButton = (installedSnap?: Snap) =>
-  installedSnap && isLocalSnap(installedSnap?.id);
 
 // response = new GetAccountInfoResponse({
 //   result: {
