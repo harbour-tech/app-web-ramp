@@ -9,17 +9,26 @@ import { MetaMaskProvider } from '@/hooks/useMetaMask';
 import App from '@/App';
 import { cn } from '@/lib/utils';
 import HarbourLogo from '@/assets/harbourLogo.svg?react';
+import IntroAnimatedLogos from '@/components/ui/introAnimatedLogos';
 
 export const Root: FunctionComponent<PropsWithChildren> = () => {
-  const [ready, setReady] = useState(false);
+  const [gradientsReady, setGradientsReady] = useState(false);
+  const [controllsVisible, setControllsVisible] = useState(false);
   useEffect(() => {
     setTimeout(() => {
-      setReady(true);
+      setGradientsReady(true);
     }, 1);
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setControllsVisible(true);
+    }, 1500);
+  }, []);
+
   return (
     <>
-      <div className="relative h-full w-full z-10">
+      <div className="relative h-full w-full z-10 animate-in">
         <div className="flex flex-col justify-center items-center gap-2 pt-8 z-10 absolute w-full">
           <div className="max-w-[680px] flex-col justify-center items-center p-8 animate-in animate-slide-up">
             <h1 className="text-center tracking-tighter leading-[80px] text-7xl md:block font-light bg-gradient-to-l from-transparent via-gray to-white text-transparent bg-clip-text animate-gradient">
@@ -31,13 +40,36 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-row justify-around items-center  h-full">
-          <div>
+        <div
+          className="flex flex-row justify-around items-center h-full pl-20 pr-20"
+          style={{ transition: 'transform 0.5s ease' }}
+        >
+          <div
+            className="absolute animate-in"
+            style={{
+              transition: 'all 1s ease',
+              transform: controllsVisible
+                ? 'translateX(-80%)'
+                : 'translateX(0px)',
+              opacity: controllsVisible ? 1 : 0,
+            }}
+          >
             <MetaMaskProvider>
               <RampClientProvider>
                 <App />
               </RampClientProvider>
             </MetaMaskProvider>
+          </div>
+          <div
+            className="absolute"
+            style={{
+              transition: 'all 1s ease',
+              transform: controllsVisible
+                ? 'translateX(120%)'
+                : 'translateX(0px)',
+            }}
+          >
+            <IntroAnimatedLogos />
           </div>
         </div>
       </div>
@@ -47,8 +79,8 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
             className={cn(
               'absolute bg-first-part-of-screen w-[976px] h-full overflow-hidden bg-no-repeat right-0 transition-transform duration-700',
               {
-                'translate-x-0': ready,
-                'translate-x-[400px]': !ready,
+                'translate-x-0': gradientsReady,
+                'translate-x-[400px]': !gradientsReady,
               },
             )}
           />
@@ -58,8 +90,8 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
             className={cn(
               'absolute bg-second-part-of-screen w-[976px] h-full overflow-hidden bg-no-repeat gradient-moved-to-left transition-transform duration-700',
               {
-                'translate-x-0': ready,
-                'translate-x-[-400px]': !ready,
+                'translate-x-0': gradientsReady,
+                'translate-x-[-400px]': !gradientsReady,
               },
             )}
           />

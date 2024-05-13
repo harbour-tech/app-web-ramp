@@ -297,7 +297,7 @@ const App = () => {
 
   return (
     <>
-      <div className="max-w-[430px] mt-4">
+      <div className="max-w-[430px] mt-4 mb-4">
         <h3 className="heading3 mb-2 text-lightSky !font-thin">
           Say goodbye to the hassle and costs of on and off ramping
         </h3>
