@@ -13,6 +13,7 @@ import IntroAnimatedLogos from '@/components/ui/introAnimatedLogos';
 
 export const Root: FunctionComponent<PropsWithChildren> = () => {
   const [gradientsReady, setGradientsReady] = useState(false);
+  const [logoVisible, setLogoVisible] = useState(true);
   const [controllsVisible, setControllsVisible] = useState(false);
   useEffect(() => {
     setTimeout(() => {
@@ -25,6 +26,10 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
       setControllsVisible(true);
     }, 1500);
   }, []);
+
+  const hideLogo = () => {
+    setLogoVisible(false);
+  };
 
   return (
     <>
@@ -41,36 +46,39 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
           </div>
         </div>
         <div
-          className="flex flex-row justify-around items-center h-full pl-20 pr-20"
+          className="flex flex-row justify-around items-center h-full"
           style={{ transition: 'transform 0.5s ease' }}
         >
           <div
             className="absolute animate-in"
             style={{
               transition: 'all 1s ease',
-              transform: controllsVisible
-                ? 'translateX(-80%)'
-                : 'translateX(0px)',
+              transform:
+                controllsVisible && logoVisible
+                  ? 'translateX(-15vw)'
+                  : 'translateX(0px)',
               opacity: controllsVisible ? 1 : 0,
             }}
           >
             <MetaMaskProvider>
               <RampClientProvider>
-                <App />
+                <App hideLogo={hideLogo} />
               </RampClientProvider>
             </MetaMaskProvider>
           </div>
-          <div
-            className="absolute"
-            style={{
-              transition: 'all 1s ease',
-              transform: controllsVisible
-                ? 'translateX(120%)'
-                : 'translateX(0px)',
-            }}
-          >
-            <IntroAnimatedLogos />
-          </div>
+          {logoVisible && (
+            <div
+              className="absolute"
+              style={{
+                transition: 'all 1s ease',
+                transform: controllsVisible
+                  ? 'translateX(15vw)'
+                  : 'translateX(0px)',
+              }}
+            >
+              <IntroAnimatedLogos />
+            </div>
+          )}
         </div>
       </div>
       <div className="absolute w-full h-full left-0 top-0 z-0">

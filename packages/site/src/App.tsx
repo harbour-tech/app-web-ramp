@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
 import { useRampClient } from '@/hooks/useRpc';
 import {
@@ -8,23 +8,13 @@ import {
   SetBankAccountRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import { Button } from '@/components/ui/button';
-import {
-  connectSnap,
-  getSnap,
-  isLocalSnap,
-  requestPersonalSign,
-} from '@/utils';
-import { Separator } from '@radix-ui/react-separator';
+import { connectSnap, getSnap, requestPersonalSign } from '@/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OnRamp } from '@/OnRamp';
-import { Snap } from '@/types';
 import { Wallet } from '@/components/Wallets';
 import { OffRamp } from '@/OffRamp';
 
 import { BankAccount } from '@/types/bankAccount';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { RocketIcon } from 'lucide-react';
-import splash from '@/assets/splash.png';
 import { toast } from 'react-toastify';
 import { keccak256, SigningKey } from 'ethers';
 import { useOnboardingModal } from '@/contexts/OnboardingModal';
@@ -37,7 +27,7 @@ const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.POLYGON, Protocol.POLYGON],
 ]);
 
-const App = () => {
+const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   const triggerModalOnceRef = useRef(false);
   const { openOnboardingModal, setOnFinishCallback } = useOnboardingModal();
   const [metamask, metamaskDispatch] = useMetaMask();
@@ -198,6 +188,10 @@ const App = () => {
     ) {
       triggerModalOnceRef.current = true;
       openOnboardingModal(accountInfo.result.value.authenticationUrl);
+    }
+
+    if (accountInfo?.result.case == 'account') {
+      hideLogo();
     }
   }, [accountInfo?.result.case]);
 
