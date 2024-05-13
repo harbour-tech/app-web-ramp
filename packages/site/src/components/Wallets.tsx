@@ -6,13 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { CircleDollarSignIcon, GemIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   GetAccountInfoResponse_Wallet,
   Protocol,
 } from '@/harbour/gen/ramp/v1/public_pb';
-import { cn } from '@/lib/utils';
 import { requestAccounts } from '@/utils';
 import {
   Dialog,
@@ -37,6 +35,7 @@ import CryptoNetworkLogo_Avalanche from '@/assets/cryptoNetworkLogo_Avalanche.sv
 import CryptoNetworkLogo_Ethereum from '@/assets/cryptoNetworkLogo_Ethereum.svg';
 import CryptoNetworkLogo_Polygon from '@/assets/cryptoNetworkLogo_Polygon.svg';
 import CryptoNetworkLogo_Terra from '@/assets/cryptoNetworkLogo_Terra.svg';
+import WalletIcon from '@/assets/walletIcon.svg';
 
 export interface WalletsProps {
   protocol: Protocol;
@@ -55,17 +54,6 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
   onAddWallet,
   description,
 }) => {
-  const style = (wallet: GetAccountInfoResponse_Wallet) => {
-    if (
-      wallet.protocol == selectedWallet?.protocol &&
-      wallet.address == selectedWallet?.address
-    ) {
-      return 'bg-accent text-accent-foreground';
-    } else {
-      return 'hover:bg-accent hover:text-accent-foreground';
-    }
-  };
-
   const handleSelect = (wallet: GetAccountInfoResponse_Wallet) => {
     onWalletSelected(wallet);
   };
@@ -82,6 +70,16 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
     [Protocol.TERRA]: CryptoNetworkLogo_Terra,
   };
 
+  const itemIcon = (wallet: Protocol) => {
+    return <img width={24} src={protocolLogos[wallet]} />;
+  };
+
+  const selectedIcon = selectedWallet ? (
+    itemIcon(selectedWallet.protocol as Protocol)
+  ) : (
+    <img width={24} src={WalletIcon} />
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -96,6 +94,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
           }}
         >
           <SelectWalletTrigger>
+            {selectedIcon}
             <SelectWalletValue placeholder="Select Wallet" />
           </SelectWalletTrigger>
           <SelectWalletContent>
@@ -105,7 +104,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
                 <SelectWalletItem
                   key={wallet.protocol + ':' + wallet.address}
                   value={wallet.name || wallet.address}
-                  icon={<img width={24} src={protocolLogos[wallet.protocol]} />}
+                  icon={itemIcon(wallet.protocol)}
                   walletAddress={wallet.address}
                 >
                   {wallet.name || wallet.address.substring(0, 6)}
