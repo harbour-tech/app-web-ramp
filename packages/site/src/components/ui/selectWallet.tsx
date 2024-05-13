@@ -24,7 +24,7 @@ const SelectWalletTrigger = React.forwardRef<
       )}
       {...props}
     >
-      {children}
+      <div className="flex items-center space-x-3">{children}</div>
       <SelectPrimitive.Icon asChild>
         <img width={24} src={ChevronDownIcon} />
       </SelectPrimitive.Icon>

@@ -6,10 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { BusIcon, CircleDollarSignIcon } from 'lucide-react';
+import AssetSymbolIcon_USDC from '@/assets/assetSymbolIcon_USDC.svg';
+import MoneyIcon from '@/assets/moneyIcon.svg';
 
-import { GetAccountInfoResponse_CryptoAsset } from '@/harbour/gen/ramp/v1/public_pb';
-import { cn } from '@/lib/utils';
+import {
+  AssetId,
+  GetAccountInfoResponse_CryptoAsset,
+} from '@/harbour/gen/ramp/v1/public_pb';
 import {
   SelectAsset,
   SelectAssetContent,
@@ -31,16 +34,24 @@ export const Assets: FunctionComponent<AssetsProps> = ({
   onSelected,
   description,
 }) => {
-  const style = (asset: GetAccountInfoResponse_CryptoAsset) => {
-    if (asset!.shortName == selected?.shortName) {
-      return 'bg-accent text-accent-foreground';
-    } else {
-      return 'hover:bg-accent hover:text-accent-foreground';
-    }
-  };
   const handleClick = (asset: GetAccountInfoResponse_CryptoAsset) => {
     onSelected(asset);
   };
+
+  const assetLogos = {
+    [AssetId.UNSPECIFIED]: undefined,
+    [AssetId.USDC]: AssetSymbolIcon_USDC,
+  };
+
+  const itemIcon = (asset: AssetId) => {
+    return <img width={24} src={assetLogos[asset]} />;
+  };
+
+  const selectedIcon = selected ? (
+    itemIcon(selected.assetId as AssetId)
+  ) : (
+    <img width={24} src={MoneyIcon} />
+  );
 
   return (
     <Card>
@@ -56,6 +67,7 @@ export const Assets: FunctionComponent<AssetsProps> = ({
           }}
         >
           <SelectAssetTrigger>
+            {selectedIcon}
             <SelectAssetValue placeholder="Select Asset" />
           </SelectAssetTrigger>
           <SelectAssetContent>
@@ -63,7 +75,7 @@ export const Assets: FunctionComponent<AssetsProps> = ({
               <SelectAssetItem
                 key={asset!.shortName}
                 value={asset.shortName}
-                icon={<CircleDollarSignIcon className="h-5 w-5" />}
+                icon={itemIcon(asset.assetId)}
               >
                 {asset.shortName}
               </SelectAssetItem>
