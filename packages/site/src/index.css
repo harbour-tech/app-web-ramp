@@ -283,12 +283,6 @@ input::-webkit-contacts-auto-fill-button {
   }
 }
 
-.animate-slide-up {
-  -webkit-animation: animateslideup 2s;
-  -moz-animation: animateslideup 2s;
-  animation: animateslideup 2s;
-}
-
 @keyframes animateslideup {
   0% {
     transform: translateY(400px);
@@ -299,4 +293,63 @@ input::-webkit-contacts-auto-fill-button {
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+@keyframes slideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(400%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-400%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes revealMiddle {
+  from {
+    opacity: 0;
+    transform: scale(5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spinClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+.animate-slideFromRight {
+  animation: slideFromRight 0.25s ease-out forwards;
+}
+
+.animate-slideFromLeft {
+  animation: slideFromLeft 0.25s ease-out forwards;
+}
+
+.animate-revealMiddle.animate-spinClockwise {
+  animation: revealMiddle 0.25s ease-out forwards,
+    spinClockwise 0.25s ease-out forwards 0.25s;
+}
+
+.animate-slide-up {
+  animation: animateslideup 2s;
 }
