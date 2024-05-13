@@ -252,7 +252,7 @@ const App = () => {
     }
 
     return (
-      <div className="flex flex-col w-[344px] gap-4 p-8">
+      <div className="flex flex-col w-[344px] gap-4">
         <Note>
           <NoteTitle>
             To enable Magic Ramping, please connect your MetaMask wallet.
@@ -298,7 +298,7 @@ const App = () => {
   return (
     <>
       <div className="max-w-[430px] mt-4">
-        <h3 className="heading3 mb-2">
+        <h3 className="heading3 mb-2 text-lightSky !font-thin">
           Say goodbye to the hassle and costs of on and off ramping
         </h3>
         <p className="text-muted-foreground caption1">
