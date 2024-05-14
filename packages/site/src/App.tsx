@@ -309,21 +309,23 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
 
   return (
     <>
-      <div className="max-w-[430px] mt-4 mb-4">
-        <h3 className="heading3 mb-2 text-lightSky !font-thin">
-          Say goodbye to the hassle and costs of on and off ramping
-        </h3>
-        <p className="text-muted-foreground caption1">
-          Experience seamless transfers between your bank account and MetaMask
-          wallet with{' '}
-          <span
-            className={resetLink ? 'text-sky' : ''}
-            onClick={() => (resetLink ? handleConnectClick() : () => null)}
-          >
-            Harbour
-          </span>
-        </p>
-      </div>
+      {accountInfo?.result.case !== 'account' && (
+        <div className="max-w-[430px] mt-36 mb-4">
+          <h3 className="heading3 mb-2 text-lightSky !font-thin">
+            Say goodbye to the hassle and costs of on and off ramping
+          </h3>
+          <p className="text-muted-foreground caption1">
+            Experience seamless transfers between your bank account and MetaMask
+            wallet with{' '}
+            <span
+              className={resetLink ? 'text-sky' : ''}
+              onClick={() => (resetLink ? handleConnectClick() : () => null)}
+            >
+              Harbour
+            </span>
+          </p>
+        </div>
+      )}
       {content}
     </>
   );

@@ -15,6 +15,7 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
   const [gradientsReady, setGradientsReady] = useState(false);
   const [logoVisible, setLogoVisible] = useState(true);
   const [controllsVisible, setControllsVisible] = useState(false);
+
   useEffect(() => {
     setTimeout(() => {
       setGradientsReady(true);
@@ -60,6 +61,8 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
               opacity: controllsVisible ? 1 : 0,
               width: !logoVisible ? '100%' : 'auto',
               padding: logoVisible ? '0' : '0 10vw',
+              top: '220px',
+              height: 'calc(100% - 220px)',
             }}
           >
             <MetaMaskProvider>
@@ -84,10 +87,18 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
         </div>
       </div>
       <div className="absolute w-full h-full left-0 top-0 z-0">
-        <div className="absolute z-0 bg-gray-600 w-full h-1/2 overflow-hidden top-0">
+        <div
+          className={cn(
+            'absolute z-0 bg-gray-600 w-full overflow-hidden top-0',
+          )}
+          style={{
+            height: logoVisible ? '50%' : 'calc(100vh - 111px)',
+            transition: 'height 1s ease',
+          }}
+        >
           <div
             className={cn(
-              'absolute bg-first-part-of-screen w-[976px] h-full overflow-hidden bg-no-repeat right-0 transition-transform duration-700',
+              'absolute bg-first-part-of-screen w-full h-full overflow-hidden bg-no-repeat right-0 transition-transform duration-700',
               {
                 'translate-x-0': gradientsReady,
                 'translate-x-[400px]': !gradientsReady,
@@ -95,10 +106,16 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
             )}
           />
         </div>
-        <div className="absolute z-0 bg-gray-500 w-full h-1/2 overflow-hidden bottom-0">
+        <div
+          className="absolute z-0 bg-gray-500 w-full overflow-hidden bottom-0"
+          style={{
+            height: logoVisible ? '50%' : '111px',
+            transition: 'height 1s ease',
+          }}
+        >
           <div
             className={cn(
-              'absolute bg-second-part-of-screen w-[976px] h-full overflow-hidden bg-no-repeat gradient-moved-to-left transition-transform duration-700',
+              'absolute bg-second-part-of-screen w-full h-full overflow-hidden bg-no-repeat gradient-moved-to-left transition-transform duration-700',
               {
                 'translate-x-0': gradientsReady,
                 'translate-x-[-400px]': !gradientsReady,
