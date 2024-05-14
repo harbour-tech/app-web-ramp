@@ -23,7 +23,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "types": ["vite-plugin-svgr/client"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
