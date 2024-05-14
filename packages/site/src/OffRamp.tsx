@@ -260,7 +260,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
 
   return (
-    <div className="flex items-start gap-8 mb-10">
+    <div className="flex items-start gap-8">
       {needSetBankAccount && (
         <>
           <div className="basis-1/3 grid gap-4"></div>

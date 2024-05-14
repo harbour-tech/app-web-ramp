@@ -58,6 +58,8 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
                   ? 'translateX(-15vw)'
                   : 'translateX(0px)',
               opacity: controllsVisible ? 1 : 0,
+              width: !logoVisible ? '100%' : 'auto',
+              padding: logoVisible ? '0' : '0 10vw',
             }}
           >
             <MetaMaskProvider>
