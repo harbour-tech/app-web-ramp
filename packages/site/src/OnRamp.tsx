@@ -18,6 +18,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
 import { BankAccount } from '@/types/bankAccount';
+import { AssetAndWallet } from './components/AssetAndWallet';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -81,6 +82,18 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
           onSelected={handleSelectAsset}
           selected={selectedAsset}
           description="Step 2: Choose the asset you want to onramp"
+        />
+        <AssetAndWallet
+          assets={account?.cryptoAssets}
+          onAssetSelected={handleSelectAsset}
+          selectedAsset={selectedAsset}
+          assetDescription="Step 2: Choose the asset you want to onramp"
+          wallets={account.wallets}
+          selectedWallet={selectedWallet}
+          onWalletSelected={handleSelectWalletClick}
+          onAddWallet={onAddWallet}
+          walletDescription="Step 1: Choose the wallet you want to onramp assets to"
+          protocol={selectedAsset ? selectedAsset.protocol : undefined}
         />
       </div>
       <div className="basis-1/3">
