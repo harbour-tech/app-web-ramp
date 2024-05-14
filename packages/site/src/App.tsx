@@ -16,6 +16,7 @@ import {
 } from '@/utils';
 import { Separator } from '@radix-ui/react-separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Success } from '@/components/Success';
 import { OnRamp } from '@/OnRamp';
 import { Snap } from '@/types';
 import { Wallet } from '@/components/Wallets';
@@ -42,6 +43,7 @@ const App = () => {
   const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(
     null,
   );
+  const [showSuccess, setShowSuccess] = useState(false);
   const isMetaMaskReady = metamask.snapsDetected;
 
   const load = async () => {
@@ -100,6 +102,16 @@ const App = () => {
     setOnFinishCallback(() => load());
   }, []);
 
+  useEffect(() => {
+    if (showSuccess) {
+      const timer = setTimeout(() => {
+        setShowSuccess(false);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccess]);
+
   const handleConnectClick = async () => {
     try {
       await connectSnap();
@@ -109,10 +121,15 @@ const App = () => {
         payload: installedSnap,
       });
       toast.success('Snap connected to MetaMask');
+      setShowSuccess(true);
     } catch (error) {
       toast.error('Failed to connect to MetaMask');
       metamaskDispatch({ type: MetamaskActions.SetError, payload: error });
     }
+  };
+
+  const handleSuccessButtonClick = () => {
+    setShowSuccess(false);
   };
 
   const handleAddWallet = async (wallet: Wallet) => {
@@ -253,31 +270,35 @@ const App = () => {
 
   return (
     <>
-      <div className="max-w-[430px] mt-4">
-        <h3 className="heading3 mb-2">
-          Say goodbye to the hassle and costs of on and off ramping
-        </h3>
-        <p className="text-muted-foreground caption1">
-          Experience seamless transfers between your bank account and MetaMask
-          wallet with Harbour
-        </p>
-      </div>
-      <div className="py-2">
-        <Separator className="my-4" />
-        {!isMetaMaskReady && (
-          <Button asChild>
-            <a
-              href="https://chromewebstore.google.com/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk"
-              target="_blank"
-            >
-              Install MetaMask
-            </a>
-          </Button>
-        )}
-        {shouldDisplayReconnectButton(
-          metamask.installedSnap as unknown as Snap,
-        ) && <Button onClick={handleConnectClick}>Reconnect Snap</Button>}
-      </div>
+      {!showSuccess && (
+        <>
+          <div className="max-w-[430px] mt-4">
+            <h3 className="heading3 mb-2">
+              Say goodbye to the hassle and costs of on and off ramping
+            </h3>
+            <p className="text-muted-foreground caption1">
+              Experience seamless transfers between your bank account and
+              MetaMask wallet with Harbour
+            </p>
+          </div>
+          <div className="py-2">
+            <Separator className="my-4" />
+            {!isMetaMaskReady && (
+              <Button asChild>
+                <a
+                  href="https://chromewebstore.google.com/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk"
+                  target="_blank"
+                >
+                  Install MetaMask
+                </a>
+              </Button>
+            )}
+            {shouldDisplayReconnectButton(
+              metamask.installedSnap as unknown as Snap,
+            ) && <Button onClick={handleConnectClick}>Reconnect Snap</Button>}
+          </div>
+        </>
+      )}
       <div>
         {!metamask.installedSnap && (
           <>
@@ -290,7 +311,8 @@ const App = () => {
           </>
         )}
       </div>
-      {content}
+      {showSuccess && <Success onNextButtonClick={handleSuccessButtonClick} />}
+      {!showSuccess && content}
     </>
   );
 };
