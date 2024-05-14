@@ -8,8 +8,14 @@ import {
   SetBankAccountRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import { Button } from '@/components/ui/button';
-import { connectSnap, getSnap, requestPersonalSign } from '@/utils';
+import {
+  connectSnap,
+  getSnap,
+  isLocalSnap,
+  requestPersonalSign,
+} from '@/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Success } from '@/components/Success';
 import { OnRamp } from '@/OnRamp';
 import { Wallet } from '@/components/Wallets';
 import { OffRamp } from '@/OffRamp';
@@ -20,6 +26,7 @@ import { keccak256, SigningKey } from 'ethers';
 import { useOnboardingModal } from '@/contexts/OnboardingModal';
 import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
 import MetaMaskWithLogo from '@/assets/metamaskWithName.svg?react';
+import { Snap } from '@/types';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
@@ -35,9 +42,13 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(
     null,
   );
+  const [showSuccess, setShowSuccess] = useState(false);
   const isMetaMaskReady = metamask.snapsDetected;
 
-  const load = async () => {
+  const load = async (message?: string) => {
+    if (message === 'onboardingFinished') {
+      setShowSuccess(true);
+    }
     let response: GetAccountInfoResponse;
     try {
       response = await rampClient.getAccountInfo({});
@@ -90,7 +101,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   }, [metamask.installedSnap, rampClient]);
 
   useEffect(() => {
-    setOnFinishCallback(() => load());
+    setOnFinishCallback((message) => load(message));
   }, []);
 
   const handleConnectClick = async () => {
@@ -287,7 +298,15 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
     handleAddWallet,
     handleSaveBankAccount,
     isMetaMaskReady,
+    showSuccess,
   ]);
+
+  if (showSuccess)
+    return <Success onNextButtonClick={() => setShowSuccess(false)} />;
+  console.log('token', import.meta.env.VITE_ENABLE_RESET);
+  const resetLink =
+    import.meta.env.VITE_ENABLE_RESET &&
+    shouldDisplayReconnectButton(metamask.installedSnap as unknown as Snap);
 
   return (
     <>
@@ -297,13 +316,22 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
         </h3>
         <p className="text-muted-foreground caption1">
           Experience seamless transfers between your bank account and MetaMask
-          wallet with Harbour
+          wallet with{' '}
+          <span
+            className={resetLink ? 'text-sky' : ''}
+            onClick={() => (resetLink ? handleConnectClick() : () => null)}
+          >
+            Harbour
+          </span>
         </p>
       </div>
       {content}
     </>
   );
 };
+
+const shouldDisplayReconnectButton = (installedSnap?: Snap) =>
+  installedSnap && isLocalSnap(installedSnap?.id);
 
 export default App;
 

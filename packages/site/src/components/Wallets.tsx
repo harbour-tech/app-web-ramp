@@ -93,7 +93,7 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
             if (selectedWallet) handleSelect(selectedWallet);
           }}
         >
-          <SelectWalletTrigger>
+          <SelectWalletTrigger disabled={wallets.length === 0}>
             {selectedIcon}
             <SelectWalletValue placeholder="Select Wallet" />
           </SelectWalletTrigger>

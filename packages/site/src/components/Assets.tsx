@@ -66,7 +66,7 @@ export const Assets: FunctionComponent<AssetsProps> = ({
             if (asset) handleClick(asset);
           }}
         >
-          <SelectAssetTrigger>
+          <SelectAssetTrigger disabled={assets.length === 0}>
             {selectedIcon}
             <SelectAssetValue placeholder="Select Asset" />
           </SelectAssetTrigger>

@@ -3,7 +3,7 @@ import { ReactNode, createContext, useEffect, useRef, useState } from 'react';
 
 interface OnboardingModalContextType {
   openOnboardingModal: (url: string) => void;
-  setOnFinishCallback: (callback: () => void) => void;
+  setOnFinishCallback: (callback: (message?: string) => void) => void;
   closeOnboardingModal: () => void;
 }
 
@@ -17,7 +17,7 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
   const [isOnboardingVisible, setIsOnboardingVisible] = useState(false);
   const [isOnboardingLoading, setIsOnboardingLoading] = useState(false);
   const [url, setUrl] = useState<string | null>(null);
-  const callbackRef = useRef<() => void>();
+  const callbackRef = useRef<(message?: string) => void>();
 
   const onMessage = (payload: MessageEvent<unknown>) => {
     if (!payload.origin.includes(window.location.host)) {
@@ -32,7 +32,7 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
       if (data === 'closeWebOnboarding') {
         setIsOnboardingVisible(false);
       }
-      callbackRef.current?.();
+      callbackRef.current?.(data as unknown as string);
     }
   };
 
