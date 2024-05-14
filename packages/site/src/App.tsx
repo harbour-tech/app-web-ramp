@@ -303,7 +303,6 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
 
   if (showSuccess)
     return <Success onNextButtonClick={() => setShowSuccess(false)} />;
-  console.log('token', import.meta.env.VITE_ENABLE_RESET);
   const resetLink =
     import.meta.env.VITE_ENABLE_RESET &&
     shouldDisplayReconnectButton(metamask.installedSnap as unknown as Snap);
