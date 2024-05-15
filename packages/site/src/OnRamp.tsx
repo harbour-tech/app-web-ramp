@@ -18,6 +18,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
 import { BankAccount } from '@/types/bankAccount';
+import { AmountInput } from '@/components/ui/amountInput';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -98,46 +99,66 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
 
       <div className="basis-1/3">
         {onRampAsset && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Magic Ramp Details</CardTitle>
-              <CardDescription>
-                Step 3: Transfer {currency} to these details to receive{' '}
-                {onRampAsset.asset!.shortName} on your selected wallet.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {account.onrampBankAccount.case && (
-                <BankAccountComponent account={getOnRampBankAccount()} />
-              )}
-              <div className="w-full max-w-sm items-center">
-                <Label htmlFor="holder">Account Holder</Label>
-                {account.accountHolder && (
-                  <Input
-                    type="text"
-                    id="holder"
-                    placeholder="Account Holder"
-                    readOnly={true}
-                    value={account.accountHolder}
-                  />
+          <>
+            <Card>
+              <CardHeader>
+                <CardTitle>Magic Ramp Details</CardTitle>
+                <CardDescription>
+                  Step 3: Transfer {currency} to these details to receive{' '}
+                  {onRampAsset.asset!.shortName} on your selected wallet.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {account.onrampBankAccount.case && (
+                  <BankAccountComponent account={getOnRampBankAccount()} />
                 )}
-              </div>
-              <div className="w-full max-w-sm items-center">
-                <Label htmlFor="ref">Payment Reference</Label>
-                {selectedAsset && (
-                  <div className="flex items-center gap-4">
+                <div className="w-full max-w-sm items-center">
+                  <Label htmlFor="holder">Account Holder</Label>
+                  {account.accountHolder && (
                     <Input
                       type="text"
-                      id="ref"
+                      id="holder"
+                      placeholder="Account Holder"
                       readOnly={true}
-                      value={onRampAsset!.onRamp!.paymentReference}
-                      withCopyToClipboard
+                      value={account.accountHolder}
                     />
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                  )}
+                </div>
+                <div className="w-full max-w-sm items-center">
+                  <Label htmlFor="ref">Payment Reference</Label>
+                  {selectedAsset && (
+                    <div className="flex items-center gap-4">
+                      <Input
+                        type="text"
+                        id="ref"
+                        readOnly={true}
+                        value={onRampAsset!.onRamp!.paymentReference}
+                        withCopyToClipboard
+                      />
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Onramp Calculator</CardTitle>
+                <CardDescription>
+                  {' '}
+                  Use the calculator below to work out the current conversion
+                  rate
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AmountInput currency={currency} label="I SEND:" value={0} />
+                <AmountInput
+                  currency={onRampAsset.asset?.shortName}
+                  label="I will get:"
+                  value={0}
+                />
+              </CardContent>
+            </Card>
+          </>
         )}
       </div>
     </div>

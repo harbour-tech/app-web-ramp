@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "buf": "npm run buf:sync && npm run buf:generate && npm run buf:clean",
+    "buf:clean": "rm -rf proto && npx prettier --write ./src/harbour/gen",
+    "buf:generate": "buf generate && sed -i '' s/_pb.js/_pb/ src/harbour/gen/*/v1/public_*.ts",
+    "buf:sync": "rm -rf proto && rm -rf _tmp && mkdir -p proto/ramp/v1/ && git clone --depth 1 git@github.com:harbour-tech/be-ramp-service.git _tmp && mv _tmp/proto/ramp/v1/public.proto proto/ramp/v1/ && rm -rf _tmp",
     "build": "tsc && vite build",
     "build:staging": "tsc && vite build --mode staging",
     "dev": "vite",
@@ -31,6 +35,10 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@bufbuild/connect-web": "*",
+    "@bufbuild/protobuf": "*",
+    "@bufbuild/protoc-gen-connect-web": "*",
+    "@bufbuild/protoc-gen-es": "*",
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
