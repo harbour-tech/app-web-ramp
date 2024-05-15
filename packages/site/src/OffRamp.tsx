@@ -37,6 +37,7 @@ import {
   requestAccounts,
   switchNetwork,
 } from '@/utils';
+import { AssetAndWallet } from './components/AssetAndWallet';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -299,6 +300,18 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
               onSelected={handleSelectAsset}
               selected={selectedAsset}
               description="Step 2: Choose the asset and chain you want to offramp"
+            />
+            <AssetAndWallet
+              assets={account?.cryptoAssets}
+              onAssetSelected={handleSelectAsset}
+              selectedAsset={selectedAsset}
+              assetDescription="Step 2: Choose the asset and chain you want to offramp"
+              wallets={account.wallets}
+              selectedWallet={selectedWallet}
+              onWalletSelected={handleSelectWalletClick}
+              onAddWallet={onAddWallet}
+              walletDescription="Step 1: Choose the wallet you want to offramp assets from"
+              protocol={selectedAsset ? selectedAsset.protocol : undefined}
             />
           </div>
           <div className="basis-1/3 grid gap-4">
