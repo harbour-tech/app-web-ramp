@@ -11,8 +11,11 @@ const IntroAnimatedLogos: React.FC<IntroAnimatedLogosProps> = ({
   disabledAnimations = false,
 }) => {
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
-      <div className={`flex flex-col items-center justify-center space-y-12`}>
+    <div
+      className="relative flex items-center justify-center"
+      style={{ transition: 'all 2s' }}
+    >
+      <div className={`flex flex-col items-center justify-center space-y-12 `}>
         <img
           src={LogotypeHarbourMedium}
           className={`${disabledAnimations ? '' : 'animate-slideFromLeft'}`}

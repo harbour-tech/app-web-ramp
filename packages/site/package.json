@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
+    "build:staging": "tsc && vite build --mode staging",
     "dev": "vite",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -42,6 +43,7 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "postcss": "^8.4.38",
     "typescript": "^5.4.5",
-    "vite": "^5.2.9"
+    "vite": "^5.2.9",
+    "vite-plugin-svgr": "^4.2.0"
   }
 }

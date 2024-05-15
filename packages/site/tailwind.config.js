@@ -10,7 +10,6 @@ export const prefix = '';
 export const theme = {
   container: {
     center: true,
-    padding: '2rem',
     screens: {
       '2xl': '1400px',
     },
@@ -92,6 +91,11 @@ export const theme = {
       'accordion-up': 'accordion-up 0.2s ease-out',
     },
     backgroundImage: {
+      'first-part-of-screen':
+        'linear-gradient(45deg, rgba(17, 26, 35, 0) 31.2%, rgba(67, 151, 249, 0.2) 77.55%, #1543E7 130.81%)',
+      'second-part-of-screen':
+        'linear-gradient(309.04deg, rgba(0, 0, 0, 0) 35.09%, rgba(52, 143, 249, 0.4) 106.03%, #1543E7 168.93%)',
+
       'gray-glass-90':
         'linear-gradient(90deg, rgba(43, 55, 65, 0.7) 0%, rgba(37, 48, 58, 0.6) 62.55%, rgba(26, 37, 48, 0.7) 100%)',
       'orange-fog':
