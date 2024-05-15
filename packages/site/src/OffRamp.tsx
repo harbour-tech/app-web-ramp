@@ -8,8 +8,6 @@ import {
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import React, { FunctionComponent, useState } from 'react';
-import { Wallet, Wallets } from '@/components/Wallets';
-import { Assets } from '@/components/Assets';
 import {
   Card,
   CardContent,
@@ -37,7 +35,7 @@ import {
   requestAccounts,
   switchNetwork,
 } from '@/utils';
-import { AssetAndWallet } from './components/AssetAndWallet';
+import { AssetAndWallet, Wallet } from './components/AssetAndWallet';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -261,7 +259,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
 
   return (
-    <div className="flex items-start gap-8 mb-10">
+    <div className="flex items-start justify-center gap-8 mb-10">
       {needSetBankAccount && (
         <>
           <div className="basis-1/3 grid gap-4"></div>
@@ -295,45 +293,26 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       {account.offrampBankAccount.case && (
         <>
           <div className="basis-1/3">
-            <Assets
-              assets={account.cryptoAssets}
-              onSelected={handleSelectAsset}
-              selected={selectedAsset}
-              description="Step 2: Choose the asset and chain you want to offramp"
-            />
             <AssetAndWallet
               assets={account?.cryptoAssets}
               onAssetSelected={handleSelectAsset}
               selectedAsset={selectedAsset}
-              assetDescription="Step 2: Choose the asset and chain you want to offramp"
+              description="Choose the asset you want to offramp."
               wallets={account.wallets}
               selectedWallet={selectedWallet}
               onWalletSelected={handleSelectWalletClick}
               onAddWallet={onAddWallet}
-              walletDescription="Step 1: Choose the wallet you want to offramp assets from"
+              noteDescription="Ensure you check all wallets you may wish to ramp from in the MetaMask pop up!"
               protocol={selectedAsset ? selectedAsset.protocol : undefined}
             />
           </div>
-          <div className="basis-1/3 grid gap-4">
-            {selectedAsset && (
-              <Wallets
-                protocol={selectedAsset.protocol}
-                wallets={account.wallets}
-                selectedWallet={selectedWallet}
-                onWalletSelected={handleSelectWalletClick}
-                onAddWallet={onAddWallet}
-                description="Step 1: Choose the wallet you want to offramp assets from"
-              />
-            )}
-          </div>
-          <div className="basis-1/3">
-            {offRampAsset && (
+          {offRampAsset && (
+            <div className="basis-1/3">
               <Card>
                 <CardHeader>
                   <CardTitle>Crypto Transactions Details</CardTitle>
                   <CardDescription>
-                    Step 3: Just enter amount and confirm transaction with
-                    MetaMask.
+                    Just enter amount and confirm transaction with MetaMask.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -416,8 +395,8 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   </div>
                 </CardFooter>
               </Card>
-            )}
-          </div>
+            </div>
+          )}
         </>
       )}
     </div>
