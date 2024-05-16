@@ -36,22 +36,45 @@ import CryptoNetworkLogo_Ethereum from '@/assets/cryptoNetworkLogo_Ethereum.svg'
 import CryptoNetworkLogo_Polygon from '@/assets/cryptoNetworkLogo_Polygon.svg';
 import CryptoNetworkLogo_Terra from '@/assets/cryptoNetworkLogo_Terra.svg';
 import WalletIcon from '@/assets/walletIcon.svg';
+import AssetSymbolIcon_USDC from '@/assets/assetSymbolIcon_USDC.svg';
+import MoneyIcon from '@/assets/moneyIcon.svg';
 
-export interface WalletsProps {
-  protocol: Protocol;
+import {
+  AssetId,
+  GetAccountInfoResponse_CryptoAsset,
+} from '@/harbour/gen/ramp/v1/public_pb';
+import {
+  SelectAsset,
+  SelectAssetContent,
+  SelectAssetItem,
+  SelectAssetTrigger,
+  SelectAssetValue,
+} from './ui/selectAsset';
+import { Note, NoteDescription } from './ui/note';
+
+export interface AssetAndWalletProps {
+  protocol: Protocol | undefined;
   wallets: GetAccountInfoResponse_Wallet[];
   selectedWallet?: GetAccountInfoResponse_Wallet;
   onWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void;
   onAddWallet: (wallet: Wallet) => Promise<void>;
+  noteDescription: string;
+  assets: GetAccountInfoResponse_CryptoAsset[];
+  selectedAsset?: GetAccountInfoResponse_CryptoAsset;
+  onAssetSelected: (asset: GetAccountInfoResponse_CryptoAsset) => void;
   description: string;
 }
 
-export const Wallets: FunctionComponent<WalletsProps> = ({
+export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
   protocol,
   wallets,
   selectedWallet,
   onWalletSelected,
   onAddWallet,
+  noteDescription,
+  assets,
+  selectedAsset,
+  onAssetSelected,
   description,
 }) => {
   const handleSelect = (wallet: GetAccountInfoResponse_Wallet) => {
@@ -70,61 +93,111 @@ export const Wallets: FunctionComponent<WalletsProps> = ({
     [Protocol.TERRA]: CryptoNetworkLogo_Terra,
   };
 
-  const itemIcon = (wallet: Protocol) => {
+  const walletItemIcon = (wallet: Protocol) => {
     return <img width={24} src={protocolLogos[wallet]} />;
   };
 
-  const selectedIcon = selectedWallet ? (
-    itemIcon(selectedWallet.protocol as Protocol)
+  const walletSelectedIcon = selectedWallet ? (
+    walletItemIcon(selectedWallet.protocol as Protocol)
   ) : (
     <img width={24} src={WalletIcon} />
+  );
+  const handleClick = (asset: GetAccountInfoResponse_CryptoAsset) => {
+    onAssetSelected(asset);
+  };
+
+  const assetLogos = {
+    [AssetId.UNSPECIFIED]: undefined,
+    [AssetId.USDC]: AssetSymbolIcon_USDC,
+  };
+
+  const assetItemIcon = (asset: AssetId) => {
+    return <img width={24} src={assetLogos[asset]} />;
+  };
+
+  const assetSelectedIcon = selectedAsset ? (
+    assetItemIcon(selectedAsset.assetId as AssetId)
+  ) : (
+    <img width={24} src={MoneyIcon} />
   );
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Wallet</CardTitle>
+        <CardTitle className="mb-3">Asset & Wallet</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <SelectWallet
+      <CardContent className="space-y-2">
+        <Note>
+          <NoteDescription>{noteDescription}</NoteDescription>
+        </Note>
+        <SelectAsset
           onValueChange={(value) => {
-            const selectedWallet = wallets.find((w) => w.name === value);
-            if (selectedWallet) handleSelect(selectedWallet);
+            const asset = assets.find((asset) => asset.shortName === value);
+            if (asset) handleClick(asset);
           }}
         >
-          <SelectWalletTrigger disabled={wallets.length === 0}>
-            {selectedIcon}
-            <SelectWalletValue placeholder="Select Wallet" />
-          </SelectWalletTrigger>
-          <SelectWalletContent>
-            {wallets
-              .filter((w) => w.protocol === protocol)
-              .map((wallet) => (
-                <SelectWalletItem
-                  key={wallet.protocol + ':' + wallet.address}
-                  value={wallet.name || wallet.address}
-                  icon={itemIcon(wallet.protocol)}
-                  walletAddress={wallet.address}
-                >
-                  {wallet.name || wallet.address.substring(0, 6)}
-                </SelectWalletItem>
-              ))}
-          </SelectWalletContent>
-        </SelectWallet>
-
-        <AddWallet
-          protocol={protocol}
-          existing={wallets
-            .filter((w) => w.protocol == protocol)
-            .map((w) => w.address)}
-          onAdd={handleAddWallet}
-        />
+          <SelectAssetTrigger disabled={assets.length === 0}>
+            {assetSelectedIcon}
+            <SelectAssetValue placeholder="Select Asset" />
+          </SelectAssetTrigger>
+          <SelectAssetContent>
+            {assets.map((asset) => (
+              <SelectAssetItem
+                key={asset!.shortName}
+                value={asset.shortName}
+                icon={assetItemIcon(asset.assetId)}
+              >
+                {asset.shortName}
+              </SelectAssetItem>
+            ))}
+          </SelectAssetContent>
+        </SelectAsset>
+        {selectedAsset && (
+          <>
+            <SelectWallet
+              onValueChange={(value) => {
+                const selectedWallet = wallets.find((w) => w.name === value);
+                if (selectedWallet) handleSelect(selectedWallet);
+              }}
+            >
+              <SelectWalletTrigger disabled={wallets.length === 0}>
+                {walletSelectedIcon}
+                <SelectWalletValue placeholder="Select Wallet" />
+              </SelectWalletTrigger>
+              <SelectWalletContent>
+                {wallets
+                  .filter((w) => w.protocol === protocol)
+                  .map((wallet) => (
+                    <SelectWalletItem
+                      key={wallet.protocol + ':' + wallet.address}
+                      value={wallet.name || wallet.address}
+                      icon={walletItemIcon(wallet.protocol)}
+                      walletAddress={wallet.address}
+                    >
+                      {wallet.name || wallet.address.substring(0, 6)}
+                    </SelectWalletItem>
+                  ))}
+              </SelectWalletContent>
+            </SelectWallet>
+            <AddWallet
+              protocol={protocol ? protocol : Protocol.UNSPECIFIED}
+              existing={wallets
+                .filter((w) => w.protocol == protocol)
+                .map((w) => w.address)}
+              onAdd={handleAddWallet}
+            />
+          </>
+        )}
       </CardContent>
     </Card>
   );
 };
-
+export interface Wallet {
+  protocol: Protocol;
+  name: string;
+  address: string;
+}
 interface AddWalletProps {
   protocol: Protocol;
   existing: string[];
@@ -263,9 +336,3 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
     </Dialog>
   );
 };
-
-export interface Wallet {
-  protocol: Protocol;
-  name: string;
-  address: string;
-}

@@ -8,9 +8,8 @@ import {
   GetAccountInfoResponse_Wallet_RampAsset,
   Protocol,
 } from '@/harbour/gen/ramp/v1/public_pb';
+
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
-import { Wallet, Wallets } from '@/components/Wallets';
-import { Assets } from '@/components/Assets';
 import { useRampClient } from '@/contexts';
 import {
   Card,
@@ -28,6 +27,8 @@ import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
 import { useDebounce } from '@/hooks/useDebounce';
 import { toast } from 'react-toastify';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { AssetAndWallet, Wallet } from './components/AssetAndWallet';
+import StepProgressBar from './components/ui/stepProgressBar';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -119,130 +120,130 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   }, [currency, onRampAsset?.asset?.shortName, debounceAmmountInput]);
 
   return (
-    <div className="flex items-start gap-8">
-      <div className="basis-1/3">
-        <Assets
-          assets={account?.cryptoAssets}
-          onSelected={handleSelectAsset}
-          selected={selectedAsset}
-          description="Step 2: Choose the asset you want to onramp"
-        />
-      </div>
-      <div className="basis-1/3">
-        {selectedAsset && (
-          <Wallets
-            protocol={selectedAsset.protocol}
+    <div className="flex flex-col items-center">
+      <StepProgressBar currentStep={selectedWallet ? 2 : 1} totalSteps={2} />
+      <div className="flex items-start justify-center gap-8 pt-6 w-full">
+        <div className="basis-1/3">
+          <AssetAndWallet
+            assets={account?.cryptoAssets}
+            onAssetSelected={handleSelectAsset}
+            selectedAsset={selectedAsset}
+            description="Choose the asset you want to onramp."
             wallets={account.wallets}
             selectedWallet={selectedWallet}
             onWalletSelected={handleSelectWalletClick}
             onAddWallet={onAddWallet}
-            description="Step 1: Choose the wallet you want to onramp assets to"
+            noteDescription="Ensure you check all wallets you may wish to ramp to in the MetaMask pop up!"
+            protocol={selectedAsset ? selectedAsset.protocol : undefined}
           />
-        )}
-      </div>
+        </div>
 
-      <div className="basis-1/3">
         {onRampAsset && (
           <>
-            <Card>
-              <CardHeader>
-                <CardTitle>Magic Ramp Details</CardTitle>
-                <CardDescription>
-                  Step 3: Transfer {currency} to these details to receive{' '}
-                  {onRampAsset.asset!.shortName} on your selected wallet.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {account.onrampBankAccount.case && (
-                  <BankAccountComponent account={getOnRampBankAccount()} />
-                )}
-                <div className="w-full max-w-sm items-center">
-                  <Label htmlFor="holder">Account Holder</Label>
-                  {account.accountHolder && (
-                    <Input
-                      type="text"
-                      id="holder"
-                      placeholder="Account Holder"
-                      readOnly={true}
-                      value={account.accountHolder}
-                    />
+            <div className="basis-1/3">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Magic Ramp Details</CardTitle>
+                  <CardDescription>
+                    Transfer {currency} to these details to receive{' '}
+                    {onRampAsset.asset!.shortName} on your selected wallet.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {account.onrampBankAccount.case && (
+                    <BankAccountComponent account={getOnRampBankAccount()} />
                   )}
-                </div>
-                <div className="w-full max-w-sm items-center">
-                  <Label htmlFor="ref">Payment Reference</Label>
-                  {selectedAsset && (
-                    <div className="flex items-center gap-4">
+                  <div className="w-full max-w-sm items-center">
+                    <Label htmlFor="holder">Account Holder</Label>
+                    {account.accountHolder && (
                       <Input
                         type="text"
-                        id="ref"
+                        id="holder"
+                        placeholder="Account Holder"
                         readOnly={true}
-                        value={onRampAsset!.onRamp!.paymentReference}
-                        withCopyToClipboard
+                        value={account.accountHolder}
                       />
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Onramp Calculator</CardTitle>
-                <CardDescription>
-                  {' '}
-                  Use the calculator below to work out the current conversion
-                  rate
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="gap-[10px]">
-                <AmountInput
-                  ref={firstInputRef}
-                  onClick={() => firstInputRef.current?.focus()}
-                  currency={currency as AmountInputProps['currency']}
-                  label="I SEND:"
-                  value={ammountInput}
-                  onChange={(event) => setAmmountInput(event.target.value)}
-                  onFocus={() =>
-                    ammountInput === '0' ? setAmmountInput('') : null
-                  }
-                />
-                <AmountInput
-                  currency={
-                    onRampAsset.asset?.shortName as AmountInputProps['currency']
-                  }
-                  label="I will get:"
-                  value={rampFeeResponse?.cryptoAssetAmount || '0'}
-                  disabled
-                  isLoading={countingFees}
-                />
-                <Note>
-                  <NoteTitle>Note</NoteTitle>
-                  <NoteDescription>
-                    The actual amount will depend on the exchange rate and
-                    network fee at the moment of receiving the payment.
-                  </NoteDescription>
-                </Note>
-                <div className="flex flex-col gap-[10px]">
-                  <p className="subtitle1 text-gray-50">
-                    {currency}:{onRampAsset.asset?.shortName} rate:{' '}
-                    {countingFees
-                      ? SmallLoader
-                      : rampFeeResponse?.exchangeRate || 'unknown'}
-                  </p>
-                  <p className="subtitle1 text-gray-50">
-                    Esimated network fees:{' '}
-                    {countingFees
-                      ? SmallLoader
-                      : rampFeeResponse?.networkFeeAmount || 'unknown'}
-                  </p>
-                  <p className="subtitle1 text-gray-50">
-                    Processing fees:{' '}
-                    {countingFees
-                      ? SmallLoader
-                      : rampFeeResponse?.processingFeeAmount || 'unknown'}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+                    )}
+                  </div>
+                  <div className="w-full max-w-sm items-center">
+                    <Label htmlFor="ref">Payment Reference</Label>
+                    {selectedAsset && (
+                      <div className="flex items-center gap-4">
+                        <Input
+                          type="text"
+                          id="ref"
+                          readOnly={true}
+                          value={onRampAsset!.onRamp!.paymentReference}
+                          withCopyToClipboard
+                        />
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="basis-1/3">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Onramp Calculator</CardTitle>
+                  <CardDescription>
+                    {' '}
+                    Use the calculator below to work out the current conversion
+                    rate
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="gap-[10px]">
+                  <AmountInput
+                    ref={firstInputRef}
+                    onClick={() => firstInputRef.current?.focus()}
+                    currency={currency as AmountInputProps['currency']}
+                    label="I SEND:"
+                    value={ammountInput}
+                    onChange={(event) => setAmmountInput(event.target.value)}
+                    onFocus={() =>
+                      ammountInput === '0' ? setAmmountInput('') : null
+                    }
+                  />
+                  <AmountInput
+                    currency={
+                      onRampAsset.asset
+                        ?.shortName as AmountInputProps['currency']
+                    }
+                    label="I will get:"
+                    value={rampFeeResponse?.cryptoAssetAmount || '0'}
+                    disabled
+                    isLoading={countingFees}
+                  />
+                  <Note>
+                    <NoteTitle>Note</NoteTitle>
+                    <NoteDescription>
+                      The actual amount will depend on the exchange rate and
+                      network fee at the moment of receiving the payment.
+                    </NoteDescription>
+                  </Note>
+                  <div className="flex flex-col gap-[10px]">
+                    <p className="subtitle1 text-gray-50">
+                      {currency}:{onRampAsset.asset?.shortName} rate:{' '}
+                      {countingFees
+                        ? SmallLoader
+                        : rampFeeResponse?.exchangeRate || 'unknown'}
+                    </p>
+                    <p className="subtitle1 text-gray-50">
+                      Esimated network fees:{' '}
+                      {countingFees
+                        ? SmallLoader
+                        : rampFeeResponse?.networkFeeAmount || 'unknown'}
+                    </p>
+                    <p className="subtitle1 text-gray-50">
+                      Processing fees:{' '}
+                      {countingFees
+                        ? SmallLoader
+                        : rampFeeResponse?.processingFeeAmount || 'unknown'}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </>
         )}
       </div>
