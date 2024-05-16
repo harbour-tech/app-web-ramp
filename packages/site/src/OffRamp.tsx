@@ -322,7 +322,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="w-full max-w-sm items-center">
+                    <div className="flex flex-col w-full max-w-sm items-start mb-3">
                       <Label htmlFor="amount">
                         Amount {offRampAsset!.asset?.shortName}
                       </Label>
@@ -385,7 +385,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         </p>
                       </div>
                     </div>
-                    <div className="flex-row w-full max-w-sm items-center">
+                    <div className="flex flex-col w-full max-w-sm items-start">
                       <Label htmlFor="address">
                         Magic Ramp address for {offRampAsset.asset?.shortName}
                       </Label>

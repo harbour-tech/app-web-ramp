@@ -87,9 +87,9 @@ const Iban: FunctionComponent<IbanProps> = ({
   };
 
   return (
-    <div className="w-full max-w-sm items-center">
+    <div className="flex flex-col w-full max-w-sm items-start">
       <Label htmlFor="iban">IBAN</Label>
-      <div className="flex items-center gap-4">
+      <div className="flex w-full items-center gap-4">
         <Input
           type="text"
           id="iban"

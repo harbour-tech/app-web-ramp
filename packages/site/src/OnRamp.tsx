@@ -106,7 +106,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                 {account.onrampBankAccount.case && (
                   <BankAccountComponent account={getOnRampBankAccount()} />
                 )}
-                <div className="w-full max-w-sm items-center">
+                <div className="flex flex-col w-full max-w-sm items-start">
                   <Label htmlFor="holder">Account Holder</Label>
                   {account.accountHolder && (
                     <Input
@@ -118,10 +118,10 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                     />
                   )}
                 </div>
-                <div className="w-full max-w-sm items-center">
+                <div className="flex flex-col w-full max-w-sm items-start">
                   <Label htmlFor="ref">Payment Reference</Label>
                   {selectedAsset && (
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 w-full">
                       <Input
                         type="text"
                         id="ref"

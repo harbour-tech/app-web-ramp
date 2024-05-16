@@ -300,26 +300,20 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
         )}
         {address && (
           <>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
+            <div className="flex flex-col space-y-4 py-4">
+              <div className="flex flex-col items-start">
                 <Label htmlFor="link" className="text-right">
                   Address
                 </Label>
-                <Input
-                  id="link"
-                  value={address.address}
-                  readOnly
-                  className="col-span-3"
-                />
+                <Input id="link" value={address.address} readOnly />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
+              <div className="flex flex-col items-start">
                 <Label htmlFor="link" className="text-right">
                   Wallet Name
                 </Label>
                 <Input
                   id="link"
                   value={address.name}
-                  className="col-span-3"
                   autoFocus={true}
                   onChange={handleNameChange}
                 />
