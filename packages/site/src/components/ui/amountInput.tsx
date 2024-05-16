@@ -3,16 +3,21 @@ import { cn } from '@/lib/utils';
 import AssetSymbolIcon_EUR from '@/assets/assetSymbolIcon_EUR.svg';
 import AssetSymbolIcon_USDC from '@/assets/assetSymbolIcon_USDC.svg';
 import AssetSymbolIcon_GBP from '@/assets/assetSymbolIcon_GBP.svg';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export interface AmountInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   validate?: (value: string) => string | null;
   currency: 'EUR' | 'GBP' | 'USDC';
   label: string;
+  isLoading?: boolean;
 }
 
 const AmountInput = React.forwardRef<HTMLInputElement, AmountInputProps>(
-  ({ className, validate, currency, label, ...props }, forwardedRef) => {
+  (
+    { className, validate, currency, label, isLoading, ...props },
+    forwardedRef,
+  ) => {
     const [value, setValue] = React.useState('');
     const [error, setError] = React.useState<string | null>(null);
     const internalRef = React.useRef<HTMLInputElement>(null);
@@ -47,7 +52,7 @@ const AmountInput = React.forwardRef<HTMLInputElement, AmountInputProps>(
     };
 
     return (
-      <div className="flex-row w-full">
+      <div className="flex-row w-full" onClick={props.onClick}>
         <div
           className={cn(
             'flex-col items-center w-full rounded-md bg-light-glass-70 shadow-inner px-4 py-3 space-y-3',
@@ -61,20 +66,30 @@ const AmountInput = React.forwardRef<HTMLInputElement, AmountInputProps>(
               {assetSymbolIcon()}
             </div>
             <p className="subtitle3 mr-2">{currency}</p>
-            <input
-              type={'text'}
-              value={value}
-              onInput={handleAmountInput}
-              onBlur={handleBlur}
-              className={cn(
-                'flex w-full truncate rounded-md bg-transparent text-right heading5 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-                className,
-                error &&
-                  'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
-              )}
-              ref={ref}
-              {...props}
-            />
+            {isLoading ? (
+              <div className="w-full flex justify-end">
+                <LoadingSpinner
+                  className="inline-block mt-[-4px]"
+                  height={20}
+                  width={20}
+                />
+              </div>
+            ) : (
+              <input
+                type={'text'}
+                value={value}
+                onInput={handleAmountInput}
+                onBlur={handleBlur}
+                className={cn(
+                  'flex w-full truncate rounded-md bg-transparent text-right heading5 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+                  className,
+                  error &&
+                    'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
+                )}
+                ref={ref}
+                {...props}
+              />
+            )}
           </div>
         </div>
         {error && <p className="text-red text-xs mt-1 flex w-full">{error}</p>}

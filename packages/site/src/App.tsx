@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
-import { MetamaskActions, useMetaMask } from '@/hooks/useMetaMask';
-import { useRampClient } from '@/hooks/useRpc';
 import {
   GetAccountInfoResponse,
   Protocol,
@@ -23,10 +21,15 @@ import { OffRamp } from '@/OffRamp';
 import { BankAccount } from '@/types/bankAccount';
 import { toast } from 'react-toastify';
 import { keccak256, SigningKey } from 'ethers';
-import { useOnboardingModal } from '@/contexts/OnboardingModal';
 import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
 import MetaMaskWithLogo from '@/assets/metamaskWithName.svg?react';
 import { Snap } from '@/types';
+import {
+  MetamaskActions,
+  useMetaMask,
+  useOnboardingModal,
+  useRampClient,
+} from '@/contexts';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],

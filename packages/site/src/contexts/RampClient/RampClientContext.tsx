@@ -1,23 +1,12 @@
-import React, { PropsWithChildren, useContext } from 'react';
-import { singRequest } from '@/utils';
 import RampClient, {
   EthereumSignature,
   Signature,
   SignerFunction,
-} from '../harbour';
+} from '@/harbour';
+import { singRequest } from '@/utils';
+import { PropsWithChildren, createContext } from 'react';
 
-export const RampClientContext = React.createContext<RampClient | null>(null);
-
-export const useRampClient = function (): RampClient {
-  const rampClient = useContext(RampClientContext);
-  if (!rampClient) {
-    throw new Error(
-      'Cannot call useRpc unless your component is within a ConnectRpcProvider',
-    );
-  }
-
-  return rampClient;
-};
+export const RampClientContext = createContext<RampClient | null>(null);
 
 export const RampClientProvider: React.FC<PropsWithChildren> = ({
   children,
