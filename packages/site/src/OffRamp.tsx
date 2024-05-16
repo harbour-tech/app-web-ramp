@@ -36,6 +36,7 @@ import {
   switchNetwork,
 } from '@/utils';
 import { AssetAndWallet, Wallet } from './components/AssetAndWallet';
+import StepProgressBar from './components/ui/stepProgressBar';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -291,113 +292,119 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         </>
       )}
       {account.offrampBankAccount.case && (
-        <>
-          <div className="basis-1/3">
-            <AssetAndWallet
-              assets={account?.cryptoAssets}
-              onAssetSelected={handleSelectAsset}
-              selectedAsset={selectedAsset}
-              description="Choose the asset you want to offramp."
-              wallets={account.wallets}
-              selectedWallet={selectedWallet}
-              onWalletSelected={handleSelectWalletClick}
-              onAddWallet={onAddWallet}
-              noteDescription="Ensure you check all wallets you may wish to ramp from in the MetaMask pop up!"
-              protocol={selectedAsset ? selectedAsset.protocol : undefined}
-            />
-          </div>
-          {offRampAsset && (
+        <div className="flex flex-col items-center w-full">
+          <StepProgressBar
+            currentStep={selectedWallet ? 2 : 1}
+            totalSteps={2}
+          />
+          <div className="flex items-start justify-center gap-8 pt-6 w-full">
             <div className="basis-1/3">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Crypto Transactions Details</CardTitle>
-                  <CardDescription>
-                    Just enter amount and confirm transaction with MetaMask.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="w-full max-w-sm items-center">
-                    <Label htmlFor="amount">
-                      Amount {offRampAsset!.asset?.shortName}
-                    </Label>
-                    <Input
-                      type="text"
-                      id="amount"
-                      placeholder={`amount in ${
-                        offRampAsset!.asset?.shortName
-                      }`}
-                      value={amount}
-                      onChange={handleAmountChange}
-                      disabled={false}
-                      validate={validateAmountFormat}
-                    />
-                  </div>
-                  <CardDescription>Receive {currency} on:</CardDescription>
-                  <div className="w-full max-w-sm items-center">
-                    <BankAccountComponent
-                      account={getOffRampBankAccount(account)}
-                      withEditButton
-                      onEditButtonClick={() =>
-                        toast.info(
-                          'Bank account editing disabled during beta testing.',
-                        )
-                      }
-                    />
-                  </div>
-                  <div>
-                    <Button
-                      className="w-full mt-4"
-                      onClick={handleTransfer}
-                      disabled={false}
-                    >
-                      <img src={Metamask} className="mr-2 h-4 w-4" />
-                      Sign with MetaMask
-                    </Button>
-                  </div>
-                </CardContent>
-                <CardFooter className="grid gap-4">
-                  <div className="flex items-center">
-                    <div className="w-full h-px bg-muted-foreground" />
-                    <span className="px-2 text-muted-foreground">or</span>
-                    <div className="w-full h-px bg-muted-foreground" />
-                  </div>
-
-                  <div className="flex items-center space-x-4 rounded-md border p-4">
-                    <WalletIcon />
-                    <div className="flex-1 space-y-1">
-                      {false && (
-                        <p className="text-sm font-medium leading-none">
-                          Push Notifications
-                        </p>
-                      )}
-                      <p className="text-sm text-muted-foreground">
-                        Alternatively send {offRampAsset!.asset?.shortName} from
-                        a <u>whitelisted address</u> to the{' '}
-                        <u>Magic Ramp address</u>. Please note that transfers
-                        from other addresses will be bounced back, minus network
-                        fees.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex-row w-full max-w-sm items-center">
-                    <Label htmlFor="address">
-                      Magic Ramp address for {offRampAsset.asset?.shortName}
-                    </Label>
-                    <div className="flex items-center gap-4"></div>
-                    <Input
-                      type="text"
-                      id="address"
-                      placeholder="address"
-                      readOnly={true}
-                      value={offRampAsset.offRamp?.address}
-                      withCopyToClipboard
-                    />
-                  </div>
-                </CardFooter>
-              </Card>
+              <AssetAndWallet
+                assets={account?.cryptoAssets}
+                onAssetSelected={handleSelectAsset}
+                selectedAsset={selectedAsset}
+                description="Choose the asset you want to offramp."
+                wallets={account.wallets}
+                selectedWallet={selectedWallet}
+                onWalletSelected={handleSelectWalletClick}
+                onAddWallet={onAddWallet}
+                noteDescription="Ensure you check all wallets you may wish to ramp from in the MetaMask pop up!"
+                protocol={selectedAsset ? selectedAsset.protocol : undefined}
+              />
             </div>
-          )}
-        </>
+            {offRampAsset && (
+              <div className="basis-1/3">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Crypto Transactions Details</CardTitle>
+                    <CardDescription>
+                      Just enter amount and confirm transaction with MetaMask.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="w-full max-w-sm items-center">
+                      <Label htmlFor="amount">
+                        Amount {offRampAsset!.asset?.shortName}
+                      </Label>
+                      <Input
+                        type="text"
+                        id="amount"
+                        placeholder={`amount in ${
+                          offRampAsset!.asset?.shortName
+                        }`}
+                        value={amount}
+                        onChange={handleAmountChange}
+                        disabled={false}
+                        validate={validateAmountFormat}
+                      />
+                    </div>
+                    <CardDescription>Receive {currency} on:</CardDescription>
+                    <div className="w-full max-w-sm items-center">
+                      <BankAccountComponent
+                        account={getOffRampBankAccount(account)}
+                        withEditButton
+                        onEditButtonClick={() =>
+                          toast.info(
+                            'Bank account editing disabled during beta testing.',
+                          )
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Button
+                        className="w-full mt-4"
+                        onClick={handleTransfer}
+                        disabled={false}
+                      >
+                        <img src={Metamask} className="mr-2 h-4 w-4" />
+                        Sign with MetaMask
+                      </Button>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="grid gap-4">
+                    <div className="flex items-center">
+                      <div className="w-full h-px bg-muted-foreground" />
+                      <span className="px-2 text-muted-foreground">or</span>
+                      <div className="w-full h-px bg-muted-foreground" />
+                    </div>
+
+                    <div className="flex items-center space-x-4 rounded-md border p-4">
+                      <WalletIcon />
+                      <div className="flex-1 space-y-1">
+                        {false && (
+                          <p className="text-sm font-medium leading-none">
+                            Push Notifications
+                          </p>
+                        )}
+                        <p className="text-sm text-muted-foreground">
+                          Alternatively send {offRampAsset!.asset?.shortName}{' '}
+                          from a <u>whitelisted address</u> to the{' '}
+                          <u>Magic Ramp address</u>. Please note that transfers
+                          from other addresses will be bounced back, minus
+                          network fees.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex-row w-full max-w-sm items-center">
+                      <Label htmlFor="address">
+                        Magic Ramp address for {offRampAsset.asset?.shortName}
+                      </Label>
+                      <div className="flex items-center gap-4"></div>
+                      <Input
+                        type="text"
+                        id="address"
+                        placeholder="address"
+                        readOnly={true}
+                        value={offRampAsset.offRamp?.address}
+                        withCopyToClipboard
+                      />
+                    </div>
+                  </CardFooter>
+                </Card>
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
