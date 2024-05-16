@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
 import { BankAccount } from '@/types/bankAccount';
 import { AssetAndWallet, Wallet } from './components/AssetAndWallet';
+import StepProgressBar from './components/ui/stepProgressBar';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -73,66 +74,69 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   }[getOnRampBankAccount().case];
 
   return (
-    <div className="flex items-start justify-center gap-8">
-      <div className="basis-1/3">
-        <AssetAndWallet
-          assets={account?.cryptoAssets}
-          onAssetSelected={handleSelectAsset}
-          selectedAsset={selectedAsset}
-          description="Choose the asset you want to onramp."
-          wallets={account.wallets}
-          selectedWallet={selectedWallet}
-          onWalletSelected={handleSelectWalletClick}
-          onAddWallet={onAddWallet}
-          noteDescription="Ensure you check all wallets you may wish to ramp to in the MetaMask pop up!"
-          protocol={selectedAsset ? selectedAsset.protocol : undefined}
-        />
-      </div>
-
-      {onRampAsset && (
+    <div className="flex flex-col items-center">
+      <StepProgressBar currentStep={selectedWallet ? 2 : 1} totalSteps={2} />
+      <div className="flex items-start justify-center gap-8 pt-6 w-full">
         <div className="basis-1/3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Magic Ramp Details</CardTitle>
-              <CardDescription>
-                Transfer {currency} to these details to receive{' '}
-                {onRampAsset.asset!.shortName} on your selected wallet.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {account.onrampBankAccount.case && (
-                <BankAccountComponent account={getOnRampBankAccount()} />
-              )}
-              <div className="w-full max-w-sm items-center">
-                <Label htmlFor="holder">Account Holder</Label>
-                {account.accountHolder && (
-                  <Input
-                    type="text"
-                    id="holder"
-                    placeholder="Account Holder"
-                    readOnly={true}
-                    value={account.accountHolder}
-                  />
+          <AssetAndWallet
+            assets={account?.cryptoAssets}
+            onAssetSelected={handleSelectAsset}
+            selectedAsset={selectedAsset}
+            description="Choose the asset you want to onramp."
+            wallets={account.wallets}
+            selectedWallet={selectedWallet}
+            onWalletSelected={handleSelectWalletClick}
+            onAddWallet={onAddWallet}
+            noteDescription="Ensure you check all wallets you may wish to ramp to in the MetaMask pop up!"
+            protocol={selectedAsset ? selectedAsset.protocol : undefined}
+          />
+        </div>
+
+        {onRampAsset && (
+          <div className="basis-1/3">
+            <Card>
+              <CardHeader>
+                <CardTitle>Magic Ramp Details</CardTitle>
+                <CardDescription>
+                  Transfer {currency} to these details to receive{' '}
+                  {onRampAsset.asset!.shortName} on your selected wallet.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {account.onrampBankAccount.case && (
+                  <BankAccountComponent account={getOnRampBankAccount()} />
                 )}
-              </div>
-              <div className="w-full max-w-sm items-center">
-                <Label htmlFor="ref">Payment Reference</Label>
-                {selectedAsset && (
-                  <div className="flex items-center gap-4">
+                <div className="w-full max-w-sm items-center">
+                  <Label htmlFor="holder">Account Holder</Label>
+                  {account.accountHolder && (
                     <Input
                       type="text"
-                      id="ref"
+                      id="holder"
+                      placeholder="Account Holder"
                       readOnly={true}
-                      value={onRampAsset!.onRamp!.paymentReference}
-                      withCopyToClipboard
+                      value={account.accountHolder}
                     />
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                  )}
+                </div>
+                <div className="w-full max-w-sm items-center">
+                  <Label htmlFor="ref">Payment Reference</Label>
+                  {selectedAsset && (
+                    <div className="flex items-center gap-4">
+                      <Input
+                        type="text"
+                        id="ref"
+                        readOnly={true}
+                        value={onRampAsset!.onRamp!.paymentReference}
+                        withCopyToClipboard
+                      />
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
