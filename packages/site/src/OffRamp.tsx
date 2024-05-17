@@ -316,7 +316,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
               <div className="basis-1/3">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Crypto Transactions Details</CardTitle>
+                    <CardTitle>Crypto Transaction Details</CardTitle>
                     <CardDescription>
                       Just enter amount and confirm transaction with MetaMask.
                     </CardDescription>
@@ -324,7 +324,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   <CardContent>
                     <div className="flex flex-col w-full max-w-sm items-start mb-3">
                       <Label htmlFor="amount">
-                        Amount {offRampAsset!.asset?.shortName}
+                        Amount of {offRampAsset!.asset?.shortName} to offramp
                       </Label>
                       <Input
                         type="text"

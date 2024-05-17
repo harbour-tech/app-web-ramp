@@ -98,8 +98,9 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
               <CardHeader>
                 <CardTitle>Magic Ramp Details</CardTitle>
                 <CardDescription>
-                  Transfer {currency} to these details to receive{' '}
-                  {onRampAsset.asset!.shortName} on your selected wallet.
+                  This is your personal Magic Ramp Account. Send {currency} to
+                  this account to receive {onRampAsset.asset!.shortName} on the
+                  wallet you have selected.
                 </CardDescription>
               </CardHeader>
               <CardContent>
