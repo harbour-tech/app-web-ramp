@@ -135,7 +135,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
       <div className="flex flex-col items-center">
         <StepProgressBar currentStep={selectedWallet ? 2 : 1} totalSteps={2} />
         <div className="flex items-start justify-center gap-8 pt-6 w-full">
-          <div className="basis-1/3">
+          <div className={`basis-1/3 ${!selectedWallet && 'min-w-[430px]'}`}>
             <AssetAndWallet
               assets={account?.cryptoAssets}
               onAssetSelected={handleSelectAsset}
@@ -162,11 +162,11 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       on the wallet you have selected.
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="space-y-5">
                     {account.onrampBankAccount.case && (
                       <BankAccountComponent account={getOnRampBankAccount()} />
                     )}
-                    <div className="flex flex-col w-full max-w-sm items-start">
+                    <div className="flex flex-col w-full items-start">
                       <Label htmlFor="holder">Account Holder</Label>
                       {account.accountHolder && (
                         <Input
@@ -178,7 +178,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                         />
                       )}
                     </div>
-                    <div className="flex flex-col w-full max-w-sm items-start">
+                    <div className="flex flex-col w-full items-start">
                       <Label htmlFor="ref">Payment Reference</Label>
                       {selectedAsset && (
                         <div className="flex items-center gap-4 w-full">

@@ -126,29 +126,33 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
       <CardHeader>
         <CardTitle>Asset & Wallet</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-5">
         <SelectAsset
           onValueChange={(value) => {
             const asset = assets.find((asset) => asset.shortName === value);
             if (asset) handleClick(asset);
           }}
         >
-          <CardDescription>{selectAssetDescription}</CardDescription>
-          <SelectAssetTrigger disabled={assets.length === 0}>
-            {assetSelectedIcon}
-            <SelectAssetValue placeholder="Select Asset" />
-          </SelectAssetTrigger>
-          <SelectAssetContent>
-            {assets.map((asset) => (
-              <SelectAssetItem
-                key={asset!.shortName}
-                value={asset.shortName}
-                icon={assetItemIcon(asset.assetId)}
-              >
-                {asset.shortName}
-              </SelectAssetItem>
-            ))}
-          </SelectAssetContent>
+          <div>
+            <CardDescription className="mb-2">
+              {selectAssetDescription}
+            </CardDescription>
+            <SelectAssetTrigger disabled={assets.length === 0}>
+              {assetSelectedIcon}
+              <SelectAssetValue placeholder="Select Asset" />
+            </SelectAssetTrigger>
+            <SelectAssetContent>
+              {assets.map((asset) => (
+                <SelectAssetItem
+                  key={asset!.shortName}
+                  value={asset.shortName}
+                  icon={assetItemIcon(asset.assetId)}
+                >
+                  {asset.shortName}
+                </SelectAssetItem>
+              ))}
+            </SelectAssetContent>
+          </div>
         </SelectAsset>
         {selectedAsset && (
           <>
@@ -158,25 +162,29 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
                 if (selectedWallet) handleSelect(selectedWallet);
               }}
             >
-              <CardDescription>{selectWalletDescription}</CardDescription>
-              <SelectWalletTrigger disabled={wallets.length === 0}>
-                {walletSelectedIcon}
-                <SelectWalletValue placeholder="Select Wallet" />
-              </SelectWalletTrigger>
-              <SelectWalletContent>
-                {wallets
-                  .filter((w) => w.protocol === protocol)
-                  .map((wallet) => (
-                    <SelectWalletItem
-                      key={wallet.protocol + ':' + wallet.address}
-                      value={wallet.name || wallet.address}
-                      icon={walletItemIcon(wallet.protocol)}
-                      walletAddress={wallet.address}
-                    >
-                      {wallet.name || wallet.address.substring(0, 6)}
-                    </SelectWalletItem>
-                  ))}
-              </SelectWalletContent>
+              <div>
+                <CardDescription className="mb-2">
+                  {selectWalletDescription}
+                </CardDescription>
+                <SelectWalletTrigger disabled={wallets.length === 0}>
+                  {walletSelectedIcon}
+                  <SelectWalletValue placeholder="Select Wallet" />
+                </SelectWalletTrigger>
+                <SelectWalletContent>
+                  {wallets
+                    .filter((w) => w.protocol === protocol)
+                    .map((wallet) => (
+                      <SelectWalletItem
+                        key={wallet.protocol + ':' + wallet.address}
+                        value={wallet.name || wallet.address}
+                        icon={walletItemIcon(wallet.protocol)}
+                        walletAddress={wallet.address}
+                      >
+                        {wallet.name || wallet.address.substring(0, 6)}
+                      </SelectWalletItem>
+                    ))}
+                </SelectWalletContent>
+              </div>
             </SelectWallet>
             <AddWallet
               protocol={protocol ? protocol : Protocol.UNSPECIFIED}
