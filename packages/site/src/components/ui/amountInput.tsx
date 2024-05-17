@@ -39,17 +39,37 @@ const AmountInput = React.forwardRef<HTMLInputElement, AmountInputProps>(
     };
 
     const assetSymbolIcon = () => {
-      switch (currency) {
-        case 'EUR':
-          return <img src={AssetSymbolIcon_EUR} alt="EUR symbol" />;
-        case 'GBP':
-          return <img src={AssetSymbolIcon_GBP} alt="GBP symbol" />;
-        case 'USDC':
-          return <img src={AssetSymbolIcon_USDC} alt="USDC symbol" />;
+      switch (true) {
+        case currency.includes('EUR'):
+          return (
+            <img
+              className="w-6 h-6"
+              src={AssetSymbolIcon_EUR}
+              alt="EUR symbol"
+            />
+          );
+        case currency.includes('GBP'):
+          return (
+            <img
+              className="w-6 h-6"
+              src={AssetSymbolIcon_GBP}
+              alt="GBP symbol"
+            />
+          );
+        case currency.includes('USDC'):
+          return (
+            <img
+              className="w-6 h-6"
+              src={AssetSymbolIcon_USDC}
+              alt="USDC symbol"
+            />
+          );
         default:
           return null;
       }
     };
+
+    const shouldHaveUSDCBackground = currency.includes('USDC');
 
     return (
       <div className="flex-row w-full" onClick={props.onClick}>
@@ -61,11 +81,16 @@ const AmountInput = React.forwardRef<HTMLInputElement, AmountInputProps>(
           )}
         >
           <p className="caption1 text-gray-100">{label}</p>
-          <div className="flex items-center">
-            <div className="bg-gray-400 p-1 mr-2 rounded-sm">
+          <div className="flex items-center gap-2">
+            <div
+              className={cn(
+                'bg-gray-400 rounded-sm h-8 min-w-8 flex justify-center items-center',
+                { 'bg-usdc': shouldHaveUSDCBackground },
+              )}
+            >
               {assetSymbolIcon()}
             </div>
-            <p className="subtitle3 mr-2">{currency}</p>
+            <p className="subtitle3">{currency}</p>
             {isLoading ? (
               <div className="w-full flex justify-end">
                 <LoadingSpinner

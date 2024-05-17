@@ -18,6 +18,7 @@ export const theme = {
     colors: {
       sky: '#006CF6',
       snow: '#FFFFFF',
+      usdc: '#2775CA',
       lightSky: '#358CFA',
       gray: {
         50: '#AEB5BC',

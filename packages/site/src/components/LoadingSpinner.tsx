@@ -23,3 +23,7 @@ export const LoadingSpinner: FC<{
     </svg>
   );
 };
+
+export const SmallLoader = (
+  <LoadingSpinner className="inline-block mt-[-4px]" height={18} width={18} />
+);
