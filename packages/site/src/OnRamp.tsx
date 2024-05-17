@@ -82,12 +82,12 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
             assets={account?.cryptoAssets}
             onAssetSelected={handleSelectAsset}
             selectedAsset={selectedAsset}
-            description="Choose the asset you want to onramp."
+            selectAssetDescription="Choose the asset you want to onramp:"
+            selectWalletDescription="Choose the wallet you want to onramp the asset to:"
             wallets={account.wallets}
             selectedWallet={selectedWallet}
             onWalletSelected={handleSelectWalletClick}
             onAddWallet={onAddWallet}
-            noteDescription="Ensure you check all wallets you may wish to ramp to in the MetaMask pop up!"
             protocol={selectedAsset ? selectedAsset.protocol : undefined}
           />
         </div>

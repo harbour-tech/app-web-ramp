@@ -303,12 +303,12 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                 assets={account?.cryptoAssets}
                 onAssetSelected={handleSelectAsset}
                 selectedAsset={selectedAsset}
-                description="Choose the asset you want to offramp."
+                selectAssetDescription="Choose the asset you want to offramp:"
+                selectWalletDescription="Choose the wallet you want to offramp the asset from:"
                 wallets={account.wallets}
                 selectedWallet={selectedWallet}
                 onWalletSelected={handleSelectWalletClick}
                 onAddWallet={onAddWallet}
-                noteDescription="Ensure you check all wallets you may wish to ramp from in the MetaMask pop up!"
                 protocol={selectedAsset ? selectedAsset.protocol : undefined}
               />
             </div>
