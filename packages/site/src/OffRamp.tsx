@@ -82,7 +82,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const [rampFeeResponse, setRampFeeResponse] = useState<
     EstimateOffRampFeeResponse | undefined
   >();
-  const [feesError, setFeesError] = useState<boolean>(false);
 
   const handleSwitchNetworkError = () => {
     toast.error('There was problem with switching newtork');
