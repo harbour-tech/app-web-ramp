@@ -1,4 +1,4 @@
-import { OnboardingModalContext } from '@/contexts/OnboardingModal/OnboardingModalContext';
+import { OnboardingModalContext } from './OnboardingModalContext';
 import { useContext } from 'react';
 
 export const useOnboardingModal = () => useContext(OnboardingModalContext);
