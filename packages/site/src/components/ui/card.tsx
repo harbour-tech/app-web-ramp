@@ -2,10 +2,10 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-const cardVariants = cva('border border-gray-500', {
+const cardVariants = cva('card border border-gray-500', {
   variants: {
     variant: {
-      active: 'bg-night active:border-blueberry focus:border-blueberry',
+      active: 'bg-night hover:border-blueberry active:border-blueberry',
       inactive: 'bg-light-glass-70',
       active_with_focus: 'bg-night border-blueberry',
     },

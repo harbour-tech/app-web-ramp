@@ -1,13 +1,16 @@
 import {
+  EstimateOffRampFeeRequest,
+  EstimateOffRampFeeResponse,
   GetAccountInfoResponse_Account,
   GetAccountInfoResponse_CryptoAsset,
   GetAccountInfoResponse_Wallet,
   GetAccountInfoResponse_Wallet_RampAsset,
   IbanCoordinates,
   Network,
+  Protocol,
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -37,6 +40,18 @@ import {
 } from '@/utils';
 import { AssetAndWallet, Wallet } from './components/AssetAndWallet';
 import StepProgressBar from './components/ui/stepProgressBar';
+import { AmountInput, AmountInputProps } from '@/components/ui/amountInput';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useRampClient } from '@/contexts';
+import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
+import { SmallLoader } from '@/components/LoadingSpinner';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import InfoSvg from '@/assets/info.svg?react';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -49,6 +64,11 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   onAddWallet,
   onSaveBankAccount,
 }) => {
+  const rampClient = useRampClient();
+  const [ammountInput, setAmmountInput] = useState<string>('0');
+  const debounceAmmountInput = useDebounce(ammountInput, 900);
+  const [countingFees, setCountingFees] = useState<boolean>(false);
+  const firstInputRef = useRef<HTMLInputElement>(null);
   const [selectedWallet, setSelectedWallet] = useState<
     GetAccountInfoResponse_Wallet | undefined
   >(undefined);
@@ -59,6 +79,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     GetAccountInfoResponse_Wallet_RampAsset | undefined
   >(undefined);
   const [amount, setAmount] = useState('0');
+  const [rampFeeResponse, setRampFeeResponse] = useState<
+    EstimateOffRampFeeResponse | undefined
+  >();
 
   const handleSwitchNetworkError = () => {
     toast.error('There was problem with switching newtork');
@@ -243,6 +266,39 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     scan: 'GBP',
   }[getOffRampBankAccount(account).case];
 
+  useEffect(() => {
+    if (
+      currency &&
+      offRampAsset?.asset?.assetId &&
+      Number(debounceAmmountInput)
+    ) {
+      setCountingFees(true);
+      const requestParams = new EstimateOffRampFeeRequest({
+        cryptoAssetId: offRampAsset?.asset?.assetId,
+        protocol: Protocol.AVAX,
+        amount: {
+          value: debounceAmmountInput,
+          case: 'cryptoAssetAmount',
+        },
+      });
+      rampClient
+        .estimateOffRampFee(requestParams)
+        .then((res) => {
+          setCountingFees(false);
+          setRampFeeResponse(res);
+        })
+        .catch((_err) => {
+          toast.error('Failed to estimate onramp fees');
+        });
+    }
+  }, [
+    currency,
+    offRampAsset?.asset?.shortName,
+    offRampAsset?.asset?.assetId,
+    debounceAmmountInput,
+    rampClient,
+  ]);
+
   const onChangeBankAccount = (account: BankAccount) => {
     setBankAccount(account);
   };
@@ -260,152 +316,247 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
 
   return (
-    <div className="flex items-start justify-center gap-8 mb-10">
-      {needSetBankAccount && (
-        <>
-          <div className="basis-1/3 grid gap-4"></div>
-          <div className="basis-1/3 grid gap-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>Setup your bank account</CardTitle>
-                <CardDescription>
-                  Set bank account you want your funds to be transferred to.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-4">
-                <BankAccountComponent
-                  account={bankAccount}
-                  onChange={onChangeBankAccount}
-                />
-                <div>
-                  <Button
-                    className="w-full"
-                    onClick={() => onSaveBankAccount(bankAccount)}
-                  >
-                    Save
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          <div className="basis-1/3 grid gap-4"></div>
-        </>
-      )}
-      {account.offrampBankAccount.case && (
-        <div className="flex flex-col items-center w-full">
-          <StepProgressBar
-            currentStep={selectedWallet ? 2 : 1}
-            totalSteps={2}
-          />
-          <div className="flex items-start justify-center gap-8 pt-6 w-full">
-            <div className="basis-1/3">
-              <AssetAndWallet
-                assets={account?.cryptoAssets}
-                onAssetSelected={handleSelectAsset}
-                selectedAsset={selectedAsset}
-                selectAssetDescription="Choose the asset you want to offramp:"
-                selectWalletDescription="Choose the wallet you want to offramp the asset from:"
-                wallets={account.wallets}
-                selectedWallet={selectedWallet}
-                onWalletSelected={handleSelectWalletClick}
-                onAddWallet={onAddWallet}
-                protocol={selectedAsset ? selectedAsset.protocol : undefined}
-              />
+    <TooltipProvider>
+      <div className="flex items-start justify-center gap-8 mb-10">
+        {needSetBankAccount && (
+          <>
+            <div className="basis-1/3 grid gap-4"></div>
+            <div className="basis-1/3 grid gap-4">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle>Setup your bank account</CardTitle>
+                  <CardDescription>
+                    Set bank account you want your funds to be transferred to.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4">
+                  <BankAccountComponent
+                    account={bankAccount}
+                    onChange={onChangeBankAccount}
+                  />
+                  <div>
+                    <Button
+                      className="w-full"
+                      onClick={() => onSaveBankAccount(bankAccount)}
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-            {offRampAsset && (
+            <div className="basis-1/3 grid gap-4"></div>
+          </>
+        )}
+        {account.offrampBankAccount.case && (
+          <div className="flex flex-col items-center w-full">
+            <StepProgressBar
+              currentStep={selectedWallet ? 2 : 1}
+              totalSteps={2}
+            />
+            <div className="flex items-start justify-center gap-8 pt-6 w-full">
               <div className="basis-1/3">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Crypto Transaction Details</CardTitle>
-                    <CardDescription>
-                      Just enter amount and confirm transaction with MetaMask.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-col w-full max-w-sm items-start mb-3">
-                      <Label htmlFor="amount">
-                        Amount of {offRampAsset!.asset?.shortName} to offramp
-                      </Label>
-                      <Input
-                        type="text"
-                        id="amount"
-                        placeholder={`amount in ${
-                          offRampAsset!.asset?.shortName
-                        }`}
-                        value={amount}
-                        onChange={handleAmountChange}
-                        disabled={false}
-                        validate={validateAmountFormat}
-                      />
-                    </div>
-                    <CardDescription>Receive {currency} on:</CardDescription>
-                    <div className="w-full max-w-sm items-center">
-                      <BankAccountComponent
-                        account={getOffRampBankAccount(account)}
-                        withEditButton
-                        onEditButtonClick={() =>
-                          toast.info(
-                            'Bank account editing disabled during beta testing.',
-                          )
-                        }
-                      />
-                    </div>
-                    <div>
-                      <Button
-                        className="w-full mt-4"
-                        onClick={handleTransfer}
-                        disabled={false}
-                      >
-                        <img src={Metamask} className="mr-2 h-4 w-4" />
-                        Sign with MetaMask
-                      </Button>
-                    </div>
-                  </CardContent>
-                  <CardFooter className="grid gap-4">
-                    <div className="flex items-center">
-                      <div className="w-full h-px bg-muted-foreground" />
-                      <span className="px-2 text-muted-foreground">or</span>
-                      <div className="w-full h-px bg-muted-foreground" />
-                    </div>
-
-                    <div className="flex items-center space-x-4 rounded-md border p-4">
-                      <WalletIcon />
-                      <div className="flex-1 space-y-1">
-                        {false && (
-                          <p className="text-sm font-medium leading-none">
-                            Push Notifications
-                          </p>
-                        )}
-                        <p className="text-sm text-muted-foreground">
-                          Alternatively send {offRampAsset!.asset?.shortName}{' '}
-                          from a <u>whitelisted address</u> to the{' '}
-                          <u>Magic Ramp address</u>. Please note that transfers
-                          from other addresses will be bounced back, minus
-                          network fees.
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col w-full max-w-sm items-start">
-                      <Label htmlFor="address">
-                        Magic Ramp address for {offRampAsset.asset?.shortName}
-                      </Label>
-                      <div className="flex items-center gap-4"></div>
-                      <Input
-                        type="text"
-                        id="address"
-                        placeholder="address"
-                        readOnly={true}
-                        value={offRampAsset.offRamp?.address}
-                        withCopyToClipboard
-                      />
-                    </div>
-                  </CardFooter>
-                </Card>
+                <AssetAndWallet
+                  assets={account?.cryptoAssets}
+                  onAssetSelected={handleSelectAsset}
+                  selectedAsset={selectedAsset}
+                  selectAssetDescription="Choose the asset you want to offramp:"
+                  selectWalletDescription="Choose the wallet you want to offramp the asset from:"
+                  wallets={account.wallets}
+                  selectedWallet={selectedWallet}
+                  onWalletSelected={handleSelectWalletClick}
+                  onAddWallet={onAddWallet}
+                  protocol={selectedAsset ? selectedAsset.protocol : undefined}
+                />
               </div>
-            )}
+              {offRampAsset && (
+                <>
+                  <div className="basis-1/3">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Crypto Transaction Details</CardTitle>
+                        <CardDescription>
+                          Just enter amount and confirm transaction with
+                          MetaMask.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex flex-col w-full max-w-sm items-start mb-3">
+                          <Label htmlFor="amount">
+                            Amount of {offRampAsset!.asset?.shortName} to
+                            offramp
+                          </Label>
+                          <Input
+                            type="text"
+                            id="amount"
+                            placeholder={`amount in ${
+                              offRampAsset!.asset?.shortName
+                            }`}
+                            value={amount}
+                            onChange={handleAmountChange}
+                            disabled={false}
+                            validate={validateAmountFormat}
+                          />
+                        </div>
+                        <CardDescription>
+                          Receive {currency} on:
+                        </CardDescription>
+                        <div className="w-full max-w-sm items-center">
+                          <BankAccountComponent
+                            account={getOffRampBankAccount(account)}
+                            withEditButton
+                            onEditButtonClick={() =>
+                              toast.info(
+                                'Bank account editing disabled during beta testing.',
+                              )
+                            }
+                          />
+                        </div>
+                        <div>
+                          <Button
+                            className="w-full mt-4"
+                            onClick={handleTransfer}
+                            disabled={false}
+                          >
+                            <img src={Metamask} className="mr-2 h-4 w-4" />
+                            Sign with MetaMask
+                          </Button>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="grid gap-4">
+                        <div className="flex items-center">
+                          <div className="w-full h-px bg-muted-foreground" />
+                          <span className="px-2 text-muted-foreground">or</span>
+                          <div className="w-full h-px bg-muted-foreground" />
+                        </div>
+
+                        <div className="flex items-center space-x-4 rounded-md border p-4">
+                          <WalletIcon />
+                          <div className="flex-1 space-y-1">
+                            {false && (
+                              <p className="text-sm font-medium leading-none">
+                                Push Notifications
+                              </p>
+                            )}
+                            <p className="text-sm text-muted-foreground">
+                              Alternatively send{' '}
+                              {offRampAsset!.asset?.shortName} from a{' '}
+                              <u>whitelisted address</u> to the{' '}
+                              <u>Magic Ramp address</u>. Please note that
+                              transfers from other addresses will be bounced
+                              back, minus network fees.
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex flex-col w-full max-w-sm items-start">
+                          <Label htmlFor="address">
+                            Magic Ramp address for{' '}
+                            {offRampAsset.asset?.shortName}
+                          </Label>
+                          <div className="flex items-center gap-4"></div>
+                          <Input
+                            type="text"
+                            id="address"
+                            placeholder="address"
+                            readOnly={true}
+                            value={offRampAsset.offRamp?.address}
+                            withCopyToClipboard
+                          />
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </div>
+                  <div className="basis-1/3">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="relative">
+                          <span className="w-full">Offramp Calculator</span>
+                          <Tooltip>
+                            <TooltipTrigger className="absolute right-0 top-2">
+                              <InfoSvg />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-80 p-3 pl-10 pr-5">
+                              <ul className="list-disc">
+                                <li className="mb-1">
+                                  You can only offramp to a bank account in your
+                                  name.
+                                </li>
+                                <li className="mb-1">
+                                  If your bank supports SEPA Instant your
+                                  account will be funded in a couple of minutes.
+                                </li>
+                                <li>
+                                  Node: Unsupported Payments will be returned to
+                                  sender.
+                                </li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </CardTitle>
+                        <CardDescription>
+                          {' '}
+                          Use the calculator below to work out the current
+                          conversion rate
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="gap-[10px]">
+                        <AmountInput
+                          ref={firstInputRef}
+                          onClick={() => firstInputRef.current?.focus()}
+                          currency={
+                            offRampAsset.asset
+                              ?.shortName as AmountInputProps['currency']
+                          }
+                          label="I SEND:"
+                          value={ammountInput}
+                          onChange={(event) =>
+                            setAmmountInput(event.target.value)
+                          }
+                          onFocus={() =>
+                            ammountInput === '0' ? setAmmountInput('') : null
+                          }
+                        />
+                        <AmountInput
+                          currency={currency as AmountInputProps['currency']}
+                          label="I will get:"
+                          value={rampFeeResponse?.fiatAssetAmount || 'N/A'}
+                          disabled
+                          isLoading={countingFees}
+                        />
+                        <Note>
+                          <NoteTitle>Note</NoteTitle>
+                          <NoteDescription>
+                            The actual amount will depend on the exchange rate
+                            and network fee at the moment of receiving the
+                            payment.
+                          </NoteDescription>
+                        </Note>
+                        {rampFeeResponse && (
+                          <div className="flex flex-col gap-[10px]">
+                            <p className="subtitle1 text-gray-50">
+                              {offRampAsset.asset?.shortName}:{currency} rate:{' '}
+                              {countingFees
+                                ? SmallLoader
+                                : rampFeeResponse?.exchangeRate || 'unknown'}
+                            </p>
+                            <p className="subtitle1 text-gray-50">
+                              Processing fees:{' '}
+                              {countingFees
+                                ? SmallLoader
+                                : rampFeeResponse?.processingFeeAmount ||
+                                  'unknown'}
+                            </p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </TooltipProvider>
   );
 };

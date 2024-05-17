@@ -108,6 +108,7 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
   const assetLogos = {
     [AssetId.UNSPECIFIED]: undefined,
     [AssetId.USDC]: AssetSymbolIcon_USDC,
+    [AssetId.AXL_USDC]: AssetSymbolIcon_USDC,
   };
 
   const assetItemIcon = (asset: AssetId) => {

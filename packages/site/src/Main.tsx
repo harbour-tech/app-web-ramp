@@ -5,7 +5,7 @@ import { Root } from '@/Root';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { OnboardingModalProvider } from '@/contexts/OnboardingModal';
+import { OnboardingModalProvider } from '@/contexts';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

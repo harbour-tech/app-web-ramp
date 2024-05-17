@@ -1,15 +1,14 @@
+import { Snap } from '@/types';
 import {
   createContext,
   Dispatch,
   ReactNode,
   Reducer,
-  useContext,
   useEffect,
   useReducer,
 } from 'react';
 
-import type { Snap } from '../types';
-import { detectSnaps, getSnap, isFlask } from '../utils';
+import { detectSnaps, getSnap, isFlask } from '../../utils';
 
 export type MetamaskState = {
   snapsDetected: boolean;
@@ -26,7 +25,7 @@ const initialState: MetamaskState = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MetamaskDispatch = { type: MetamaskActions; payload: any };
 
-export const UseMetaMask = createContext<
+export const MetaMaskContext = createContext<
   [MetamaskState, Dispatch<MetamaskDispatch>]
 >([
   initialState,
@@ -34,17 +33,6 @@ export const UseMetaMask = createContext<
     /* no op */
   },
 ]);
-
-export const useMetaMask = () => {
-  const metaMask = useContext(UseMetaMask);
-
-  if (!metaMask) {
-    throw new Error(
-      'Cannot call useMetaMask unless your component is within a MetaMaskProvider',
-    );
-  }
-  return metaMask;
-};
 
 export enum MetamaskActions {
   SetInstalled = 'SetInstalled',
@@ -88,7 +76,11 @@ const reducer: Reducer<MetamaskState, MetamaskDispatch> = (state, action) => {
  * @param props.children - React component to be wrapped by the Provider.
  * @returns JSX.
  */
-export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
+export const MetaMaskContextProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // Find MetaMask Provider and search for Snaps
@@ -153,8 +145,8 @@ export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <UseMetaMask.Provider value={[state, dispatch]}>
+    <MetaMaskContext.Provider value={[state, dispatch]}>
       {children}
-    </UseMetaMask.Provider>
+    </MetaMaskContext.Provider>
   );
 };

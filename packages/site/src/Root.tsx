@@ -4,12 +4,11 @@ import {
   useState,
   useEffect,
 } from 'react';
-import { RampClientProvider } from '@/hooks/useRpc';
-import { MetaMaskProvider } from '@/hooks/useMetaMask';
 import App from '@/App';
 import { cn } from '@/lib/utils';
 import HarbourLogo from '@/assets/harbourLogo.svg?react';
 import IntroAnimatedLogos from '@/components/ui/introAnimatedLogos';
+import { MetaMaskContextProvider, RampClientProvider } from '@/contexts';
 
 export const Root: FunctionComponent<PropsWithChildren> = () => {
   const [gradientsReady, setGradientsReady] = useState(false);
@@ -65,11 +64,11 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
               height: 'calc(100% - 220px)',
             }}
           >
-            <MetaMaskProvider>
+            <MetaMaskContextProvider>
               <RampClientProvider>
                 <App hideLogo={hideLogo} />
               </RampClientProvider>
-            </MetaMaskProvider>
+            </MetaMaskContextProvider>
           </div>
           {logoVisible && (
             <div
