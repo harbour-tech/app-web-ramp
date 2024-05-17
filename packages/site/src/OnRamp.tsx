@@ -140,12 +140,12 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
               assets={account?.cryptoAssets}
               onAssetSelected={handleSelectAsset}
               selectedAsset={selectedAsset}
-              description="Choose the asset you want to onramp."
+              selectAssetDescription="Choose the asset you want to onramp:"
+              selectWalletDescription="Choose the wallet you want to onramp the asset to:"
               wallets={account.wallets}
               selectedWallet={selectedWallet}
               onWalletSelected={handleSelectWalletClick}
               onAddWallet={onAddWallet}
-              noteDescription="Ensure you check all wallets you may wish to ramp to in the MetaMask pop up!"
               protocol={selectedAsset ? selectedAsset.protocol : undefined}
             />
           </div>
@@ -157,15 +157,16 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                   <CardHeader>
                     <CardTitle>Magic Ramp Details</CardTitle>
                     <CardDescription>
-                      Transfer {currency} to these details to receive{' '}
-                      {onRampAsset.asset!.shortName} on your selected wallet.
+                      This is your personal Magic Ramp Account. Send {currency}{' '}
+                      to this account to receive {onRampAsset.asset!.shortName}{' '}
+                      on the wallet you have selected.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     {account.onrampBankAccount.case && (
                       <BankAccountComponent account={getOnRampBankAccount()} />
                     )}
-                    <div className="w-full max-w-sm items-center">
+                    <div className="flex flex-col w-full max-w-sm items-start">
                       <Label htmlFor="holder">Account Holder</Label>
                       {account.accountHolder && (
                         <Input
@@ -177,10 +178,10 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                         />
                       )}
                     </div>
-                    <div className="w-full max-w-sm items-center">
+                    <div className="flex flex-col w-full max-w-sm items-start">
                       <Label htmlFor="ref">Payment Reference</Label>
                       {selectedAsset && (
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-4 w-full">
                           <Input
                             type="text"
                             id="ref"

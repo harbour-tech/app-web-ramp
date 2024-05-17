@@ -50,7 +50,6 @@ import {
   SelectAssetTrigger,
   SelectAssetValue,
 } from './ui/selectAsset';
-import { Note, NoteDescription } from './ui/note';
 
 export interface AssetAndWalletProps {
   protocol: Protocol | undefined;
@@ -58,11 +57,11 @@ export interface AssetAndWalletProps {
   selectedWallet?: GetAccountInfoResponse_Wallet;
   onWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void;
   onAddWallet: (wallet: Wallet) => Promise<void>;
-  noteDescription: string;
   assets: GetAccountInfoResponse_CryptoAsset[];
   selectedAsset?: GetAccountInfoResponse_CryptoAsset;
   onAssetSelected: (asset: GetAccountInfoResponse_CryptoAsset) => void;
-  description: string;
+  selectAssetDescription: string;
+  selectWalletDescription: string;
 }
 
 export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
@@ -71,11 +70,11 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
   selectedWallet,
   onWalletSelected,
   onAddWallet,
-  noteDescription,
   assets,
   selectedAsset,
   onAssetSelected,
-  description,
+  selectAssetDescription,
+  selectWalletDescription,
 }) => {
   const handleSelect = (wallet: GetAccountInfoResponse_Wallet) => {
     onWalletSelected(wallet);
@@ -125,19 +124,16 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="mb-3">Asset & Wallet</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardTitle>Asset & Wallet</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        <Note>
-          <NoteDescription>{noteDescription}</NoteDescription>
-        </Note>
         <SelectAsset
           onValueChange={(value) => {
             const asset = assets.find((asset) => asset.shortName === value);
             if (asset) handleClick(asset);
           }}
         >
+          <CardDescription>{selectAssetDescription}</CardDescription>
           <SelectAssetTrigger disabled={assets.length === 0}>
             {assetSelectedIcon}
             <SelectAssetValue placeholder="Select Asset" />
@@ -162,6 +158,7 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
                 if (selectedWallet) handleSelect(selectedWallet);
               }}
             >
+              <CardDescription>{selectWalletDescription}</CardDescription>
               <SelectWalletTrigger disabled={wallets.length === 0}>
                 {walletSelectedIcon}
                 <SelectWalletValue placeholder="Select Wallet" />
@@ -301,26 +298,20 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
         )}
         {address && (
           <>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
+            <div className="flex flex-col space-y-4 py-4">
+              <div className="flex flex-col items-start">
                 <Label htmlFor="link" className="text-right">
                   Address
                 </Label>
-                <Input
-                  id="link"
-                  value={address.address}
-                  readOnly
-                  className="col-span-3"
-                />
+                <Input id="link" value={address.address} readOnly />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
+              <div className="flex flex-col items-start">
                 <Label htmlFor="link" className="text-right">
                   Wallet Name
                 </Label>
                 <Input
                   id="link"
                   value={address.name}
-                  className="col-span-3"
                   autoFocus={true}
                   onChange={handleNameChange}
                 />

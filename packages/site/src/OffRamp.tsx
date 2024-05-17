@@ -360,12 +360,12 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   assets={account?.cryptoAssets}
                   onAssetSelected={handleSelectAsset}
                   selectedAsset={selectedAsset}
-                  description="Choose the asset you want to offramp."
+                  selectAssetDescription="Choose the asset you want to offramp:"
+                  selectWalletDescription="Choose the wallet you want to offramp the asset from:"
                   wallets={account.wallets}
                   selectedWallet={selectedWallet}
                   onWalletSelected={handleSelectWalletClick}
                   onAddWallet={onAddWallet}
-                  noteDescription="Ensure you check all wallets you may wish to ramp from in the MetaMask pop up!"
                   protocol={selectedAsset ? selectedAsset.protocol : undefined}
                 />
               </div>
@@ -374,16 +374,17 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   <div className="basis-1/3">
                     <Card>
                       <CardHeader>
-                        <CardTitle>Crypto Transactions Details</CardTitle>
+                        <CardTitle>Crypto Transaction Details</CardTitle>
                         <CardDescription>
                           Just enter amount and confirm transaction with
                           MetaMask.
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className="w-full max-w-sm items-center">
+                        <div className="flex flex-col w-full max-w-sm items-start mb-3">
                           <Label htmlFor="amount">
-                            Amount {offRampAsset!.asset?.shortName}
+                            Amount of {offRampAsset!.asset?.shortName} to
+                            offramp
                           </Label>
                           <Input
                             type="text"
@@ -447,7 +448,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                             </p>
                           </div>
                         </div>
-                        <div className="flex-row w-full max-w-sm items-center">
+                        <div className="flex flex-col w-full max-w-sm items-start">
                           <Label htmlFor="address">
                             Magic Ramp address for{' '}
                             {offRampAsset.asset?.shortName}
