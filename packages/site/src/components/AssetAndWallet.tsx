@@ -50,7 +50,6 @@ import {
   SelectAssetTrigger,
   SelectAssetValue,
 } from './ui/selectAsset';
-import { Note, NoteDescription } from './ui/note';
 
 export interface AssetAndWalletProps {
   protocol: Protocol | undefined;
@@ -58,11 +57,11 @@ export interface AssetAndWalletProps {
   selectedWallet?: GetAccountInfoResponse_Wallet;
   onWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void;
   onAddWallet: (wallet: Wallet) => Promise<void>;
-  noteDescription: string;
   assets: GetAccountInfoResponse_CryptoAsset[];
   selectedAsset?: GetAccountInfoResponse_CryptoAsset;
   onAssetSelected: (asset: GetAccountInfoResponse_CryptoAsset) => void;
-  description: string;
+  selectAssetDescription: string;
+  selectWalletDescription: string;
 }
 
 export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
@@ -71,11 +70,11 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
   selectedWallet,
   onWalletSelected,
   onAddWallet,
-  noteDescription,
   assets,
   selectedAsset,
   onAssetSelected,
-  description,
+  selectAssetDescription,
+  selectWalletDescription,
 }) => {
   const handleSelect = (wallet: GetAccountInfoResponse_Wallet) => {
     onWalletSelected(wallet);
@@ -109,6 +108,7 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
   const assetLogos = {
     [AssetId.UNSPECIFIED]: undefined,
     [AssetId.USDC]: AssetSymbolIcon_USDC,
+    [AssetId.AXL_USDC]: AssetSymbolIcon_USDC,
   };
 
   const assetItemIcon = (asset: AssetId) => {
@@ -124,34 +124,35 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="mb-3">Asset & Wallet</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardTitle>Asset & Wallet</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
-        <Note>
-          <NoteDescription>{noteDescription}</NoteDescription>
-        </Note>
+      <CardContent className="space-y-5">
         <SelectAsset
           onValueChange={(value) => {
             const asset = assets.find((asset) => asset.shortName === value);
             if (asset) handleClick(asset);
           }}
         >
-          <SelectAssetTrigger disabled={assets.length === 0}>
-            {assetSelectedIcon}
-            <SelectAssetValue placeholder="Select Asset" />
-          </SelectAssetTrigger>
-          <SelectAssetContent>
-            {assets.map((asset) => (
-              <SelectAssetItem
-                key={asset!.shortName}
-                value={asset.shortName}
-                icon={assetItemIcon(asset.assetId)}
-              >
-                {asset.shortName}
-              </SelectAssetItem>
-            ))}
-          </SelectAssetContent>
+          <div>
+            <CardDescription className="mb-2">
+              {selectAssetDescription}
+            </CardDescription>
+            <SelectAssetTrigger disabled={assets.length === 0}>
+              {assetSelectedIcon}
+              <SelectAssetValue placeholder="Select Asset" />
+            </SelectAssetTrigger>
+            <SelectAssetContent>
+              {assets.map((asset) => (
+                <SelectAssetItem
+                  key={asset!.shortName}
+                  value={asset.shortName}
+                  icon={assetItemIcon(asset.assetId)}
+                >
+                  {asset.shortName}
+                </SelectAssetItem>
+              ))}
+            </SelectAssetContent>
+          </div>
         </SelectAsset>
         {selectedAsset && (
           <>
@@ -161,24 +162,29 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
                 if (selectedWallet) handleSelect(selectedWallet);
               }}
             >
-              <SelectWalletTrigger disabled={wallets.length === 0}>
-                {walletSelectedIcon}
-                <SelectWalletValue placeholder="Select Wallet" />
-              </SelectWalletTrigger>
-              <SelectWalletContent>
-                {wallets
-                  .filter((w) => w.protocol === protocol)
-                  .map((wallet) => (
-                    <SelectWalletItem
-                      key={wallet.protocol + ':' + wallet.address}
-                      value={wallet.name || wallet.address}
-                      icon={walletItemIcon(wallet.protocol)}
-                      walletAddress={wallet.address}
-                    >
-                      {wallet.name || wallet.address.substring(0, 6)}
-                    </SelectWalletItem>
-                  ))}
-              </SelectWalletContent>
+              <div>
+                <CardDescription className="mb-2">
+                  {selectWalletDescription}
+                </CardDescription>
+                <SelectWalletTrigger disabled={wallets.length === 0}>
+                  {walletSelectedIcon}
+                  <SelectWalletValue placeholder="Select Wallet" />
+                </SelectWalletTrigger>
+                <SelectWalletContent>
+                  {wallets
+                    .filter((w) => w.protocol === protocol)
+                    .map((wallet) => (
+                      <SelectWalletItem
+                        key={wallet.protocol + ':' + wallet.address}
+                        value={wallet.name || wallet.address}
+                        icon={walletItemIcon(wallet.protocol)}
+                        walletAddress={wallet.address}
+                      >
+                        {wallet.name || wallet.address.substring(0, 6)}
+                      </SelectWalletItem>
+                    ))}
+                </SelectWalletContent>
+              </div>
             </SelectWallet>
             <AddWallet
               protocol={protocol ? protocol : Protocol.UNSPECIFIED}
@@ -300,26 +306,20 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
         )}
         {address && (
           <>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
+            <div className="flex flex-col space-y-4 py-4">
+              <div className="flex flex-col items-start">
                 <Label htmlFor="link" className="text-right">
                   Address
                 </Label>
-                <Input
-                  id="link"
-                  value={address.address}
-                  readOnly
-                  className="col-span-3"
-                />
+                <Input id="link" value={address.address} readOnly />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
+              <div className="flex flex-col items-start">
                 <Label htmlFor="link" className="text-right">
                   Wallet Name
                 </Label>
                 <Input
                   id="link"
                   value={address.name}
-                  className="col-span-3"
                   autoFocus={true}
                   onChange={handleNameChange}
                 />
