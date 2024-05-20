@@ -1,5 +1,5 @@
 {
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Magic Ramp by Harbour",
   "proposedName": "Magic Ramp",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/harbour-tech/app-web-ramp.git"
   },
   "source": {
-    "shasum": "EtSyLiIrO1JjlnR1DT5XrtbAE/TbCP7U0GN7rCMZ8yA=",
+    "shasum": "0+k9OKzJmyCRm/eSxE88kRCbQmhx6Xo6/xCqNc5zLA0=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -19,7 +19,6 @@
   },
   "initialPermissions": {
     "snap_getEntropy": {},
-    "snap_manageAccounts": {},
     "endowment:ethereum-provider": {},
     "endowment:rpc": {
       "dapps": true,
