@@ -376,7 +376,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   <div className="basis-1/3">
                     <Card>
                       <CardHeader>
-                        <CardTitle>Crypto Transaction Details</CardTitle>
+                        <CardTitle>Transaction Details</CardTitle>
                         <CardDescription>
                           Just enter amount and confirm transaction with
                           MetaMask.
