@@ -355,7 +355,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
               totalSteps={2}
             />
             <div className="flex items-start justify-center gap-8 pt-6 w-full">
-              <div className="basis-1/3">
+              <div
+                className={`basis-1/3 ${!selectedWallet && 'min-w-[430px]'}`}
+              >
                 <AssetAndWallet
                   assets={account?.cryptoAssets}
                   onAssetSelected={handleSelectAsset}
@@ -381,7 +383,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className="flex flex-col w-full max-w-sm items-start mb-3">
+                        <div className="flex flex-col w-full items-start mb-3">
                           <Label htmlFor="amount">
                             Amount of {offRampAsset!.asset?.shortName} to
                             offramp
@@ -401,7 +403,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         <CardDescription>
                           Receive {currency} on:
                         </CardDescription>
-                        <div className="w-full max-w-sm items-center">
+                        <div className="w-full items-center">
                           <BankAccountComponent
                             account={getOffRampBankAccount(account)}
                             withEditButton
@@ -448,7 +450,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                             </p>
                           </div>
                         </div>
-                        <div className="flex flex-col w-full max-w-sm items-start">
+                        <div className="flex flex-col w-full items-start">
                           <Label htmlFor="address">
                             Magic Ramp address for{' '}
                             {offRampAsset.asset?.shortName}
