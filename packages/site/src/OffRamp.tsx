@@ -517,6 +517,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           onFocus={() =>
                             ammountInput === '0' ? setAmmountInput('') : null
                           }
+                          validate={validateAmountFormat}
                         />
                         <AmountInput
                           currency={currency as AmountInputProps['currency']}
