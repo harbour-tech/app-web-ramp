@@ -130,6 +130,14 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     rampClient,
   ]);
 
+  const validateAmountFormat = (value: string) => {
+    const regex = /^\d+(\.\d+)?$/;
+    if (!regex.test(value)) {
+      return 'Use only numbers and optionally one decimal point separator';
+    }
+    return null;
+  };
+
   return (
     <TooltipProvider>
       <div className="flex flex-col items-center">
@@ -242,6 +250,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       onFocus={() =>
                         ammountInput === '0' ? setAmmountInput('') : null
                       }
+                      validate={validateAmountFormat}
                     />
                     <AmountInput
                       currency={

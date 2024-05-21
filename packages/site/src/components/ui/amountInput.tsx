@@ -90,7 +90,7 @@ const AmountInput = React.forwardRef<HTMLInputElement, AmountInputProps>(
             >
               {assetSymbolIcon()}
             </div>
-            <p className="subtitle3">{currency}</p>
+            <p className="subtitle3 min-w-max">{currency}</p>
             {isLoading ? (
               <div className="w-full flex justify-end">
                 <LoadingSpinner
@@ -106,7 +106,7 @@ const AmountInput = React.forwardRef<HTMLInputElement, AmountInputProps>(
                 onInput={handleAmountInput}
                 onBlur={handleBlur}
                 className={cn(
-                  'flex w-full truncate rounded-md bg-transparent text-right heading5 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+                  'flex w-full text-right heading5 bg-transparent ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
                   className,
                   error &&
                     'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
