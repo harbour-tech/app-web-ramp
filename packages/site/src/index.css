@@ -189,7 +189,7 @@ input::-webkit-contacts-auto-fill-button {
 }
 
 .body3 {
-  @apply text-sm not-italic font-medium leading-5;
+  @apply text-sm not-italic font-light leading-5;
   font-family: Albert Sans;
 }
 
