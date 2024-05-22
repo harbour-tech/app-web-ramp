@@ -47,6 +47,8 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   );
   const [showSuccess, setShowSuccess] = useState(false);
   const isMetaMaskReady = metamask.snapsDetected;
+  const [changingBankAccountFailed, setChangingBankAccountFailed] =
+    useState<boolean>(false);
 
   const load = async (message?: string) => {
     if (message === 'onboardingFinished') {
@@ -163,6 +165,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
 
   const handleSaveBankAccount = async (account: BankAccount) => {
     try {
+      setChangingBankAccountFailed(false);
       await rampClient
         .setBankAccount(
           new SetBankAccountRequest({
@@ -170,7 +173,8 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
           }),
         )
         .then((res) => {
-          if (res.errors) {
+          if (res.errors && res.errors.length > 0) {
+            setChangingBankAccountFailed(true);
             res.errors.forEach((error) => {
               let errorMessage = 'Problem with saving bank number';
               switch (error) {
@@ -190,6 +194,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
           }
         });
     } catch (e) {
+      setChangingBankAccountFailed(true);
       toast.error('Unknown error');
     }
     await load();
@@ -253,7 +258,8 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
               account={accountInfo.result.value}
               onAddWallet={handleAddWallet}
               onSaveBankAccount={handleSaveBankAccount}
-            ></OffRamp>
+              changingBankAccountFailed={changingBankAccountFailed}
+            />
           </TabsContent>
         </Tabs>
       );

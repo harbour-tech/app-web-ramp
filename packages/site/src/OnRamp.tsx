@@ -192,8 +192,8 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                     </CardTitle>
                     <CardDescription>
                       This is your personal Magic Ramp Account. Send {currency}{' '}
-                      to this account to receive {onRampAsset.asset!.shortName}{' '}
-                      on the wallet you have selected.
+                      to this account to receive USDC on the wallet you have
+                      selected.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-5">
@@ -255,10 +255,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       validate={validateAmountFormat}
                     />
                     <AmountInput
-                      currency={
-                        onRampAsset.asset
-                          ?.shortName as AmountInputProps['currency']
-                      }
+                      currency={'USDC'}
                       label="I will get:"
                       value={rampFeeResponse?.cryptoAssetAmount || 'N/A'}
                       disabled
@@ -274,7 +271,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                     {rampFeeResponse && (
                       <div className="flex flex-col gap-[10px]">
                         <p className="subtitle1 text-gray-50">
-                          {currency}:{onRampAsset.asset?.shortName} rate:{' '}
+                          {currency}:USDC rate:{' '}
                           {countingFees
                             ? SmallLoader
                             : rampFeeResponse?.exchangeRate || 'unknown'}

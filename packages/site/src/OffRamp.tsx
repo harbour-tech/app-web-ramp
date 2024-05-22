@@ -23,6 +23,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
+import { BankAccountWithIcon } from '@/components/BankAccountWithEditIcon';
 import BankAccount from '@/types/bankAccount';
 import { WalletIcon } from 'lucide-react';
 import { ethers, parseUnits } from 'ethers';
@@ -57,12 +58,14 @@ export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
   onAddWallet: (wallet: Wallet) => Promise<void>;
   onSaveBankAccount: (account: BankAccount) => void;
+  changingBankAccountFailed: boolean;
 }
 
 export const OffRamp: FunctionComponent<OffRampProps> = ({
   account,
   onAddWallet,
   onSaveBankAccount,
+  changingBankAccountFailed,
 }) => {
   const rampClient = useRampClient();
   const [ammountInput, setAmmountInput] = useState<string>('0');
@@ -303,6 +306,11 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     setBankAccount(account);
   };
 
+  const updateBankAccount = (account: BankAccount) => {
+    setBankAccount(account);
+    onSaveBankAccount(account);
+  };
+
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value);
   };
@@ -333,6 +341,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   <BankAccountComponent
                     account={bankAccount}
                     onChange={onChangeBankAccount}
+                    error={changingBankAccountFailed}
                   />
                   <div>
                     <Button
@@ -400,8 +409,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                       <CardContent>
                         <div className="flex flex-col w-full items-start mb-3">
                           <Label htmlFor="amount">
-                            Amount of {offRampAsset!.asset?.shortName} to
-                            offramp
+                            Amount of USDC to offramp
                           </Label>
                           <Input
                             type="text"
@@ -419,14 +427,11 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           Receive {currency} on:
                         </CardDescription>
                         <div className="w-full items-center">
-                          <BankAccountComponent
+                          <BankAccountWithIcon
+                            key={bankAccount.value.toString()}
                             account={getOffRampBankAccount(account)}
-                            withEditButton
-                            onEditButtonClick={() =>
-                              toast.info(
-                                'Bank account editing disabled during beta testing.',
-                              )
-                            }
+                            onChange={updateBankAccount}
+                            error={changingBankAccountFailed}
                           />
                         </div>
                         <p className="subtitle1 text-gray-50 mt-4">
@@ -454,14 +459,8 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         <div className="flex items-center space-x-4 rounded-md border p-4">
                           <WalletIcon />
                           <div className="flex-1 space-y-1">
-                            {false && (
-                              <p className="text-sm font-medium leading-none">
-                                Push Notifications
-                              </p>
-                            )}
                             <p className="text-sm text-muted-foreground">
-                              Alternatively send{' '}
-                              {offRampAsset!.asset?.shortName} from a{' '}
+                              Alternatively send USDC from a{' '}
                               <u>whitelisted address</u> to the{' '}
                               <u>Magic Ramp address</u>. Please note that
                               transfers from other addresses will be bounced
@@ -471,15 +470,14 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         </div>
                         <div className="flex flex-col w-full items-start">
                           <Label htmlFor="address">
-                            Magic Ramp address for{' '}
-                            {offRampAsset.asset?.shortName}
+                            Magic Ramp address for USDC
                           </Label>
                           <div className="flex items-center gap-4"></div>
                           <Input
                             type="text"
                             id="address"
                             placeholder="address"
-                            readOnly={true}
+                            readOnly
                             value={offRampAsset.offRamp?.address}
                             withCopyToClipboard
                           />
@@ -503,10 +501,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         <AmountInput
                           ref={firstInputRef}
                           onClick={() => firstInputRef.current?.focus()}
-                          currency={
-                            offRampAsset.asset
-                              ?.shortName as AmountInputProps['currency']
-                          }
+                          currency={'USDC'}
                           label="I SEND:"
                           value={ammountInput}
                           onChange={(event) =>
@@ -535,7 +530,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         {rampFeeResponse && (
                           <div className="flex flex-col gap-[10px]">
                             <p className="subtitle1 text-gray-50">
-                              {offRampAsset.asset?.shortName}:{currency} rate:{' '}
+                              USDC:{currency} rate:{' '}
                               {countingFees
                                 ? SmallLoader
                                 : rampFeeResponse?.exchangeRate || 'unknown'}
