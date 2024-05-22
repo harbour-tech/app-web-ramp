@@ -376,7 +376,22 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                   <div className="basis-1/3">
                     <Card>
                       <CardHeader>
-                        <CardTitle>Transaction Details</CardTitle>
+                        <CardTitle className="flex justify-between">
+                          Transaction Details
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <InfoSvg />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-80 p-3 pl-10 pr-5">
+                              <ul className="list-disc">
+                                <li className="mb-1">
+                                  If your bank supports SEPA Instant your
+                                  account will be funded in a couple of minutes.
+                                </li>
+                              </ul>
+                            </TooltipContent>
+                          </Tooltip>
+                        </CardTitle>
                         <CardDescription>
                           Just enter amount and confirm transaction with
                           MetaMask.
@@ -414,6 +429,10 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                             }
                           />
                         </div>
+                        <p className="subtitle1 text-gray-50 mt-4">
+                          You can only offramp to a bank account in your name.
+                          Unsupported payments will be returned to sender.
+                        </p>
                         <div>
                           <Button
                             className="w-full mt-4"
@@ -473,27 +492,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                       <CardHeader>
                         <CardTitle className="relative">
                           <span className="w-full">Offramp Calculator</span>
-                          <Tooltip>
-                            <TooltipTrigger className="absolute right-0 top-2">
-                              <InfoSvg />
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-80 p-3 pl-10 pr-5">
-                              <ul className="list-disc">
-                                <li className="mb-1">
-                                  You can only offramp to a bank account in your
-                                  name.
-                                </li>
-                                <li className="mb-1">
-                                  If your bank supports SEPA Instant your
-                                  account will be funded in a couple of minutes.
-                                </li>
-                                <li>
-                                  Node: Unsupported Payments will be returned to
-                                  sender.
-                                </li>
-                              </ul>
-                            </TooltipContent>
-                          </Tooltip>
                         </CardTitle>
                         <CardDescription>
                           {' '}

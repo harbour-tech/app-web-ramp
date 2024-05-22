@@ -163,7 +163,33 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
               <div className="basis-1/3">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Magic Ramp Details</CardTitle>
+                    <CardTitle className="flex justify-between">
+                      Magic Ramp Details
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <InfoSvg />
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-80 p-3 pl-10 pr-5">
+                          <ul className="list-disc">
+                            <li className="mb-1">
+                              Please only send {currency} to your Magic Ramp
+                              Account.
+                            </li>
+                            <li className="mb-1">
+                              Please only send from a bank account in your name.
+                            </li>
+                            <li className="mb-1">
+                              If your bank supports SEPA Instant your wallet
+                              will be funded in a couple of minutes.
+                            </li>
+                            <li>
+                              Note: Unsupported payments will be returned to
+                              sender.
+                            </li>
+                          </ul>
+                        </TooltipContent>
+                      </Tooltip>
+                    </CardTitle>
                     <CardDescription>
                       This is your personal Magic Ramp Account. Send {currency}{' '}
                       to this account to receive {onRampAsset.asset!.shortName}{' '}
@@ -208,30 +234,6 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                   <CardHeader>
                     <CardTitle className="relative">
                       <span className="w-full">Onramp Calculator</span>
-                      <Tooltip>
-                        <TooltipTrigger className="absolute right-0 top-2">
-                          <InfoSvg />
-                        </TooltipTrigger>
-                        <TooltipContent className="max-w-80 p-3 pl-10 pr-5">
-                          <ul className="list-disc">
-                            <li className="mb-1">
-                              Please only send {currency} to your Magic Ramp
-                              Account.
-                            </li>
-                            <li className="mb-1">
-                              Please only send from a bank account in your name.
-                            </li>
-                            <li className="mb-1">
-                              If your bank supports SEPA Instant your wallet
-                              will be funded in a couple of minutes.
-                            </li>
-                            <li>
-                              Node: Unsupported Payments will be returned to
-                              sender.
-                            </li>
-                          </ul>
-                        </TooltipContent>
-                      </Tooltip>
                     </CardTitle>
                     <CardDescription>
                       {' '}
