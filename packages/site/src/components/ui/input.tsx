@@ -2,22 +2,30 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import CopyIcon from '@/assets/copyIcon.svg';
 import { toast } from 'react-toastify';
+import { useEffect } from 'react';
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   validate?: (value: string) => string | null;
   withCopyToClipboard?: boolean;
+  error?: string | null;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { className, type, validate, withCopyToClipboard, ...props },
+    { className, type, validate, withCopyToClipboard, error, ...props },
     forwardedRef,
   ) => {
     const [value, setValue] = React.useState('');
-    const [error, setError] = React.useState<string | null>(null);
+    const [_error, setError] = React.useState<string | null>(error || null);
     const internalRef = React.useRef<HTMLInputElement>(null);
     const ref = forwardedRef ?? internalRef;
+
+    useEffect(() => {
+      if (_error !== error) {
+        setError(error || null);
+      }
+    }, [_error, error]);
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = event.target.value;
@@ -58,7 +66,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={cn(
               'flex items-center w-full rounded-md bg-light-glass shadow-inner px-2',
               className,
-              error && 'border border-red',
+              _error && 'border border-red',
             )}
           >
             <input
@@ -69,7 +77,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               className={cn(
                 'flex h-10 w-full rounded-md bg-transparent px-3 py-2 body2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
                 className,
-                error &&
+                _error &&
                   'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
               )}
               ref={ref}
@@ -85,7 +93,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
           </div>
         </div>
-        {error && <p className="text-red text-xs mt-1 flex w-full">{error}</p>}
+        {_error && (
+          <p className="text-red text-xs mt-1 flex w-full">{_error}</p>
+        )}
       </div>
     );
   },

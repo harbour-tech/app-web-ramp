@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useRef } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import {
@@ -6,14 +6,15 @@ import {
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import { BankAccount as Account } from '@/types/bankAccount';
+import { PencilIcon, SaveIcon } from 'lucide-react';
 
 export interface BankAccountProps {
   account: Account;
   onChange?: (account: Account) => void;
-  error?: boolean;
+  error: boolean;
 }
 
-export const BankAccount: FunctionComponent<BankAccountProps> = ({
+export const BankAccountWithIcon: FunctionComponent<BankAccountProps> = ({
   account,
   onChange,
   error,
@@ -57,11 +58,16 @@ interface IbanProps {
 }
 
 const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
-  const onIbanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [editable, setEditable] = React.useState(false);
+  const [ibanValue, setIbanValue] = React.useState(iban.iban);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const saveChanges = () => {
+    setEditable(false);
     if (onChange) {
       onChange(
         new IbanCoordinates({
-          iban: e.target.value,
+          iban: ibanValue,
         }),
       );
     }
@@ -72,14 +78,31 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
       <Label htmlFor="iban">IBAN</Label>
       <div className="flex w-full items-center gap-4">
         <Input
+          ref={inputRef}
           type="text"
           id="iban"
           placeholder="IBAN"
-          readOnly={!onChange}
-          value={iban.iban}
-          onChange={onIbanChange}
-          error={error ? 'Invalid IBAN' : ''}
+          error={error ? 'Invalid IBAN' : null}
+          readOnly={!editable}
+          value={ibanValue}
+          onChange={(e) => setIbanValue(e.target.value)}
+          className={!editable ? 'text-gray-200' : ''}
         />
+        {editable ? (
+          <SaveIcon
+            onClick={saveChanges}
+            className="stroke-green cursor-pointer"
+          />
+        ) : (
+          <PencilIcon
+            className="stroke-gray-50 cursor-pointer"
+            onClick={() => {
+              setEditable(true);
+              inputRef.current?.focus();
+              inputRef.current?.select();
+            }}
+          />
+        )}
       </div>
     </div>
   );
@@ -92,24 +115,29 @@ interface ScanProps {
 }
 
 const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
+  const [editable, setEditable] = React.useState(false);
+  const [scanValue, setScanValue] = React.useState({
+    sortCode: scan.sortCode,
+    accountNumber: scan.accountNumber,
+  });
+
   const onSortCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onChange) {
-      onChange(
-        new ScanCoordinates({
-          accountNumber: scan.accountNumber,
-          sortCode: e.target.value,
-        }),
-      );
-    }
+    setScanValue({
+      accountNumber: scanValue.accountNumber,
+      sortCode: e.target.value,
+    });
   };
   const onAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setScanValue({
+      accountNumber: e.target.value,
+      sortCode: scanValue.sortCode,
+    });
+  };
+
+  const saveChanges = () => {
+    setEditable(false);
     if (onChange) {
-      onChange(
-        new ScanCoordinates({
-          accountNumber: e.target.value,
-          sortCode: scan.sortCode,
-        }),
-      );
+      onChange(new ScanCoordinates(scanValue));
     }
   };
 
@@ -123,10 +151,10 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
           placeholder="000000"
           maxLength={6}
           pattern="\d+"
-          readOnly={!onChange}
-          value={scan.sortCode}
+          readOnly={!editable}
+          value={scanValue.sortCode}
           onChange={onSortCodeChange}
-          error={error ? 'Invalid Bank Number' : ''}
+          error={error ? 'Invalid Bank Number' : null}
         />
       </div>
       <div className="w-full items-center">
@@ -138,11 +166,22 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
             placeholder="123456789"
             maxLength={30}
             pattern="\d+"
-            readOnly={!onChange}
-            value={scan.accountNumber}
+            readOnly={!editable}
+            value={scanValue.accountNumber}
             onChange={onAccountNumberChange}
-            error={error ? 'Invalid Bank Number' : ''}
+            error={error ? 'Invalid Bank Number' : null}
           />
+          {editable ? (
+            <SaveIcon
+              onClick={saveChanges}
+              className="stroke-green cursor-pointer"
+            />
+          ) : (
+            <PencilIcon
+              className="stroke-gray-50 cursor-pointer"
+              onClick={() => setEditable(true)}
+            />
+          )}
         </div>
       </div>
     </div>
