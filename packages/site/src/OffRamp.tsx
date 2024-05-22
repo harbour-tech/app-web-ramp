@@ -53,6 +53,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import InfoSvg from '@/assets/info.svg?react';
+import { TransactionProcessingSpinner } from '@/components/TransactionProcessingSpinner';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -438,6 +439,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           You can only offramp to a bank account in your name.
                           Unsupported payments will be returned to sender.
                         </p>
+                        <TransactionProcessingSpinner />
                         <div>
                           <Button
                             className="w-full mt-4"
