@@ -219,7 +219,14 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     setSelectedWallet(undefined);
   };
 
-  const handleSelectWalletClick = (wallet: GetAccountInfoResponse_Wallet) => {
+  const handleSelectWalletClick = (
+    wallet: GetAccountInfoResponse_Wallet | undefined,
+  ) => {
+    if (!wallet) {
+      setSelectedWallet(undefined);
+      setOffRampAsset(undefined);
+      return;
+    }
     setSelectedWallet(wallet);
     const asset = wallet.assets.find(
       (ra) => ra.asset!.assetId == selectedAsset!.assetId,
