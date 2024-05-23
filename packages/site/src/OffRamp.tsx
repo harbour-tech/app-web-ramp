@@ -7,7 +7,6 @@ import {
   GetAccountInfoResponse_Wallet_RampAsset,
   IbanCoordinates,
   Network,
-  Protocol,
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
