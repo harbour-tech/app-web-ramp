@@ -278,7 +278,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       setCountingFees(true);
       const requestParams = new EstimateOffRampFeeRequest({
         cryptoAssetId: offRampAsset?.asset?.assetId,
-        protocol: Protocol.AVAX,
+        protocol: offRampAsset.asset.protocol,
         amount: {
           value: debounceAmmountInput,
           case: 'cryptoAssetAmount',
@@ -298,6 +298,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     currency,
     offRampAsset?.asset?.shortName,
     offRampAsset?.asset?.assetId,
+    offRampAsset?.asset?.protocol,
     debounceAmmountInput,
     rampClient,
   ]);
