@@ -37,6 +37,10 @@ const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.POLYGON, Protocol.POLYGON],
 ]);
 
+const installationLink = process.env.VITE_FLASK_INSTALLATION
+  ? 'https://chromewebstore.google.com/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk'
+  : 'https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
+
 const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   const triggerModalOnceRef = useRef(false);
   const { openOnboardingModal, setOnFinishCallback } = useOnboardingModal();
@@ -278,10 +282,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
         </Note>
         {!isMetaMaskReady ? (
           <Button asChild className="leading-3">
-            <a
-              href="https://chromewebstore.google.com/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk"
-              target="_blank"
-            >
+            <a href={installationLink} target="_blank">
               Install <MetaMaskWithLogo className="ml-2" />
             </a>
           </Button>
