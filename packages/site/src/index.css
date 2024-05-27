@@ -95,6 +95,10 @@ body {
   filter: invert();
 }
 
+.ready-to-copy-font {
+  font-family: Roboto Mono, sans-serif !important;
+}
+
 /* Safari fix hiding input's autofill indicator that doesn't fit our designs */
 input::-webkit-contacts-auto-fill-button {
   background-color: transparent;
@@ -131,6 +135,12 @@ input::-webkit-contacts-auto-fill-button {
   font-family: Space Grotesk;
   src: url(/src/assets/SpaceGrotesk-Light.ttf) format('truetype');
   font-weight: 300;
+}
+
+@font-face {
+  font-family: Roboto Mono;
+  src: url(/src/assets/RobotoMono-Regular.ttf) format('truetype');
+  font-weight: normal;
 }
 
 .heading1 {

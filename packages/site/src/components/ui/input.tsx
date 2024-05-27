@@ -61,12 +61,16 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="flex-row w-full">
-        <div className="rounded-md p-px bg-gray-glass">
+        <div
+          className={cn('rounded-md p-px bg-gray-glass', {
+            'bg-gray-200': withCopyToClipboard,
+          })}
+        >
           <div
             className={cn(
               'flex items-center w-full rounded-md bg-light-glass shadow-inner px-2',
               className,
-              _error && 'border border-red',
+              { 'border border-red': _error },
             )}
           >
             <input
@@ -77,8 +81,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               className={cn(
                 'flex h-10 w-full rounded-md bg-transparent px-3 py-2 body2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
                 className,
-                _error &&
-                  'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
+                {
+                  'ready-to-copy-font': withCopyToClipboard,
+                  'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0':
+                    _error,
+                },
               )}
               ref={ref}
               {...props}

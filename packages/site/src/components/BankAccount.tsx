@@ -11,12 +11,14 @@ export interface BankAccountProps {
   account: Account;
   onChange?: (account: Account) => void;
   error?: boolean;
+  withCopyToClipboard?: boolean;
 }
 
 export const BankAccount: FunctionComponent<BankAccountProps> = ({
   account,
   onChange,
   error,
+  withCopyToClipboard,
 }) => {
   const onIbanChange = (iban: IbanCoordinates) => {
     if (!onChange) {
@@ -38,25 +40,37 @@ export const BankAccount: FunctionComponent<BankAccountProps> = ({
     });
   };
 
-  return (
-    <>
-      {account.case == 'iban' && (
-        <Iban error={error} iban={account.value} onChange={onIbanChange} />
-      )}
-      {account.case == 'scan' && (
-        <Scan error={error} scan={account.value} onChange={onScanChange} />
-      )}
-    </>
-  );
+  const commonProps = {
+    error,
+    withCopyToClipboard,
+  };
+
+  if (account.case == 'iban') {
+    return (
+      <Iban iban={account.value} onChange={onIbanChange} {...commonProps} />
+    );
+  }
+  if (account.case == 'scan') {
+    return (
+      <Scan scan={account.value} onChange={onScanChange} {...commonProps} />
+    );
+  }
+  return null;
 };
 
 interface IbanProps {
   iban: IbanCoordinates;
   onChange?: (iban: IbanCoordinates) => void;
   error?: boolean;
+  withCopyToClipboard?: boolean;
 }
 
-const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
+const Iban: FunctionComponent<IbanProps> = ({
+  iban,
+  onChange,
+  error,
+  withCopyToClipboard,
+}) => {
   const onIbanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       onChange(
@@ -79,6 +93,7 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
           value={iban.iban}
           onChange={onIbanChange}
           error={error ? 'Invalid IBAN' : ''}
+          withCopyToClipboard={!!withCopyToClipboard}
         />
       </div>
     </div>
@@ -89,9 +104,15 @@ interface ScanProps {
   scan: ScanCoordinates;
   onChange?: (scan: ScanCoordinates) => void;
   error?: boolean;
+  withCopyToClipboard?: boolean;
 }
 
-const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
+const Scan: FunctionComponent<ScanProps> = ({
+  scan,
+  onChange,
+  error,
+  withCopyToClipboard,
+}) => {
   const onSortCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       onChange(
@@ -127,6 +148,7 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
           value={scan.sortCode}
           onChange={onSortCodeChange}
           error={error ? 'Invalid Bank Number' : ''}
+          withCopyToClipboard={!!withCopyToClipboard}
         />
       </div>
       <div className="w-full items-center">
@@ -142,6 +164,7 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
             value={scan.accountNumber}
             onChange={onAccountNumberChange}
             error={error ? 'Invalid Bank Number' : ''}
+            withCopyToClipboard={!!withCopyToClipboard}
           />
         </div>
       </div>
