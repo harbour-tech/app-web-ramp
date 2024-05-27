@@ -191,7 +191,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       signer,
     );
     setIsProcessingTransfer(true);
-
     const xAmount = parseUnits(amount, 6);
     await usdcContract
       .transfer(offRampAsset!.offRamp!.address, xAmount, {
