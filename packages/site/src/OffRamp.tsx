@@ -335,6 +335,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     return null;
   };
 
+  const bankAccountType =
+    currency === 'GBP' ? 'instant Faster Payments' : 'SEPA Instant';
+
   return (
     <TooltipProvider>
       {isProcessingTransfer && <TransactionProcessingSpinner />}
@@ -405,9 +408,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                               <InfoSvg />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-80 p-3 pl-10 pr-5">
-                              <ul className="list-disc">
+                              <ul className="list-none">
                                 <li className="mb-1">
-                                  If your bank supports SEPA Instant your
+                                  If your bank supports {bankAccountType} your
                                   account will be funded in a couple of minutes.
                                 </li>
                               </ul>
