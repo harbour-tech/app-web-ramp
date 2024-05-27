@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import {
   GetAccountInfoResponse,
   Protocol,
@@ -38,7 +38,6 @@ const SupportedNetworks = new Map<Protocol, Protocol>([
 ]);
 
 const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
-  const triggerModalOnceRef = useRef(false);
   const { openOnboardingModal, setOnFinishCallback } = useOnboardingModal();
   const [metamask, metamaskDispatch] = useMetaMask();
   const rampClient = useRampClient();
@@ -201,13 +200,6 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   };
 
   useEffect(() => {
-    if (
-      accountInfo?.result.case == 'authentication' &&
-      !triggerModalOnceRef.current
-    ) {
-      triggerModalOnceRef.current = true;
-    }
-
     if (accountInfo?.result.case == 'account') {
       hideLogo();
     }
