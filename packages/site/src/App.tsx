@@ -206,7 +206,6 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
       !triggerModalOnceRef.current
     ) {
       triggerModalOnceRef.current = true;
-      openOnboardingModal(accountInfo.result.value.authenticationUrl);
     }
 
     if (accountInfo?.result.case == 'account') {
