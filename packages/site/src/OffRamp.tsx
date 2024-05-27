@@ -7,7 +7,6 @@ import {
   GetAccountInfoResponse_Wallet_RampAsset,
   IbanCoordinates,
   Network,
-  Protocol,
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
@@ -221,7 +220,14 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     setSelectedWallet(undefined);
   };
 
-  const handleSelectWalletClick = (wallet: GetAccountInfoResponse_Wallet) => {
+  const handleSelectWalletClick = (
+    wallet: GetAccountInfoResponse_Wallet | undefined,
+  ) => {
+    if (!wallet) {
+      setSelectedWallet(undefined);
+      setOffRampAsset(undefined);
+      return;
+    }
     setSelectedWallet(wallet);
     const asset = wallet.assets.find(
       (ra) => ra.asset!.assetId == selectedAsset!.assetId,
@@ -279,7 +285,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       setCountingFees(true);
       const requestParams = new EstimateOffRampFeeRequest({
         cryptoAssetId: offRampAsset?.asset?.assetId,
-        protocol: Protocol.AVAX,
+        protocol: offRampAsset.asset.protocol,
         amount: {
           value: debounceAmmountInput,
           case: 'cryptoAssetAmount',
@@ -299,6 +305,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     currency,
     offRampAsset?.asset?.shortName,
     offRampAsset?.asset?.assetId,
+    offRampAsset?.asset?.protocol,
     debounceAmmountInput,
     rampClient,
   ]);

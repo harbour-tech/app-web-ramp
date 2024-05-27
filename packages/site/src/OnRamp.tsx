@@ -62,11 +62,19 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     GetAccountInfoResponse_Wallet_RampAsset | undefined
   >(undefined);
 
-  const handleSelectWalletClick = (wallet: GetAccountInfoResponse_Wallet) => {
+  const handleSelectWalletClick = (
+    wallet: GetAccountInfoResponse_Wallet | undefined,
+  ) => {
+    if (!wallet) {
+      setSelectedWallet(undefined);
+      setOnRampAsset(undefined);
+      return;
+    }
     setSelectedWallet(wallet);
     const asset = wallet.assets.find(
       (ra) => ra.asset!.assetId == selectedAsset!.assetId,
     );
+    console.log({ asset });
     setOnRampAsset(asset);
   };
 
