@@ -13,7 +13,15 @@ export interface InputProps
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { className, type, validate, withCopyToClipboard, error, ...props },
+    {
+      className,
+      type,
+      validate,
+      withCopyToClipboard,
+      error,
+      disabled,
+      ...props
+    },
     forwardedRef,
   ) => {
     const [value, setValue] = React.useState('');
@@ -59,18 +67,19 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       }
     };
 
+    const displayAsDisabled = withCopyToClipboard || props.readOnly;
+
     return (
       <div className="flex-row w-full">
-        <div
-          className={cn('rounded-md p-px bg-gray-glass', {
-            '!border-gray-300 border': withCopyToClipboard,
-          })}
-        >
+        <div className="rounded-md p-px bg-gray-glass">
           <div
             className={cn(
               'flex items-center w-full rounded-md bg-light-glass shadow-inner px-2',
               className,
-              { 'border border-red': _error },
+              {
+                'border !border-red': _error,
+                'border-gray-200 border': displayAsDisabled,
+              },
             )}
           >
             <input
@@ -82,7 +91,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 'flex h-10 w-full rounded-md bg-transparent px-3 py-2 body2 ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
                 className,
                 {
-                  'ready-to-copy-font text-gray-200': withCopyToClipboard,
+                  'ready-to-copy-font text-gray-100': displayAsDisabled,
                   'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0':
                     _error,
                 },
