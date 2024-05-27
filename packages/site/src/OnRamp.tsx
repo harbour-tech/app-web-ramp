@@ -146,6 +146,9 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     return null;
   };
 
+  const bankAccountType =
+    currency === 'GBP' ? 'instant Faster Payments' : 'SEPA Instant';
+
   return (
     <TooltipProvider>
       <div className="flex flex-col items-center">
@@ -187,8 +190,8 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                               Please only send from a bank account in your name.
                             </li>
                             <li className="mb-1">
-                              If your bank supports SEPA Instant your wallet
-                              will be funded in a couple of minutes.
+                              If your bank supports {bankAccountType} your
+                              wallet will be funded in a couple of minutes.
                             </li>
                             <li>
                               Note: Unsupported payments will be returned to
