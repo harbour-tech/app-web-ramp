@@ -86,7 +86,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   >();
 
   const handleSwitchNetworkError = () => {
-    toast.error('There was problem with switching newtork');
+    toast.error('There was a problem with switching the network');
   };
 
   async function handleTransfer() {
