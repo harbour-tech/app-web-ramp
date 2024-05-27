@@ -71,6 +71,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const [ammountInput, setAmmountInput] = useState<string>('0');
   const debounceAmmountInput = useDebounce(ammountInput, 900);
   const [countingFees, setCountingFees] = useState<boolean>(false);
+  const [isProcessingTransfer, setIsProcessingTransfer] = useState(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
   const [selectedWallet, setSelectedWallet] = useState<
     GetAccountInfoResponse_Wallet | undefined
@@ -87,7 +88,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   >();
 
   const handleSwitchNetworkError = () => {
-    toast.error('There was problem with switching newtork');
+    toast.error('There was a problem with switching the network');
   };
 
   async function handleTransfer() {
@@ -189,15 +190,19 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       erc20Asset.abi,
       signer,
     );
+    setIsProcessingTransfer(true);
+
     const xAmount = parseUnits(amount, 6);
     await usdcContract
       .transfer(offRampAsset!.offRamp!.address, xAmount, {
         /*gasPrice: 0*/
       })
       .then(() => {
+        setIsProcessingTransfer(false);
         toast.success('Success, transaction sent');
       })
       .catch((err) => {
+        setIsProcessingTransfer(false);
         if (err.reason) {
           if (err.reason.includes('amount exceeds balance')) {
             toast.error('Insuficient balance on MetaMask account');
@@ -333,6 +338,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
 
   return (
     <TooltipProvider>
+      {isProcessingTransfer && <TransactionProcessingSpinner />}
       <div className="flex items-start justify-center gap-8 mb-10">
         {needSetBankAccount && (
           <>
@@ -446,7 +452,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           You can only offramp to a bank account in your name.
                           Unsupported payments will be returned to sender.
                         </p>
-                        <TransactionProcessingSpinner />
                         <div>
                           <Button
                             className="w-full mt-4"
