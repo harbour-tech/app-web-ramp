@@ -52,6 +52,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import InfoSvg from '@/assets/info.svg?react';
+import { TransactionProcessingSpinner } from '@/components/TransactionProcessingSpinner';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -70,6 +71,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const [ammountInput, setAmmountInput] = useState<string>('0');
   const debounceAmmountInput = useDebounce(ammountInput, 900);
   const [countingFees, setCountingFees] = useState<boolean>(false);
+  const [isProcessingTransfer, setIsProcessingTransfer] = useState(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
   const [selectedWallet, setSelectedWallet] = useState<
     GetAccountInfoResponse_Wallet | undefined
@@ -188,15 +190,18 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       erc20Asset.abi,
       signer,
     );
+    setIsProcessingTransfer(true);
     const xAmount = parseUnits(amount, 6);
     await usdcContract
       .transfer(offRampAsset!.offRamp!.address, xAmount, {
         /*gasPrice: 0*/
       })
       .then(() => {
+        setIsProcessingTransfer(false);
         toast.success('Success, transaction sent');
       })
       .catch((err) => {
+        setIsProcessingTransfer(false);
         if (err.reason) {
           if (err.reason.includes('amount exceeds balance')) {
             toast.error('Insuficient balance on MetaMask account');
@@ -332,6 +337,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
 
   return (
     <TooltipProvider>
+      {isProcessingTransfer && <TransactionProcessingSpinner />}
       <div className="flex items-start justify-center gap-8 mb-10">
         {needSetBankAccount && (
           <>
