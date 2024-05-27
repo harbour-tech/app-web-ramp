@@ -206,7 +206,10 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                   </CardHeader>
                   <CardContent className="space-y-5">
                     {account.onrampBankAccount.case && (
-                      <BankAccountComponent account={getOnRampBankAccount()} />
+                      <BankAccountComponent
+                        account={getOnRampBankAccount()}
+                        withCopyToClipboard
+                      />
                     )}
                     <div className="flex flex-col w-full items-start">
                       <Label htmlFor="holder">Account Holder</Label>
@@ -217,6 +220,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                           placeholder="Account Holder"
                           readOnly={true}
                           value={account.accountHolder}
+                          withCopyToClipboard
                         />
                       )}
                     </div>
