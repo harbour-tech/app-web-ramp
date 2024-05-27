@@ -37,7 +37,7 @@ const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.POLYGON, Protocol.POLYGON],
 ]);
 
-const installationLink = process.env.VITE_FLASK_INSTALLATION
+const installationLink = import.meta.env.VITE_FLASK_INSTALLATION
   ? 'https://chromewebstore.google.com/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk'
   : 'https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
 
