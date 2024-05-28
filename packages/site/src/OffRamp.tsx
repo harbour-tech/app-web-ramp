@@ -39,7 +39,6 @@ import {
   switchNetwork,
 } from '@/utils';
 import { AssetAndWallet, Wallet } from './components/AssetAndWallet';
-import StepProgressBar from './components/ui/stepProgressBar';
 import { AmountInput, AmountInputProps } from '@/components/ui/amountInput';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useRampClient } from '@/contexts';
@@ -375,11 +374,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         )}
         {account.offrampBankAccount.case && (
           <div className="flex flex-col items-center w-full">
-            <StepProgressBar
-              currentStep={selectedWallet ? 2 : 1}
-              totalSteps={2}
-            />
-            <div className="flex items-start justify-center gap-8 pt-6 w-full">
+            <div className="flex items-start justify-center gap-8 pt-4 w-full">
               <div
                 className={`basis-1/3 ${!selectedWallet && 'min-w-[430px]'}`}
               >
