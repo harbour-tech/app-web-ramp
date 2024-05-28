@@ -66,38 +66,11 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
     }
 
     if (response.result.case == 'account') {
-      // filter out unnecessary assets
       response.result.value.cryptoAssets =
         response.result.value.cryptoAssets.filter((a) =>
           SupportedNetworks.has(a.protocol),
         );
-      // response.result.value.onrampBankAccount = {
-      //   case:"onrampScan",
-      //   value: new ScanCoordinates({
-      //     sortCode: "DEXXXX",
-      //     accountNumber: "12345678"
-      //   })
-      // }
-      // response.result.value.onrampBankAccount = {
-      //     case:"onrampIban",
-      //     value: new IbanCoordinates({
-      //       iban: "DE1233231231",
-      //     })
-      //   }
-      //response.result.value.wallets[0].address = "0x73c2D5103898a0a850886314B6099b4DE03FC0Bb";
-      //response.result.value.wallets[0].name = "Stepan's Metamask";
-      // response.result.value.offrampBankAccount = {
-      //   case: 'offrampIban',
-      //   value: new IbanCoordinates({
-      //     iban: 'DE39 5001 0517 3186 9541 84',
-      //   }),
-      // };
     }
-
-    // response.result = {
-    //   case: "authentication",
-    //   value: new GetAccountInfoResponse_Authentication({}),
-    // }
 
     setAccountInfo(response);
   };
@@ -106,7 +79,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
     if (metamask.installedSnap) {
       load();
     }
-  }, [metamask.installedSnap, rampClient]);
+  }, [metamask.installedSnap]);
 
   useEffect(() => {
     setOnFinishCallback((message) => load(message));
