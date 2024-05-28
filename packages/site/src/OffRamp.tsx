@@ -307,11 +307,11 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     }
   }, [
     currency,
+    rampClient,
     offRampAsset?.asset?.shortName,
     offRampAsset?.asset?.assetId,
     offRampAsset?.asset?.protocol,
     debounceAmmountInput,
-    rampClient,
   ]);
 
   const onChangeBankAccount = (account: BankAccount) => {

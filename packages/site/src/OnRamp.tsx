@@ -74,7 +74,6 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     const asset = wallet.assets.find(
       (ra) => ra.asset!.assetId == selectedAsset!.assetId,
     );
-    console.log({ asset });
     setOnRampAsset(asset);
   };
 
