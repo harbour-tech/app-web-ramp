@@ -26,7 +26,6 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { toast } from 'react-toastify';
 import { SmallLoader } from '@/components/LoadingSpinner';
 import { AssetAndWallet, Wallet } from './components/AssetAndWallet';
-import StepProgressBar from './components/ui/stepProgressBar';
 import {
   Tooltip,
   TooltipProvider,
@@ -151,8 +150,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   return (
     <TooltipProvider>
       <div className="flex flex-col items-center">
-        <StepProgressBar currentStep={selectedWallet ? 2 : 1} totalSteps={2} />
-        <div className="flex items-start justify-center gap-8 pt-6 w-full">
+        <div className="flex items-start justify-center gap-8 pt-4 w-full">
           <div className={`basis-1/3 ${!selectedWallet && 'min-w-[430px]'}`}>
             <AssetAndWallet
               assets={account?.cryptoAssets}
