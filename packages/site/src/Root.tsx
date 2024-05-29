@@ -62,6 +62,8 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
               padding: logoVisible ? '0' : '0 10vw',
               top: '220px',
               height: 'calc(100% - 220px)',
+              paddingBottom: '20px',
+              overflow: 'auto',
             }}
           >
             <MetaMaskContextProvider>
