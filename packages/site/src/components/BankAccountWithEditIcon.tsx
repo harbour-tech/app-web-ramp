@@ -11,7 +11,7 @@ import { PencilIcon, SaveIcon } from 'lucide-react';
 export interface BankAccountProps {
   account: Account;
   onChange?: (account: Account) => void;
-  error: boolean;
+  error: boolean | string;
 }
 
 export const BankAccountWithIcon: FunctionComponent<BankAccountProps> = ({
@@ -54,7 +54,7 @@ export const BankAccountWithIcon: FunctionComponent<BankAccountProps> = ({
 interface IbanProps {
   iban: IbanCoordinates;
   onChange?: (iban: IbanCoordinates) => void;
-  error?: boolean;
+  error?: boolean | string;
 }
 
 const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
@@ -73,6 +73,9 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
     }
   };
 
+  const fullError =
+    typeof error === 'string' ? error : error ? 'Invalid IBAN' : null;
+
   return (
     <div className="flex flex-col w-full items-start">
       <Label htmlFor="iban">IBAN</Label>
@@ -82,7 +85,7 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
           type="text"
           id="iban"
           placeholder="IBAN"
-          error={error ? 'Invalid IBAN' : null}
+          error={fullError}
           readOnly={!editable}
           value={ibanValue}
           onChange={(e) => setIbanValue(e.target.value)}
@@ -111,7 +114,7 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
 interface ScanProps {
   scan: ScanCoordinates;
   onChange?: (scan: ScanCoordinates) => void;
-  error?: boolean;
+  error?: boolean | string;
 }
 
 const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
@@ -141,6 +144,10 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
     }
   };
 
+  const errorForSortCode = typeof error === 'string' || error ? ' ' : null;
+  const fullError =
+    typeof error === 'string' ? error : error ? 'Invalid Bank Number' : null;
+
   return (
     <div className="flex gap-4">
       <div className="w-3/5 items-center">
@@ -154,7 +161,7 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
           readOnly={!editable}
           value={scanValue.sortCode}
           onChange={onSortCodeChange}
-          error={error ? 'Invalid Bank Number' : null}
+          error={errorForSortCode}
         />
       </div>
       <div className="w-full items-center">
@@ -169,7 +176,7 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
             readOnly={!editable}
             value={scanValue.accountNumber}
             onChange={onAccountNumberChange}
-            error={error ? 'Invalid Bank Number' : null}
+            error={fullError}
           />
           {editable ? (
             <SaveIcon
