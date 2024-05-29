@@ -236,7 +236,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
     return (
       <div className="flex flex-col w-[344px] gap-4">
         <Note>
-          <NoteTitle>
+          <NoteTitle className="!normal-case">
             To enable Magic Ramping, please connect your MetaMask wallet.
           </NoteTitle>
           <NoteDescription>
@@ -285,7 +285,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
     <>
       {accountInfo?.result.case !== 'account' && (
         <div className="max-w-[430px] mt-36 mb-4">
-          <h3 className="heading3 mb-2 text-lightSky !font-thin">
+          <h3 className="heading3 mb-2 text-lightSky !font-thin !normal-case">
             Say goodbye to the hassle and costs of on and off ramping
           </h3>
           <p className="text-muted-foreground caption1">
