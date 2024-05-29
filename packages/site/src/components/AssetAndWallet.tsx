@@ -50,6 +50,7 @@ import {
   SelectAssetTrigger,
   SelectAssetValue,
 } from './ui/selectAsset';
+import MetaMaskLogo from '@/assets/metamask.svg';
 
 export interface AssetAndWalletProps {
   protocol: Protocol | undefined;
@@ -299,8 +300,11 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
         <DialogHeader>
           <DialogTitle>Add Metamask Wallet</DialogTitle>
           <DialogDescription>
-            You can add as many Ethereum wallets as you want but they all must
-            be owned by you!
+            You may add as many wallets as you like, however they must all be
+            owned by you. By clicking the ADD WALLET button, you'll be prompted
+            by MetaMask to sign a transaction. Don't worry, there's no
+            transaction fees and no money transfer, this is purely to
+            demonstrate ownership of the wallet.
           </DialogDescription>
         </DialogHeader>
         {!address && (
@@ -331,6 +335,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
             </div>
             <DialogFooter>
               <Button type="button" variant="primary" onClick={handleAdd}>
+                <img src={MetaMaskLogo} className="mr-2 h-5 w-5" />
                 Add wallet
               </Button>
             </DialogFooter>
