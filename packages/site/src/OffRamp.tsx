@@ -58,7 +58,7 @@ export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
   onAddWallet: (wallet: Wallet) => Promise<void>;
   onSaveBankAccount: (account: BankAccount) => void;
-  changingBankAccountFailed: boolean;
+  changingBankAccountFailed: boolean | string;
 }
 
 export const OffRamp: FunctionComponent<OffRampProps> = ({

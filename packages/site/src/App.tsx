@@ -7,6 +7,7 @@ import {
 } from '@/harbour/gen/ramp/v1/public_pb';
 import { Button } from '@/components/ui/button';
 import {
+  bankAccountIsSameAsOnRampBankAccount,
   connectSnap,
   getSnap,
   isLocalSnap,
@@ -50,8 +51,9 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   );
   const [showSuccess, setShowSuccess] = useState(false);
   const isMetaMaskReady = metamask.snapsDetected;
-  const [changingBankAccountFailed, setChangingBankAccountFailed] =
-    useState<boolean>(false);
+  const [changingBankAccountFailed, setChangingBankAccountFailed] = useState<
+    boolean | string
+  >(false);
 
   const load = async (message?: string) => {
     if (message === 'onboardingFinished') {
@@ -139,39 +141,46 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
     await load();
   };
 
-  const handleSaveBankAccount = async (account: BankAccount) => {
-    try {
-      setChangingBankAccountFailed(false);
-      await rampClient
-        .setBankAccount(
-          new SetBankAccountRequest({
-            bankAccount: account,
-          }),
-        )
-        .then((res) => {
-          if (res.errors && res.errors.length > 0) {
-            setChangingBankAccountFailed(true);
-            res.errors.forEach((error) => {
-              let errorMessage = 'Problem with saving bank number';
-              switch (error) {
-                case 1:
-                  errorMessage = 'Invalid short code';
-                  break;
-                case 2:
-                  errorMessage = 'Invalid bank number';
-                  break;
-                default:
-                  break;
-              }
-              toast.error(errorMessage);
-            });
-          } else {
-            toast.success('Bank account saved');
-          }
-        });
-    } catch (e) {
-      setChangingBankAccountFailed(true);
-      toast.error('Unknown error');
+  const handleSaveBankAccount = async (newAccount: BankAccount) => {
+    setChangingBankAccountFailed(false);
+    if (bankAccountIsSameAsOnRampBankAccount(newAccount, accountInfo)) {
+      const errorMessage =
+        'You cannot off-ramp to your magic ramp account. Set your personal bank account details instead, where you wish to receive payments.';
+      toast.error(errorMessage);
+      setChangingBankAccountFailed(errorMessage);
+    } else {
+      try {
+        await rampClient
+          .setBankAccount(
+            new SetBankAccountRequest({
+              bankAccount: newAccount,
+            }),
+          )
+          .then((res) => {
+            if (res.errors && res.errors.length > 0) {
+              setChangingBankAccountFailed(true);
+              res.errors.forEach((error) => {
+                let errorMessage = 'Problem with saving bank number';
+                switch (error) {
+                  case 1:
+                    errorMessage = 'Invalid short code';
+                    break;
+                  case 2:
+                    errorMessage = 'Invalid bank number';
+                    break;
+                  default:
+                    break;
+                }
+                toast.error(errorMessage);
+              });
+            } else {
+              toast.success('Bank account saved');
+            }
+          });
+      } catch (e) {
+        setChangingBankAccountFailed(true);
+        toast.error('Unknown error');
+      }
     }
     await load();
   };

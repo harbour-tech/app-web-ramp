@@ -10,7 +10,7 @@ import { BankAccount as Account } from '@/types/bankAccount';
 export interface BankAccountProps {
   account: Account;
   onChange?: (account: Account) => void;
-  error?: boolean;
+  error?: boolean | string;
   withCopyToClipboard?: boolean;
 }
 
@@ -61,7 +61,7 @@ export const BankAccount: FunctionComponent<BankAccountProps> = ({
 interface IbanProps {
   iban: IbanCoordinates;
   onChange?: (iban: IbanCoordinates) => void;
-  error?: boolean;
+  error?: boolean | string;
   withCopyToClipboard?: boolean;
 }
 
@@ -81,6 +81,9 @@ const Iban: FunctionComponent<IbanProps> = ({
     }
   };
 
+  const fullError =
+    typeof error === 'string' ? error : error ? 'Invalid IBAN' : '';
+
   return (
     <div className="flex flex-col w-full items-start">
       <Label htmlFor="iban">IBAN</Label>
@@ -92,7 +95,7 @@ const Iban: FunctionComponent<IbanProps> = ({
           readOnly={!onChange}
           value={iban.iban}
           onChange={onIbanChange}
-          error={error ? 'Invalid IBAN' : ''}
+          error={fullError}
           withCopyToClipboard={!!withCopyToClipboard}
         />
       </div>
@@ -103,7 +106,7 @@ const Iban: FunctionComponent<IbanProps> = ({
 interface ScanProps {
   scan: ScanCoordinates;
   onChange?: (scan: ScanCoordinates) => void;
-  error?: boolean;
+  error?: boolean | string;
   withCopyToClipboard?: boolean;
 }
 
@@ -134,6 +137,9 @@ const Scan: FunctionComponent<ScanProps> = ({
     }
   };
 
+  const fullError =
+    typeof error === 'string' ? error : error ? 'Invalid Bank Number' : '';
+
   return (
     <div className="flex gap-4">
       <div className="w-3/5 items-center">
@@ -147,7 +153,7 @@ const Scan: FunctionComponent<ScanProps> = ({
           readOnly={!onChange}
           value={scan.sortCode}
           onChange={onSortCodeChange}
-          error={error ? 'Invalid Bank Number' : ''}
+          error={fullError}
           withCopyToClipboard={!!withCopyToClipboard}
         />
       </div>
