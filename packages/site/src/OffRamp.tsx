@@ -68,8 +68,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   changingBankAccountFailed,
 }) => {
   const rampClient = useRampClient();
-  const [ammountInput, setAmmountInput] = useState<string>('0');
-  const debounceAmmountInput = useDebounce(ammountInput, 900);
+  const [amount, setAmount] = useState('0');
+  const [amountInput, setAmountInput] = useState<string>('0');
+  const debounceAmountInput = useDebounce(amountInput, 900);
   const [countingFees, setCountingFees] = useState<boolean>(false);
   const [isProcessingTransfer, setIsProcessingTransfer] = useState(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
@@ -82,7 +83,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const [offRampAsset, setOffRampAsset] = useState<
     GetAccountInfoResponse_Wallet_RampAsset | undefined
   >(undefined);
-  const [amount, setAmount] = useState('0');
   const [rampFeeResponse, setRampFeeResponse] = useState<
     EstimateOffRampFeeResponse | undefined
   >();
@@ -284,14 +284,14 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     if (
       currency &&
       offRampAsset?.asset?.assetId &&
-      Number(debounceAmmountInput)
+      Number(debounceAmountInput)
     ) {
       setCountingFees(true);
       const requestParams = new EstimateOffRampFeeRequest({
         cryptoAssetId: offRampAsset?.asset?.assetId,
         protocol: offRampAsset.asset.protocol,
         amount: {
-          value: debounceAmmountInput,
+          value: debounceAmountInput,
           case: 'cryptoAssetAmount',
         },
       });
@@ -311,7 +311,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     offRampAsset?.asset?.shortName,
     offRampAsset?.asset?.assetId,
     offRampAsset?.asset?.protocol,
-    debounceAmmountInput,
+    debounceAmountInput,
   ]);
 
   const onChangeBankAccount = (account: BankAccount) => {
@@ -524,12 +524,12 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           onClick={() => firstInputRef.current?.focus()}
                           currency={'USDC'}
                           label="I SEND:"
-                          value={ammountInput}
+                          value={amountInput}
                           onChange={(event) =>
-                            setAmmountInput(event.target.value)
+                            setAmountInput(event.target.value)
                           }
                           onFocus={() =>
-                            ammountInput === '0' ? setAmmountInput('') : null
+                            amountInput === '0' ? setAmountInput('') : null
                           }
                           validate={validateAmountFormat}
                         />

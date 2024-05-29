@@ -44,8 +44,8 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   account,
   onAddWallet,
 }) => {
-  const [ammountInput, setAmmountInput] = useState<string>('0');
-  const debounceAmmountInput = useDebounce(ammountInput, 900);
+  const [amountInput, setAmountInput] = useState<string>('0');
+  const debounceAmountInput = useDebounce(amountInput, 900);
   const [countingFees, setCountingFees] = useState<boolean>(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
   const rampClient = useRampClient();
@@ -108,14 +108,14 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     if (
       currency &&
       onRampAsset?.asset?.assetId &&
-      Number(debounceAmmountInput)
+      Number(debounceAmountInput)
     ) {
       setCountingFees(true);
       const requestParams = new EstimateOnRampFeeRequest({
         cryptoAssetId: onRampAsset.asset.assetId,
         protocol: onRampAsset.asset.protocol,
         amount: {
-          value: debounceAmmountInput,
+          value: debounceAmountInput,
           case: 'fiatAssetAmount',
         },
       });
@@ -133,7 +133,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     currency,
     onRampAsset?.asset?.assetId,
     onRampAsset?.asset?.protocol,
-    debounceAmmountInput,
+    debounceAmountInput,
     rampClient,
   ]);
 
@@ -269,10 +269,10 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       onClick={() => firstInputRef.current?.focus()}
                       currency={currency as AmountInputProps['currency']}
                       label="I SEND:"
-                      value={ammountInput}
-                      onChange={(event) => setAmmountInput(event.target.value)}
+                      value={amountInput}
+                      onChange={(event) => setAmountInput(event.target.value)}
                       onFocus={() =>
-                        ammountInput === '0' ? setAmmountInput('') : null
+                        amountInput === '0' ? setAmountInput('') : null
                       }
                       validate={validateAmountFormat}
                     />
