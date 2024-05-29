@@ -148,7 +148,6 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
         'You cannot off-ramp to your magic ramp account. Set your personal bank account details instead, where you wish to receive payments.';
       toast.error(errorMessage);
       setChangingBankAccountFailed(errorMessage);
-      return;
     } else {
       try {
         await rampClient
