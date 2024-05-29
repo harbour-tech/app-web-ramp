@@ -33,6 +33,7 @@ import {
   TooltipContent,
 } from '@/components/ui/tooltip';
 import InfoSvg from '@/assets/info.svg?react';
+import WarningIconSvg from '@/assets/warningIcon.svg?react';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -252,6 +253,15 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       Use the calculator below to work out the current
                       conversion rate
                     </CardDescription>
+                    <div className="flex items-center space-x-4 rounded-md border p-4 mt-5">
+                      <WarningIconSvg />
+                      <div className="flex-1 space-y-1">
+                        <p className="text-sm text-muted-foreground">
+                          This product is currently in beta testing, please
+                          transaction with small amounts, up to 200 {currency}
+                        </p>
+                      </div>
+                    </div>
                   </CardHeader>
                   <CardContent className="gap-[10px]">
                     <AmountInput
