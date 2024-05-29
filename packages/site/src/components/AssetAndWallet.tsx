@@ -123,6 +123,9 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
     <img width={24} src={MoneyIcon} />
   );
 
+  const hasWalletsForSelectedAsset =
+    wallets.filter((w) => w.protocol === protocol).length > 0;
+
   return (
     <Card>
       <CardHeader>
@@ -158,39 +161,41 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
         </SelectAsset>
         {selectedAsset && (
           <>
-            <SelectWallet
-              key={selectedAsset.network}
-              onValueChange={(value) => {
-                const selectedWallet = wallets.find(
-                  (w) => `${w.address}:${w.protocol}` === value,
-                );
-                if (selectedWallet) handleSelect(selectedWallet);
-              }}
-            >
-              <div>
-                <CardDescription className="mb-2">
-                  {selectWalletDescription}
-                </CardDescription>
-                <SelectWalletTrigger disabled={wallets.length === 0}>
-                  {walletSelectedIcon}
-                  <SelectWalletValue placeholder="Select Wallet" />
-                </SelectWalletTrigger>
-                <SelectWalletContent>
-                  {wallets
-                    .filter((w) => w.protocol === protocol)
-                    .map((wallet) => (
-                      <SelectWalletItem
-                        key={`${wallet.address}:${wallet.protocol}`}
-                        value={`${wallet.address}:${wallet.protocol}`}
-                        icon={walletItemIcon(wallet.protocol)}
-                        walletAddress={wallet.address}
-                      >
-                        {wallet.name || wallet.address.substring(0, 6)}
-                      </SelectWalletItem>
-                    ))}
-                </SelectWalletContent>
-              </div>
-            </SelectWallet>
+            {hasWalletsForSelectedAsset && (
+              <SelectWallet
+                key={selectedAsset.network}
+                onValueChange={(value) => {
+                  const selectedWallet = wallets.find(
+                    (w) => `${w.address}:${w.protocol}` === value,
+                  );
+                  if (selectedWallet) handleSelect(selectedWallet);
+                }}
+              >
+                <div>
+                  <CardDescription className="mb-2">
+                    {selectWalletDescription}
+                  </CardDescription>
+                  <SelectWalletTrigger disabled={wallets.length === 0}>
+                    {walletSelectedIcon}
+                    <SelectWalletValue placeholder="Select Wallet" />
+                  </SelectWalletTrigger>
+                  <SelectWalletContent>
+                    {wallets
+                      .filter((w) => w.protocol === protocol)
+                      .map((wallet) => (
+                        <SelectWalletItem
+                          key={`${wallet.address}:${wallet.protocol}`}
+                          value={`${wallet.address}:${wallet.protocol}`}
+                          icon={walletItemIcon(wallet.protocol)}
+                          walletAddress={wallet.address}
+                        >
+                          {wallet.name || wallet.address.substring(0, 6)}
+                        </SelectWalletItem>
+                      ))}
+                  </SelectWalletContent>
+                </div>
+              </SelectWallet>
+            )}
             <AddWallet
               protocol={protocol ? protocol : Protocol.UNSPECIFIED}
               existing={wallets
