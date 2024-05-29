@@ -404,10 +404,17 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                               <InfoSvg />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-80 p-3 pl-10 pr-5">
-                              <ul className="list-none">
+                              <ul className="list-disc">
                                 <li className="mb-1">
                                   If your bank supports {bankAccountType} your
                                   account will be funded in a couple of minutes.
+                                </li>
+                                <li className="mb-1">
+                                  We strongly recommend using our app to sign
+                                  the transaction. If you manually send an asset
+                                  we don't support, we may not be able to
+                                  recover it, or the process may be subject to
+                                  delays and additional fees.
                                 </li>
                               </ul>
                             </TooltipContent>
