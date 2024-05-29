@@ -1,3 +1,6 @@
+import { GetAccountInfoResponse } from '@/harbour/gen/ramp/v1/public_pb.ts';
+import BankAccount from '@/types/bankAccount.tsx';
+
 export * from './metamask';
 export * from './snap';
 export * from './erc20.ts';
@@ -101,3 +104,30 @@ export async function switchNetwork(params: NetworkParams) {
     }
   }
 }
+
+const normalizeBankAccount = (bankAccount: string): string =>
+  bankAccount.toLowerCase().replace(/\s/g, '');
+
+export const bankAccountIsSameAsOnRampBankAccount = (
+  bankAccount: BankAccount,
+  onRampInfo: GetAccountInfoResponse | null,
+): boolean => {
+  if (!onRampInfo || onRampInfo.result.case !== 'account') return false;
+
+  const onRampBankInfo = onRampInfo.result.value.onrampBankAccount;
+  const isIbanMatch =
+    onRampBankInfo.case === 'onrampIban' &&
+    bankAccount.case === 'iban' &&
+    normalizeBankAccount(onRampBankInfo.value.iban) ===
+      normalizeBankAccount(bankAccount.value.iban);
+
+  const isScanMatch =
+    onRampBankInfo.case === 'onrampScan' &&
+    bankAccount.case === 'scan' &&
+    normalizeBankAccount(onRampBankInfo.value.accountNumber) ===
+      normalizeBankAccount(bankAccount.value.accountNumber) &&
+    normalizeBankAccount(onRampBankInfo.value.sortCode) ===
+      normalizeBankAccount(bankAccount.value.sortCode);
+
+  return isIbanMatch || isScanMatch;
+};
