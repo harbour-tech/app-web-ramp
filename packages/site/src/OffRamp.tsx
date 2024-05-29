@@ -513,8 +513,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           <div className="flex-1 space-y-1">
                             <p className="text-sm text-muted-foreground">
                               This product is currently in beta testing, please
-                              transact with small amounts, up to 200{' '}
-                              {currency}.
+                              transact with small amounts, up to 200 {currency}.
                             </p>
                           </div>
                         </div>
