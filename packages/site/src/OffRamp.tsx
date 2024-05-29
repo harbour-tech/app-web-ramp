@@ -375,7 +375,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         )}
         {account.offrampBankAccount.case && (
           <div className="flex flex-col items-center w-full">
-            <div className="flex items-start justify-center gap-8 pt-4 w-full">
+            <div className="flex items-start justify-center gap-8 pt-4 w-full flex-wrap">
               <div
                 className={`basis-[300px] flex-shrink-0 flex-grow ${
                   !selectedWallet && 'min-w-[430px]'
