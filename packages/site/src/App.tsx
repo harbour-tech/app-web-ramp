@@ -32,6 +32,7 @@ import {
   useRampClient,
 } from '@/contexts';
 import { isMobile } from 'react-device-detect';
+import { handle32002 } from '@/lib/utils';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
@@ -98,8 +99,13 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
       });
       toast.success('Snap connected to MetaMask');
     } catch (error) {
-      toast.error('Failed to connect to MetaMask');
-      metamaskDispatch({ type: MetamaskActions.SetError, payload: error });
+      console.log(error, error?.code);
+      if (error?.code === -32002) {
+        handle32002();
+      } else {
+        toast.error('Failed to connect to MetaMask');
+        metamaskDispatch({ type: MetamaskActions.SetError, payload: error });
+      }
     }
   };
 
@@ -136,7 +142,9 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
         toast.success('Wallet added');
       }
     } catch (e) {
-      console.log(e);
+      if (e?.code === -32002 || e?.error?.code === -32002) {
+        handle32002();
+      }
       toast.error('Failed to add wallet');
     }
     await load();

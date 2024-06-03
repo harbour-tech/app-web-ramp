@@ -53,6 +53,7 @@ import {
 import InfoSvg from '@/assets/info.svg?react';
 import { TransactionProcessingSpinner } from '@/components/TransactionProcessingSpinner';
 import WarningIconSvg from '@/assets/warningIcon.svg?react';
+import { handle32002 } from '@/lib/utils';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -172,9 +173,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       .getSigner(selectedWallet!.address)
       .catch((e) => {
         if (e?.error?.code === -32002) {
-          alert(
-            'There is pending request to connect to MetaMask, please approve/reject it first by clicking on the MetaMask extension icon.',
-          );
+          handle32002();
           throw e;
         }
         if (e?.code === 'ACTION_REJECTED') {

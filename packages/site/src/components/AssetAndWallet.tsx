@@ -51,6 +51,7 @@ import {
   SelectAssetValue,
 } from './ui/selectAsset';
 import MetaMaskLogo from '@/assets/metamask.svg';
+import { handle32002 } from '@/lib/utils';
 
 export interface AssetAndWalletProps {
   protocol: Protocol | undefined;
@@ -253,9 +254,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
       } catch (e) {
         const code = e?.code || 0;
         if (code === -32002) {
-          alert(
-            'There is pending request to connect to MetaMask, please approve/reject it first by clicking on the MetaMask extension icon.',
-          );
+          handle32002();
         }
         if (code === 4001) {
           toast.error(
