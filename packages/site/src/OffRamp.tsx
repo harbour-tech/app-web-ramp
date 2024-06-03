@@ -455,7 +455,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         </div>
                         <p className="subtitle1 text-gray-50 mt-4">
                           You can only offramp to a bank account in your name.
-                          Unsupported payments will be returned to sender.
                         </p>
                         <div>
                           <Button
