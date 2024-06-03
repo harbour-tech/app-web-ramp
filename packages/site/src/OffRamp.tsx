@@ -69,6 +69,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
 }) => {
   const rampClient = useRampClient();
   const [amount, setAmount] = useState('0');
+  const [amountError, setAmountError] = useState<string | null>(null);
   const [amountInput, setAmountInput] = useState<string>('0');
   const debounceAmountInput = useDebounce(amountInput, 900);
   const [countingFees, setCountingFees] = useState<boolean>(false);
@@ -323,8 +324,10 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     onSaveBankAccount(account);
   };
 
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newAmount = event.target.value;
+    setAmount(newAmount);
+    setAmountError(validateAmountFormat(newAmount));
   };
 
   const validateAmountFormat = (value: string) => {
@@ -440,6 +443,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                             onChange={handleAmountChange}
                             disabled={false}
                             validate={validateAmountFormat}
+                            error={amountError}
                           />
                         </div>
                         <CardDescription>
