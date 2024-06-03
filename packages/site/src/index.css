@@ -216,21 +216,25 @@ input::-webkit-contacts-auto-fill-button {
 .caption1 {
   @apply text-xs not-italic font-medium leading-[14px] tracking-[1px] uppercase;
   font-family: Albert Sans;
+  text-align: justify;
 }
 
 .caption2 {
   @apply text-xs not-italic font-normal leading-4;
   font-family: Albert Sans;
+  text-align: justify;
 }
 
 .caption3 {
   @apply text-[11px] not-italic font-normal leading-[13px] capitalize;
   font-family: Albert Sans;
+  text-align: justify;
 }
 
 .caption4 {
   @apply text-[11px] not-italic font-medium leading-[13px] tracking-[1px] uppercase;
   font-family: Albert Sans;
+  text-align: justify;
 }
 
 .navigation {
