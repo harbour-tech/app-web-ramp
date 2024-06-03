@@ -69,7 +69,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
 }) => {
   const rampClient = useRampClient();
   const [amount, setAmount] = useState('0');
-  const [amountError, setAmountError] = useState<string | null>(null);
   const [amountInput, setAmountInput] = useState<string>('0');
   const debounceAmountInput = useDebounce(amountInput, 900);
   const [countingFees, setCountingFees] = useState<boolean>(false);
@@ -325,9 +324,39 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newAmount = event.target.value;
-    setAmount(newAmount);
-    setAmountError(validateAmountFormat(newAmount));
+    let newValue = event.target.value;
+
+    // Only allow numbers and a period
+    newValue = newValue.replace(/[^0-9.]/g, '');
+
+    // Convert negative numbers to positive
+    if (newValue.startsWith('-')) {
+      newValue = newValue.substring(1);
+    }
+
+    // Limit to 2 decimal places
+    if (newValue.includes('.')) {
+      const parts = newValue.split('.');
+      if (parts[1].length > 2) {
+        newValue = `${parts[0]}.${parts[1].substring(0, 2)}`;
+      }
+    }
+
+    // Don't update the state if the new value contains more than one period
+    if ((newValue.match(/\./g) || []).length > 1) {
+      return;
+    }
+
+    // Remove leading zeros unless the number is a fraction less than 1
+    if (
+      newValue.length > 1 &&
+      newValue.startsWith('0') &&
+      !newValue.startsWith('0.')
+    ) {
+      newValue = newValue.replace(/^0+/, '');
+    }
+
+    setAmount(newValue);
   };
 
   const validateAmountFormat = (value: string) => {
@@ -443,7 +472,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                             onChange={handleAmountChange}
                             disabled={false}
                             validate={validateAmountFormat}
-                            error={amountError}
                           />
                         </div>
                         <CardDescription>
@@ -464,11 +492,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           <Button
                             className="w-full mt-4"
                             onClick={handleTransfer}
-                            disabled={
-                              Number(amount) === 0 ||
-                              amount === null ||
-                              amountError != null
-                            }
+                            disabled={Number(amount) === 0 || amount === null}
                           >
                             <img src={Metamask} className="mr-2 h-4 w-4" />
                             Sign with MetaMask
