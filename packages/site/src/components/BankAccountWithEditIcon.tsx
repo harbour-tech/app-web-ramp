@@ -63,13 +63,16 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const saveChanges = () => {
-    setEditable(false);
     if (onChange) {
-      onChange(
-        new IbanCoordinates({
-          iban: ibanValue,
-        }),
-      );
+      const newIban = new IbanCoordinates({
+        iban: ibanValue,
+      });
+
+      const error = onChange(newIban);
+
+      if (error !== undefined) {
+        setEditable(true);
+      }
     }
   };
 
@@ -130,6 +133,7 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
       sortCode: e.target.value,
     });
   };
+
   const onAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setScanValue({
       accountNumber: e.target.value,
@@ -138,9 +142,14 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
   };
 
   const saveChanges = () => {
-    setEditable(false);
     if (onChange) {
-      onChange(new ScanCoordinates(scanValue));
+      const newScan = new ScanCoordinates(scanValue);
+      onChange(newScan);
+      if (error) {
+        setEditable(true);
+      } else {
+        setEditable(false);
+      }
     }
   };
 
