@@ -375,9 +375,11 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         )}
         {account.offrampBankAccount.case && (
           <div className="flex flex-col items-center w-full">
-            <div className="flex items-start justify-center gap-8 pt-4 w-full">
+            <div className="flex items-start justify-center gap-8 pt-4 w-full flex-wrap">
               <div
-                className={`basis-1/3 ${!selectedWallet && 'min-w-[430px]'}`}
+                className={`basis-[300px] flex-shrink-0 flex-grow ${
+                  !selectedWallet && 'min-w-[430px]'
+                } ${!offRampAsset && 'max-w-[33%]'}`}
               >
                 <AssetAndWallet
                   assets={account?.cryptoAssets}
@@ -394,7 +396,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
               </div>
               {offRampAsset && (
                 <>
-                  <div className="basis-1/3">
+                  <div className="basis-[300px] flex-shrink-0 flex-grow">
                     <Card>
                       <CardHeader>
                         <CardTitle className="flex justify-between">
@@ -497,7 +499,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                       </CardFooter>
                     </Card>
                   </div>
-                  <div className="basis-1/3">
+                  <div className="basis-[300px] flex-shrink-0 flex-grow">
                     <Card>
                       <CardHeader>
                         <CardTitle className="relative">

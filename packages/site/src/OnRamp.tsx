@@ -151,8 +151,12 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   return (
     <TooltipProvider>
       <div className="flex flex-col items-center">
-        <div className="flex items-start justify-center gap-8 pt-4 w-full">
-          <div className={`basis-1/3 ${!selectedWallet && 'min-w-[430px]'}`}>
+        <div className="flex items-start justify-center gap-8 pt-4 w-full flex-wrap">
+          <div
+            className={`flex-shrink-0 flex-grow basis-[300px] ${
+              !selectedWallet && 'min-w-[430px]'
+            } ${!onRampAsset && 'max-w-[33%]'}`}
+          >
             <AssetAndWallet
               assets={account?.cryptoAssets}
               onAssetSelected={handleSelectAsset}
@@ -169,7 +173,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
 
           {onRampAsset && (
             <>
-              <div className="basis-1/3">
+              <div className="flex-shrink-0 flex-grow basis-[300px]">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex justify-between">
@@ -242,7 +246,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                   </CardContent>
                 </Card>
               </div>
-              <div className="basis-1/3">
+              <div className="basis-[300px] flex-shrink-0 flex-grow">
                 <Card>
                   <CardHeader>
                     <CardTitle className="relative">

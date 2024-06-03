@@ -9,11 +9,13 @@ import { cn } from '@/lib/utils';
 import HarbourLogo from '@/assets/harbourLogo.svg?react';
 import IntroAnimatedLogos from '@/components/ui/introAnimatedLogos';
 import { MetaMaskContextProvider, RampClientProvider } from '@/contexts';
+import useWindowDimensions from '@/hooks/useWindowDimensions';
 
 export const Root: FunctionComponent<PropsWithChildren> = () => {
   const [gradientsReady, setGradientsReady] = useState(false);
   const [logoVisible, setLogoVisible] = useState(true);
   const [controllsVisible, setControllsVisible] = useState(false);
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     setTimeout(() => {
@@ -30,6 +32,9 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
   const hideLogo = () => {
     setLogoVisible(false);
   };
+
+  const maxWidthToShowLogo = 1220;
+  const shouldNotShowLogo = width < maxWidthToShowLogo;
 
   return (
     <>
@@ -55,13 +60,17 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
               transition: 'all 1s ease',
               transform:
                 controllsVisible && logoVisible
-                  ? 'translateX(-15vw)'
-                  : 'translateX(0px)',
+                  ? shouldNotShowLogo
+                    ? 'translateX(0)'
+                    : 'translateX(-15vw)'
+                  : 'translateX(0)',
               opacity: controllsVisible ? 1 : 0,
               width: !logoVisible ? '100%' : 'auto',
               padding: logoVisible ? '0' : '0 10vw',
               top: '220px',
               height: 'calc(100% - 220px)',
+              paddingBottom: '20px',
+              overflow: 'auto',
             }}
           >
             <MetaMaskContextProvider>
@@ -76,8 +85,10 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
               style={{
                 transition: 'all 1s ease',
                 transform: controllsVisible
-                  ? 'translateX(15vw)'
-                  : 'translateX(0px)',
+                  ? shouldNotShowLogo
+                    ? 'translateX(150vw)'
+                    : 'translateX(15vw)'
+                  : 'translateX(0)',
               }}
             >
               <IntroAnimatedLogos />

@@ -31,6 +31,7 @@ import {
   useOnboardingModal,
   useRampClient,
 } from '@/contexts';
+import { isMobile } from 'react-device-detect';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
@@ -192,6 +193,17 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   }, [accountInfo?.result.case]);
 
   const content = useMemo(() => {
+    if (isMobile) {
+      return (
+        <Note>
+          <NoteTitle>Desktop requirement</NoteTitle>
+          <NoteDescription>
+            This app can only be used on desktop browers with MetaMask installed
+          </NoteDescription>
+        </Note>
+      );
+    }
+
     if (accountInfo?.result.case == 'authentication') {
       return (
         <div className="flex flex-col w-[344px] gap-4">
@@ -228,7 +240,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
             <OnRamp
               account={accountInfo.result.value}
               onAddWallet={handleAddWallet}
-            ></OnRamp>
+            />
           </TabsContent>
           <TabsContent value="offramp">
             <OffRamp
