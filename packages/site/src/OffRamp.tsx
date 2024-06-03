@@ -464,7 +464,11 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           <Button
                             className="w-full mt-4"
                             onClick={handleTransfer}
-                            disabled={false}
+                            disabled={
+                              Number(amount) === 0 ||
+                              amount === null ||
+                              amountError != null
+                            }
                           >
                             <img src={Metamask} className="mr-2 h-4 w-4" />
                             Sign with MetaMask
