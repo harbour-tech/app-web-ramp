@@ -31,6 +31,8 @@ import {
   useOnboardingModal,
   useRampClient,
 } from '@/contexts';
+import { isMobile } from 'react-device-detect';
+import { handle32002 } from '@/lib/utils';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
@@ -97,8 +99,12 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
       });
       toast.success('Snap connected to MetaMask');
     } catch (error) {
-      toast.error('Failed to connect to MetaMask');
-      metamaskDispatch({ type: MetamaskActions.SetError, payload: error });
+      if (error?.code === -32002) {
+        handle32002();
+      } else {
+        toast.error('Failed to connect to MetaMask');
+        metamaskDispatch({ type: MetamaskActions.SetError, payload: error });
+      }
     }
   };
 
@@ -135,7 +141,9 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
         toast.success('Wallet added');
       }
     } catch (e) {
-      console.log(e);
+      if (e?.code === -32002 || e?.error?.code === -32002) {
+        handle32002();
+      }
       toast.error('Failed to add wallet');
     }
     await load();
@@ -192,6 +200,17 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   }, [accountInfo?.result.case]);
 
   const content = useMemo(() => {
+    if (isMobile) {
+      return (
+        <Note>
+          <NoteTitle>Desktop requirement</NoteTitle>
+          <NoteDescription>
+            This app can only be used on desktop browers with MetaMask installed
+          </NoteDescription>
+        </Note>
+      );
+    }
+
     if (accountInfo?.result.case == 'authentication') {
       return (
         <div className="flex flex-col w-[344px] gap-4">
@@ -228,7 +247,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
             <OnRamp
               account={accountInfo.result.value}
               onAddWallet={handleAddWallet}
-            ></OnRamp>
+            />
           </TabsContent>
           <TabsContent value="offramp">
             <OffRamp
