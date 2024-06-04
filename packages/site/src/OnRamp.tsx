@@ -33,7 +33,7 @@ import {
   TooltipContent,
 } from '@/components/ui/tooltip';
 import InfoSvg from '@/assets/info.svg?react';
-import WarningIconSvg from '@/assets/warningIcon.svg?react';
+import WarningIcon from '@/assets/warningIcon';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -243,6 +243,16 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                         </div>
                       )}
                     </div>
+                    <div className="flex items-center space-x-4 rounded-md border p-4 mt-5">
+                      <WarningIcon />
+                      <div className="flex-1 space-y-1">
+                        <p className="text-sm">
+                          Please ensure the payment reference is correct so we
+                          know exactly which stablecoin you wish to buy. A wrong
+                          reference will lead to rejected payments.
+                        </p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -258,9 +268,9 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       conversion rate
                     </CardDescription>
                     <div className="flex items-center space-x-4 rounded-md border p-4 mt-5">
-                      <WarningIconSvg />
+                      <WarningIcon />
                       <div className="flex-1 space-y-1">
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm">
                           This product is currently in beta testing, please
                           transact with small amounts, up to 200 {currency}.
                         </p>
