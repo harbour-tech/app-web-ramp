@@ -237,6 +237,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       (ra) => ra.asset!.assetId == selectedAsset!.assetId,
     );
     setOffRampAsset(asset);
+    setAmount('0');
   };
   const needSetBankAccount = !account.offrampBankAccount.case;
 
