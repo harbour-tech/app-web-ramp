@@ -71,7 +71,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const rampClient = useRampClient();
   const [amount, setAmount] = useState('0');
   const [amountInput, setAmountInput] = useState<string>('0');
-  const debounceAmountInput = useDebounce(amountInput, 900);
+  const debounceAmountInput = useDebounce(amountInput, 400);
   const [countingFees, setCountingFees] = useState<boolean>(false);
   const [isProcessingTransfer, setIsProcessingTransfer] = useState(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
@@ -92,6 +92,18 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     toast.error('There was a problem with switching the network');
   };
 
+  const handleInput = (enteringValue: string) => {
+    let value = enteringValue;
+    if (value.endsWith('.')) {
+      const dotIndex = value.indexOf('.');
+      if (dotIndex !== value.length - 1) {
+        value = value.substring(0, value.length - 1);
+      }
+    }
+    const withoutLeadingZero = value.replace(/^0+/, '');
+    const withoutNonNumeric = withoutLeadingZero.replace(/[^\d.]/g, '');
+    setAmountInput(withoutNonNumeric);
+  };
   async function handleTransfer() {
     const provider = new ethers.BrowserProvider(window.ethereum);
 
@@ -359,14 +371,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     setAmount(newValue);
   };
 
-  const validateAmountFormat = (value: string) => {
-    const regex = /^\d+(\.\d+)?$/;
-    if (!regex.test(value)) {
-      return 'Use only numbers and optionally one decimal point separator';
-    }
-    return null;
-  };
-
   const bankAccountType =
     currency === 'GBP' ? 'instant Faster Payments' : 'SEPA Instant';
 
@@ -473,7 +477,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                             value={amount}
                             onChange={handleAmountChange}
                             disabled={false}
-                            validate={validateAmountFormat}
                           />
                         </div>
                         <CardDescription>
@@ -545,7 +548,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                     <Card>
                       <CardHeader>
                         <CardTitle className="relative">
-                          <span className="w-full">Offramp Calculator</span>
+                          <span className="w-full">Off Ramp Calculator</span>
                         </CardTitle>
                         <CardDescription>
                           {' '}
@@ -567,19 +570,19 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           ref={firstInputRef}
                           onClick={() => firstInputRef.current?.focus()}
                           currency={'USDC'}
-                          label="I SEND:"
+                          label="SEND:"
                           value={amountInput}
-                          onChange={(event) =>
-                            setAmountInput(event.target.value)
-                          }
+                          onChange={(event) => handleInput(event.target.value)}
                           onFocus={() =>
                             amountInput === '0' ? setAmountInput('') : null
                           }
-                          validate={validateAmountFormat}
+                          onBlur={() =>
+                            amountInput === '' ? setAmountInput('0') : null
+                          }
                         />
                         <AmountInput
                           currency={currency as AmountInputProps['currency']}
-                          label="I will get:"
+                          label="RECEIVE:"
                           value={rampFeeResponse?.fiatAssetAmount || 'N/A'}
                           disabled
                           isLoading={countingFees}
@@ -595,7 +598,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         {rampFeeResponse && (
                           <div className="flex flex-col gap-[10px]">
                             <p className="subtitle1 text-gray-50">
-                              USDC:{currency} rate:{' '}
+                              USDC/{currency} rate:{' '}
                               {countingFees
                                 ? SmallLoader
                                 : rampFeeResponse?.exchangeRate || 'unknown'}
@@ -605,7 +608,8 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                               {countingFees
                                 ? SmallLoader
                                 : rampFeeResponse?.processingFeeAmount ||
-                                  'unknown'}
+                                  'unknown'}{' '}
+                              {currency}
                             </p>
                           </div>
                         )}
