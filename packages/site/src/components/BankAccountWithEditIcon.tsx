@@ -70,6 +70,9 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
           iban: ibanValue,
         }),
       );
+      if (error !== undefined) {
+        setEditable(true);
+      }
     }
   };
 
@@ -124,29 +127,64 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
     accountNumber: scan.accountNumber,
   });
 
-  const onSortCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSortCodeChange = (value: string) => {
     setScanValue({
       accountNumber: scanValue.accountNumber,
-      sortCode: e.target.value,
+      sortCode: value,
     });
   };
-  const onAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const onAccountNumberChange = (value: string) => {
     setScanValue({
-      accountNumber: e.target.value,
+      accountNumber: value,
       sortCode: scanValue.sortCode,
     });
+  };
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    type: 'accountNumber' | 'sortCode',
+  ) => {
+    let newValue = event.target.value;
+
+    newValue = newValue.replace(/[^0-9]/g, '');
+
+    if (type === 'sortCode' && newValue.length > 6) {
+      newValue = newValue.substring(0, 6);
+    } else if (type === 'accountNumber' && newValue.length > 30) {
+      newValue = newValue.substring(0, 30);
+    }
+
+    if (type === 'sortCode') {
+      onSortCodeChange(newValue);
+    } else {
+      onAccountNumberChange(newValue);
+    }
   };
 
   const saveChanges = () => {
     setEditable(false);
     if (onChange) {
-      onChange(new ScanCoordinates(scanValue));
+      onChange(
+        new ScanCoordinates({
+          accountNumber: scanValue.accountNumber,
+          sortCode: scanValue.sortCode,
+        }),
+      );
+      if (error !== undefined) {
+        setEditable(true);
+      }
     }
   };
 
-  const errorForSortCode = typeof error === 'string' || error ? ' ' : null;
+  const errorForAccountNumberCode =
+    typeof error === 'string' || error ? ' ' : null;
   const fullError =
-    typeof error === 'string' ? error : error ? 'Invalid Bank Number' : null;
+    typeof error === 'string'
+      ? error
+      : error
+      ? 'Invalid Sort Code or Number'
+      : null;
 
   return (
     <div className="flex gap-4">
@@ -160,8 +198,8 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
           pattern="\d+"
           readOnly={!editable}
           value={scanValue.sortCode}
-          onChange={onSortCodeChange}
-          error={errorForSortCode}
+          onChange={(e) => handleInputChange(e, 'sortCode')}
+          error={fullError}
         />
       </div>
       <div className="w-full items-center">
@@ -175,8 +213,8 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
             pattern="\d+"
             readOnly={!editable}
             value={scanValue.accountNumber}
-            onChange={onAccountNumberChange}
-            error={fullError}
+            onChange={(e) => handleInputChange(e, 'accountNumber')}
+            error={errorForAccountNumberCode}
           />
           {editable ? (
             <SaveIcon

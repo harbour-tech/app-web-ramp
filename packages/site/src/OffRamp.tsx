@@ -53,6 +53,7 @@ import {
 import InfoSvg from '@/assets/info.svg?react';
 import { TransactionProcessingSpinner } from '@/components/TransactionProcessingSpinner';
 import WarningIconSvg from '@/assets/warningIcon.svg?react';
+import { handle32002 } from '@/lib/utils';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -68,8 +69,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   changingBankAccountFailed,
 }) => {
   const rampClient = useRampClient();
-  const [ammountInput, setAmmountInput] = useState<string>('0');
-  const debounceAmmountInput = useDebounce(ammountInput, 900);
+  const [amount, setAmount] = useState('0');
+  const [amountInput, setAmountInput] = useState<string>('0');
+  const debounceAmountInput = useDebounce(amountInput, 900);
   const [countingFees, setCountingFees] = useState<boolean>(false);
   const [isProcessingTransfer, setIsProcessingTransfer] = useState(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
@@ -82,7 +84,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const [offRampAsset, setOffRampAsset] = useState<
     GetAccountInfoResponse_Wallet_RampAsset | undefined
   >(undefined);
-  const [amount, setAmount] = useState('0');
   const [rampFeeResponse, setRampFeeResponse] = useState<
     EstimateOffRampFeeResponse | undefined
   >();
@@ -172,9 +173,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       .getSigner(selectedWallet!.address)
       .catch((e) => {
         if (e?.error?.code === -32002) {
-          alert(
-            'There is pending request to connect to MetaMask, please approve/reject it first by clicking on the MetaMask extension icon.',
-          );
+          handle32002();
           throw e;
         }
         if (e?.code === 'ACTION_REJECTED') {
@@ -237,6 +236,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       (ra) => ra.asset!.assetId == selectedAsset!.assetId,
     );
     setOffRampAsset(asset);
+    setAmount('0');
   };
   const needSetBankAccount = !account.offrampBankAccount.case;
 
@@ -284,14 +284,14 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     if (
       currency &&
       offRampAsset?.asset?.assetId &&
-      Number(debounceAmmountInput)
+      Number(debounceAmountInput)
     ) {
       setCountingFees(true);
       const requestParams = new EstimateOffRampFeeRequest({
         cryptoAssetId: offRampAsset?.asset?.assetId,
         protocol: offRampAsset.asset.protocol,
         amount: {
-          value: debounceAmmountInput,
+          value: debounceAmountInput,
           case: 'cryptoAssetAmount',
         },
       });
@@ -311,7 +311,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     offRampAsset?.asset?.shortName,
     offRampAsset?.asset?.assetId,
     offRampAsset?.asset?.protocol,
-    debounceAmmountInput,
+    debounceAmountInput,
   ]);
 
   const onChangeBankAccount = (account: BankAccount) => {
@@ -323,8 +323,40 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     onSaveBankAccount(account);
   };
 
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let newValue = event.target.value;
+
+    // Only allow numbers and a period
+    newValue = newValue.replace(/[^0-9.]/g, '');
+
+    // Convert negative numbers to positive
+    if (newValue.startsWith('-')) {
+      newValue = newValue.substring(1);
+    }
+
+    // Limit to 2 decimal places
+    if (newValue.includes('.')) {
+      const parts = newValue.split('.');
+      if (parts[1].length > 2) {
+        newValue = `${parts[0]}.${parts[1].substring(0, 2)}`;
+      }
+    }
+
+    // Don't update the state if the new value contains more than one period
+    if ((newValue.match(/\./g) || []).length > 1) {
+      return;
+    }
+
+    // Remove leading zeros unless the number is a fraction less than 1
+    if (
+      newValue.length > 1 &&
+      newValue.startsWith('0') &&
+      !newValue.startsWith('0.')
+    ) {
+      newValue = newValue.replace(/^0+/, '');
+    }
+
+    setAmount(newValue);
   };
 
   const validateAmountFormat = (value: string) => {
@@ -406,10 +438,17 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                               <InfoSvg />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-80 p-3 pl-10 pr-5">
-                              <ul className="list-none">
+                              <ul className="list-disc">
                                 <li className="mb-1">
                                   If your bank supports {bankAccountType} your
                                   account will be funded in a couple of minutes.
+                                </li>
+                                <li className="mb-1">
+                                  We strongly recommend using our app to sign
+                                  the transaction. If you manually send an asset
+                                  we don't support, we may not be able to
+                                  recover it, or the process may be subject to
+                                  delays and additional fees.
                                 </li>
                               </ul>
                             </TooltipContent>
@@ -450,13 +489,16 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         </div>
                         <p className="subtitle1 text-gray-50 mt-4">
                           You can only offramp to a bank account in your name.
-                          Unsupported payments will be returned to sender.
                         </p>
                         <div>
                           <Button
                             className="w-full mt-4"
                             onClick={handleTransfer}
-                            disabled={false}
+                            disabled={
+                              Number(amount) === 0 ||
+                              amount === null ||
+                              !!changingBankAccountFailed
+                            }
                           >
                             <img src={Metamask} className="mr-2 h-4 w-4" />
                             Sign with MetaMask
@@ -526,12 +568,12 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           onClick={() => firstInputRef.current?.focus()}
                           currency={'USDC'}
                           label="I SEND:"
-                          value={ammountInput}
+                          value={amountInput}
                           onChange={(event) =>
-                            setAmmountInput(event.target.value)
+                            setAmountInput(event.target.value)
                           }
                           onFocus={() =>
-                            ammountInput === '0' ? setAmmountInput('') : null
+                            amountInput === '0' ? setAmountInput('') : null
                           }
                           validate={validateAmountFormat}
                         />
