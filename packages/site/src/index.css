@@ -371,3 +371,8 @@ input::-webkit-contacts-auto-fill-button {
 .animate-slide-up {
   animation: animateslideup 2s;
 }
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
