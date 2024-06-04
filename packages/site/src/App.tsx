@@ -32,16 +32,13 @@ import {
   useRampClient,
 } from '@/contexts';
 import { isMobile } from 'react-device-detect';
+import { installationLink } from '@/lib/utils';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
   [Protocol.AVAX, Protocol.AVAX],
   [Protocol.POLYGON, Protocol.POLYGON],
 ]);
-
-const installationLink = import.meta.env.VITE_FLASK_INSTALLATION
-  ? 'https://chromewebstore.google.com/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk'
-  : 'https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
 
 const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   const { openOnboardingModal, setOnFinishCallback } = useOnboardingModal();
@@ -267,7 +264,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
         </Note>
         {!isMetaMaskReady ? (
           <Button asChild className="leading-3">
-            <a href={installationLink} target="_blank">
+            <a href={installationLink()} target="_blank">
               Install <MetaMaskWithLogo className="ml-2" />
             </a>
           </Button>
