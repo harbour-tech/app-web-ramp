@@ -63,13 +63,13 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const saveChanges = () => {
+    setEditable(false);
     if (onChange) {
-      const newIban = new IbanCoordinates({
-        iban: ibanValue,
-      });
-
-      const error = onChange(newIban);
-
+      onChange(
+        new IbanCoordinates({
+          iban: ibanValue,
+        }),
+      );
       if (error !== undefined) {
         setEditable(true);
       }
@@ -127,28 +127,52 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
     accountNumber: scan.accountNumber,
   });
 
-  const onSortCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSortCodeChange = (value: string) => {
     setScanValue({
       accountNumber: scanValue.accountNumber,
-      sortCode: e.target.value,
+      sortCode: value,
     });
   };
 
-  const onAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onAccountNumberChange = (value: string) => {
     setScanValue({
-      accountNumber: e.target.value,
+      accountNumber: value,
       sortCode: scanValue.sortCode,
     });
   };
 
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    type: 'accountNumber' | 'sortCode',
+  ) => {
+    let newValue = event.target.value;
+
+    newValue = newValue.replace(/[^0-9]/g, '');
+
+    if (type === 'sortCode' && newValue.length > 6) {
+      newValue = newValue.substring(0, 6);
+    } else if (type === 'accountNumber' && newValue.length > 30) {
+      newValue = newValue.substring(0, 30);
+    }
+
+    if (type === 'sortCode') {
+      onSortCodeChange(newValue);
+    } else {
+      onAccountNumberChange(newValue);
+    }
+  };
+
   const saveChanges = () => {
+    setEditable(false);
     if (onChange) {
-      const newScan = new ScanCoordinates(scanValue);
-      onChange(newScan);
-      if (error) {
+      onChange(
+        new ScanCoordinates({
+          accountNumber: scanValue.accountNumber,
+          sortCode: scanValue.sortCode,
+        }),
+      );
+      if (error !== undefined) {
         setEditable(true);
-      } else {
-        setEditable(false);
       }
     }
   };
@@ -174,7 +198,7 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
           pattern="\d+"
           readOnly={!editable}
           value={scanValue.sortCode}
-          onChange={onSortCodeChange}
+          onChange={(e) => handleInputChange(e, 'sortCode')}
           error={fullError}
         />
       </div>
@@ -189,7 +213,7 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
             pattern="\d+"
             readOnly={!editable}
             value={scanValue.accountNumber}
-            onChange={onAccountNumberChange}
+            onChange={(e) => handleInputChange(e, 'accountNumber')}
             error={errorForAccountNumberCode}
           />
           {editable ? (
