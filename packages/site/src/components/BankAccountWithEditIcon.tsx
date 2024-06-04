@@ -153,9 +153,14 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
     }
   };
 
-  const errorForSortCode = typeof error === 'string' || error ? ' ' : null;
+  const errorForAccountNumberCode =
+    typeof error === 'string' || error ? ' ' : null;
   const fullError =
-    typeof error === 'string' ? error : error ? 'Invalid Bank Number' : null;
+    typeof error === 'string'
+      ? error
+      : error
+      ? 'Invalid Sort Code or Number'
+      : null;
 
   return (
     <div className="flex gap-4">
@@ -170,7 +175,7 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
           readOnly={!editable}
           value={scanValue.sortCode}
           onChange={onSortCodeChange}
-          error={errorForSortCode}
+          error={fullError}
         />
       </div>
       <div className="w-full items-center">
@@ -185,7 +190,7 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
             readOnly={!editable}
             value={scanValue.accountNumber}
             onChange={onAccountNumberChange}
-            error={fullError}
+            error={errorForAccountNumberCode}
           />
           {editable ? (
             <SaveIcon
