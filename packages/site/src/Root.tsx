@@ -38,7 +38,7 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
 
   return (
     <>
-      <div className="relative h-full w-full z-10 animate-in">
+      <div className="relative h-full w-full z-10 animate-in overflow-hidden">
         <div className="flex flex-col justify-center items-center gap-2 pt-8 z-0 absolute w-full">
           <div className="max-w-[680px] flex-col justify-center items-center p-8 animate-in animate-slide-up">
             <h1 className="text-center tracking-tighter leading-[80px] text-7xl md:block font-light bg-gradient-to-l from-transparent via-gray to-white text-transparent bg-clip-text animate-gradient">
@@ -55,7 +55,7 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
           style={{ transition: 'transform 0.5s ease' }}
         >
           <div
-            className="absolute animate-in"
+            className="absolute animate-in no-scrollbar"
             style={{
               transition: 'all 1s ease',
               transform:
