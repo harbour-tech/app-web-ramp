@@ -99,7 +99,6 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
       });
       toast.success('Snap connected to MetaMask');
     } catch (error) {
-      console.log(error, error?.code);
       if (error?.code === -32002) {
         handle32002();
       } else {
