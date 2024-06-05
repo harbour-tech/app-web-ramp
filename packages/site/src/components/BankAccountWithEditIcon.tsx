@@ -187,48 +187,53 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
       : null;
 
   return (
-    <div className="flex gap-4">
-      <div className="w-3/5 items-center">
-        <Label htmlFor="sortCode">Sort Code</Label>
-        <Input
-          type="text"
-          id="sortCode"
-          placeholder="000000"
-          maxLength={6}
-          pattern="\d+"
-          readOnly={!editable}
-          value={scanValue.sortCode}
-          onChange={(e) => handleInputChange(e, 'sortCode')}
-          error={fullError}
-        />
-      </div>
-      <div className="w-full items-center">
-        <Label htmlFor="accountNumber">Account Number</Label>
-        <div className="flex items-center gap-4">
+    <>
+      <div className="flex gap-4">
+        <div className="w-3/5 items-center">
+          <Label htmlFor="sortCode">Sort Code</Label>
           <Input
             type="text"
-            id="accountNumber"
-            placeholder="123456789"
-            maxLength={30}
+            id="sortCode"
+            placeholder="000000"
+            maxLength={6}
             pattern="\d+"
             readOnly={!editable}
-            value={scanValue.accountNumber}
-            onChange={(e) => handleInputChange(e, 'accountNumber')}
+            value={scanValue.sortCode}
+            onChange={(e) => handleInputChange(e, 'sortCode')}
             error={errorForAccountNumberCode}
           />
-          {editable ? (
-            <SaveIcon
-              onClick={saveChanges}
-              className="stroke-green cursor-pointer"
+        </div>
+        <div className="w-full items-center">
+          <Label htmlFor="accountNumber">Account Number</Label>
+          <div className="flex items-center gap-4">
+            <Input
+              type="text"
+              id="accountNumber"
+              placeholder="123456789"
+              maxLength={30}
+              pattern="\d+"
+              readOnly={!editable}
+              value={scanValue.accountNumber}
+              onChange={(e) => handleInputChange(e, 'accountNumber')}
+              error={errorForAccountNumberCode}
             />
-          ) : (
-            <PencilIcon
-              className="stroke-gray-50 cursor-pointer"
-              onClick={() => setEditable(true)}
-            />
-          )}
+            {editable ? (
+              <SaveIcon
+                onClick={saveChanges}
+                className="stroke-green cursor-pointer"
+              />
+            ) : (
+              <PencilIcon
+                className="stroke-gray-50 cursor-pointer"
+                onClick={() => setEditable(true)}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      {fullError && (
+        <p className="text-red text-xs mt-1 flex w-full">{fullError}</p>
+      )}
+    </>
   );
 };
