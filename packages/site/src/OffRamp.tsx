@@ -92,18 +92,38 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     toast.error('There was a problem with switching the network');
   };
 
-  const handleInput = (enteringValue: string) => {
-    let value = enteringValue;
-    if (value.endsWith('.')) {
-      const dotIndex = value.indexOf('.');
-      if (dotIndex !== value.length - 1) {
-        value = value.substring(0, value.length - 1);
+  const handleInput = (value: string) => {
+    // Limit the number of decimal places to two
+    let result = value.replace(/(\.\d{2})\d+/, '$1');
+
+    if (result.endsWith('.')) {
+      const dotIndex = result.indexOf('.');
+      // Remove the dot if it is not the last character
+      if (dotIndex !== result.length - 1) {
+        result = result.substring(0, result.length - 1);
       }
     }
-    const withoutLeadingZero = value.replace(/^0+/, '');
-    const withoutNonNumeric = withoutLeadingZero.replace(/[^\d.]/g, '');
-    setAmountInput(withoutNonNumeric);
+
+    // Replace two or more leading zeros with a single zero
+    result = result.replace(/^00+/, '0');
+
+    // Check if the result starts with a zero and is an integer
+    if (
+      result.length > 1 &&
+      result.startsWith('0') &&
+      result.match(/^[0-9]*$/)
+    ) {
+      // Remove one leading zero (e.g., change "0123" to "123")
+      result = result.replace(/^0/, '');
+    }
+
+    // Remove all non-numeric characters except for the dot
+    result = result.replace(/[^\d.]/g, '');
+
+    // Set the processed result as the input value
+    setAmountInput(result);
   };
+
   async function handleTransfer() {
     const provider = new ethers.BrowserProvider(window.ethereum);
 
