@@ -45,7 +45,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   onAddWallet,
 }) => {
   const [amountInput, setAmountInput] = useState<string>('0');
-  const debounceAmountInput = useDebounce(amountInput, 900);
+  const debounceAmountInput = useDebounce(amountInput, 400);
   const [countingFees, setCountingFees] = useState<boolean>(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
   const rampClient = useRampClient();
@@ -61,6 +61,39 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   const [onRampAsset, setOnRampAsset] = useState<
     GetAccountInfoResponse_Wallet_RampAsset | undefined
   >(undefined);
+
+  const handleInput = (value: string) => {
+    // Limit the number of decimal places to two
+    let result = value.replace(/(\.\d{2})\d+/, '$1');
+
+    // Check if the result ends with a dot
+    if (result.endsWith('.')) {
+      const dotIndex = result.indexOf('.');
+      // Remove the dot if it is not the last character
+      if (dotIndex !== result.length - 1) {
+        result = result.substring(0, result.length - 1);
+      }
+    }
+
+    // Replace two or more leading zeros with a single zero
+    result = result.replace(/^00+/, '0');
+
+    // Check if the result starts with a zero and is an integer
+    if (
+      result.length > 1 &&
+      result.startsWith('0') &&
+      result.match(/^[0-9]*$/)
+    ) {
+      // Remove one leading zero (e.g., change "0123" to "123")
+      result = result.replace(/^0/, ''); // replace all the leading zeros from 0123 to 123
+    }
+
+    // Remove all non-numeric characters except for the dot
+    result = result.replace(/[^\d.]/g, '');
+
+    // Set the processed result as the input value
+    setAmountInput(result);
+  };
 
   const handleSelectWalletClick = (
     wallet: GetAccountInfoResponse_Wallet | undefined,
@@ -136,14 +169,6 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     debounceAmountInput,
     rampClient,
   ]);
-
-  const validateAmountFormat = (value: string) => {
-    const regex = /^\d+(\.\d+)?$/;
-    if (!regex.test(value)) {
-      return 'Use only numbers and optionally one decimal point separator';
-    }
-    return null;
-  };
 
   const bankAccountType =
     currency === 'GBP' ? 'instant Faster Payments' : 'SEPA Instant';
@@ -260,7 +285,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                 <Card>
                   <CardHeader>
                     <CardTitle className="relative">
-                      <span className="w-full">Onramp Calculator</span>
+                      <span className="w-full">On Ramp Calculator</span>
                     </CardTitle>
                     <CardDescription>
                       {' '}
@@ -282,17 +307,19 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       ref={firstInputRef}
                       onClick={() => firstInputRef.current?.focus()}
                       currency={currency as AmountInputProps['currency']}
-                      label="I SEND:"
+                      label="SEND:"
                       value={amountInput}
-                      onChange={(event) => setAmountInput(event.target.value)}
+                      onChange={(event) => handleInput(event.target.value)}
                       onFocus={() =>
                         amountInput === '0' ? setAmountInput('') : null
                       }
-                      validate={validateAmountFormat}
+                      onBlur={() =>
+                        amountInput === '' ? setAmountInput('0') : null
+                      }
                     />
                     <AmountInput
                       currency={'USDC'}
-                      label="I will get:"
+                      label="RECEIVE:"
                       value={rampFeeResponse?.cryptoAssetAmount || 'N/A'}
                       disabled
                       isLoading={countingFees}
@@ -307,22 +334,33 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                     {rampFeeResponse && (
                       <div className="flex flex-col gap-[10px]">
                         <p className="subtitle1 text-gray-50">
-                          {currency}:USDC rate:{' '}
+                          {currency}/USDC rate:{' '}
                           {countingFees
                             ? SmallLoader
                             : rampFeeResponse?.exchangeRate || 'unknown'}
                         </p>
                         <p className="subtitle1 text-gray-50">
                           Esimated network fees:{' '}
-                          {countingFees
-                            ? SmallLoader
-                            : rampFeeResponse?.networkFeeAmount || 'unknown'}
+                          {countingFees ? (
+                            SmallLoader
+                          ) : (
+                            <>
+                              {rampFeeResponse?.networkFeeAmount || 'unknown'}{' '}
+                              {currency}
+                            </>
+                          )}
                         </p>
                         <p className="subtitle1 text-gray-50">
                           Processing fees:{' '}
-                          {countingFees
-                            ? SmallLoader
-                            : rampFeeResponse?.processingFeeAmount || 'unknown'}
+                          {countingFees ? (
+                            SmallLoader
+                          ) : (
+                            <>
+                              {rampFeeResponse?.processingFeeAmount ||
+                                'unknown'}{' '}
+                              {currency}
+                            </>
+                          )}
                         </p>
                       </div>
                     )}
