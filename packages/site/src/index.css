@@ -58,6 +58,7 @@ body {
     --brightBlueberry: theme('colors.brightBlueberry');
     --disabledNightBlue: theme('colors.disabledNightBlue');
     --red: theme('colors.red');
+    --yellow: theme('colors.yellow');
   }
 
   .dark {

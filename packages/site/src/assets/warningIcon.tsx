@@ -1,4 +1,4 @@
-const WarningIcon = ({ stroke = 'snow' }) => (
+const WarningIcon = ({ stroke = 'var(--yellow)' }) => (
   <svg
     width="24"
     height="24"
