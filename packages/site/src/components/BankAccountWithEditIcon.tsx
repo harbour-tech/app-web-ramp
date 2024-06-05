@@ -6,7 +6,7 @@ import {
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import { BankAccount as Account } from '@/types/bankAccount';
-import { PencilIcon, SaveIcon } from 'lucide-react';
+import { PencilIcon, SaveIcon, XIcon } from 'lucide-react';
 
 export interface BankAccountProps {
   account: Account;
@@ -80,7 +80,7 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
     typeof error === 'string' ? error : error ? 'Invalid IBAN' : null;
 
   return (
-    <div className="flex flex-col w-full items-start">
+    <div className="flex flex-col w-full items-start h-full">
       <Label htmlFor="iban">IBAN</Label>
       <div className="flex w-full items-center gap-4">
         <Input
@@ -94,21 +94,29 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
           onChange={(e) => setIbanValue(e.target.value)}
           className={!editable ? 'text-gray-200' : ''}
         />
-        {editable ? (
-          <SaveIcon
-            onClick={saveChanges}
-            className="stroke-green cursor-pointer"
-          />
-        ) : (
-          <PencilIcon
-            className="stroke-gray-50 cursor-pointer"
-            onClick={() => {
-              setEditable(true);
-              inputRef.current?.focus();
-              inputRef.current?.select();
-            }}
-          />
-        )}
+        <div className="flex gap-2 h-full pt-2">
+          {editable ? (
+            <>
+              <SaveIcon
+                onClick={saveChanges}
+                className="stroke-green cursor-pointer"
+              />
+              <XIcon
+                onClick={saveChanges}
+                className="stroke-red cursor-pointer"
+              />
+            </>
+          ) : (
+            <PencilIcon
+              className="stroke-gray-50 cursor-pointer"
+              onClick={() => {
+                setEditable(true);
+                inputRef.current?.focus();
+                inputRef.current?.select();
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
