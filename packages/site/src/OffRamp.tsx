@@ -52,7 +52,7 @@ import {
 } from '@/components/ui/tooltip';
 import InfoSvg from '@/assets/info.svg?react';
 import { TransactionProcessingSpinner } from '@/components/TransactionProcessingSpinner';
-import WarningIconSvg from '@/assets/warningIcon.svg?react';
+import WarningIcon from '@/assets/warningIcon';
 import { handle32002 } from '@/lib/utils';
 
 export interface OffRampProps {
@@ -553,7 +553,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           conversion rate
                         </CardDescription>
                         <div className="flex items-center space-x-4 rounded-md border p-4 mt-5">
-                          <WarningIconSvg />
+                          <WarningIcon />
                           <div className="flex-1 space-y-1">
                             <p className="text-sm text-muted-foreground">
                               This product is currently in beta testing, please

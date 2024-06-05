@@ -37,6 +37,7 @@ export const theme = {
       brightBlueberry: '#32CAEB',
       red: '#F04B4B',
       green: '#5FC346',
+      yellow: '#e3db1c',
       disabledNightBlue: '#1F518C',
       border: 'hsl(var(--border))',
       input: 'hsl(var(--input))',
