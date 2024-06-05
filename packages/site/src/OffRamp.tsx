@@ -125,14 +125,15 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
 
   async function handleTransfer() {
+    let switchNetworkResult: boolean | undefined | void = false;
     const provider = new ethers.BrowserProvider(window.ethereum);
 
     let erc20Asset: Erc20Token;
     switch (offRampAsset?.asset?.network) {
       case Network.ETHEREUM_MAINNET:
-        await switchNetwork(ETHEREUM_MAINNET_PARAMS).catch(
-          handleSwitchNetworkError,
-        );
+        switchNetworkResult = await switchNetwork(
+          ETHEREUM_MAINNET_PARAMS,
+        ).catch(handleSwitchNetworkError);
         erc20Asset = {
           address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
           abi: [
@@ -142,9 +143,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         };
         break;
       case Network.AVAX_C_MAINNET:
-        await switchNetwork(AVALANCHE_MAINNET_PARAMS).catch(
-          handleSwitchNetworkError,
-        );
+        switchNetworkResult = await switchNetwork(
+          AVALANCHE_MAINNET_PARAMS,
+        ).catch(handleSwitchNetworkError);
         erc20Asset = {
           address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
           abi: [
@@ -154,7 +155,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         };
         break;
       case Network.AVAX_FUJI:
-        await switchNetwork(AVALANCHE_FUJI_PARAMS).catch(
+        switchNetworkResult = await switchNetwork(AVALANCHE_FUJI_PARAMS).catch(
           handleSwitchNetworkError,
         );
         erc20Asset = {
@@ -166,7 +167,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         };
         break;
       case Network.POLYGON_MAINNET:
-        await switchNetwork(POLYGON_MAINNET_PARAMS).catch(
+        switchNetworkResult = await switchNetwork(POLYGON_MAINNET_PARAMS).catch(
           handleSwitchNetworkError,
         );
         erc20Asset = {
@@ -178,7 +179,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         };
         break;
       case Network.POLYGON_AMOY:
-        await switchNetwork(POLYGON_AMOY_PARAMS).catch(
+        switchNetworkResult = await switchNetwork(POLYGON_AMOY_PARAMS).catch(
           handleSwitchNetworkError,
         );
         erc20Asset = {
@@ -191,6 +192,10 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         break;
       default:
         throw `unsupported network: ${offRampAsset?.asset?.network}`;
+    }
+
+    if (switchNetworkResult !== true) {
+      return;
     }
 
     if (!(await provider.hasSigner(selectedWallet!.address))) {
