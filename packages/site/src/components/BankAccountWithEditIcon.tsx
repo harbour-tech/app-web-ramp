@@ -203,8 +203,8 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
 
   const dropChanges = () => {
     setScanValue({
-      accountNumber: scanValue.accountNumber,
-      sortCode: scanValue.sortCode,
+      accountNumber: scan.accountNumber,
+      sortCode: scan.sortCode,
     });
     if (onChange) {
       onChange(
@@ -273,8 +273,6 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
                 className="stroke-gray-50 cursor-pointer"
                 onClick={() => {
                   setEditable(true);
-                  // inputRef.current?.focus();
-                  // inputRef.current?.select();
                 }}
               />
             )}
