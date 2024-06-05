@@ -193,7 +193,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       default:
         throw `unsupported network: ${offRampAsset?.asset?.network}`;
     }
-    console.log({ switchNetworkResult });
+
     if (switchNetworkResult !== true) {
       return;
     }
