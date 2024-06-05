@@ -473,7 +473,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                             value={amount}
                             onChange={handleAmountChange}
                             disabled={false}
-                            validate={validateAmountFormat}
                           />
                         </div>
                         <CardDescription>
@@ -555,7 +554,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         <div className="flex items-center space-x-4 rounded-md border p-4 mt-5">
                           <WarningIcon />
                           <div className="flex-1 space-y-1">
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm">
                               This product is currently in beta testing, please
                               transact with small amounts, up to 200 {currency}.
                             </p>
