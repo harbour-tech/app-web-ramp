@@ -75,6 +75,7 @@ export async function switchNetwork(params: NetworkParams) {
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: params.chainId }],
     });
+    return true;
   } catch (e: any) {
     if (e.code !== 4902) {
       throw `unexpected error: ${e.code}`;
@@ -99,6 +100,7 @@ export async function switchNetwork(params: NetworkParams) {
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: params.chainId }],
       });
+      return true;
     } catch (e: any) {
       throw `unexpected error: ${e.code}`;
     }
