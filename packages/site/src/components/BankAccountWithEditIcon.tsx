@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef } from 'react';
+import React, { FunctionComponent, useRef, useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import {
@@ -6,7 +6,7 @@ import {
   ScanCoordinates,
 } from '@/harbour/gen/ramp/v1/public_pb';
 import { BankAccount as Account } from '@/types/bankAccount';
-import { PencilIcon, SaveIcon } from 'lucide-react';
+import { PencilIcon, SaveIcon, XIcon } from 'lucide-react';
 
 export interface BankAccountProps {
   account: Account;
@@ -62,25 +62,39 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
   const [ibanValue, setIbanValue] = React.useState(iban.iban);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    if (editable && (error === undefined || error === false)) {
+      setEditable(false);
+    }
+  }, [error]);
+
   const saveChanges = () => {
-    setEditable(false);
     if (onChange) {
       onChange(
         new IbanCoordinates({
           iban: ibanValue,
         }),
       );
-      if (error !== undefined) {
-        setEditable(true);
-      }
     }
+  };
+
+  const dropChanges = () => {
+    setIbanValue(iban.iban);
+    if (onChange) {
+      onChange(
+        new IbanCoordinates({
+          iban: iban.iban,
+        }),
+      );
+    }
+    setEditable(false);
   };
 
   const fullError =
     typeof error === 'string' ? error : error ? 'Invalid IBAN' : null;
 
   return (
-    <div className="flex flex-col w-full items-start">
+    <div className="flex flex-col w-full items-start h-full">
       <Label htmlFor="iban">IBAN</Label>
       <div className="flex w-full items-center gap-4">
         <Input
@@ -94,21 +108,29 @@ const Iban: FunctionComponent<IbanProps> = ({ iban, onChange, error }) => {
           onChange={(e) => setIbanValue(e.target.value)}
           className={!editable ? 'text-gray-200' : ''}
         />
-        {editable ? (
-          <SaveIcon
-            onClick={saveChanges}
-            className="stroke-green cursor-pointer"
-          />
-        ) : (
-          <PencilIcon
-            className="stroke-gray-50 cursor-pointer"
-            onClick={() => {
-              setEditable(true);
-              inputRef.current?.focus();
-              inputRef.current?.select();
-            }}
-          />
-        )}
+        <div className="flex gap-2 h-full pt-2">
+          {editable ? (
+            <>
+              <SaveIcon
+                onClick={saveChanges}
+                className="stroke-green cursor-pointer"
+              />
+              <XIcon
+                onClick={dropChanges}
+                className="stroke-red cursor-pointer"
+              />
+            </>
+          ) : (
+            <PencilIcon
+              className="stroke-gray-50 cursor-pointer"
+              onClick={() => {
+                setEditable(true);
+                inputRef.current?.focus();
+                inputRef.current?.select();
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -126,6 +148,12 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
     sortCode: scan.sortCode,
     accountNumber: scan.accountNumber,
   });
+
+  useEffect(() => {
+    if (editable && (error === undefined || error === false)) {
+      setEditable(false);
+    }
+  }, [error]);
 
   const onSortCodeChange = (value: string) => {
     setScanValue({
@@ -163,7 +191,6 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
   };
 
   const saveChanges = () => {
-    setEditable(false);
     if (onChange) {
       onChange(
         new ScanCoordinates({
@@ -171,10 +198,23 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
           sortCode: scanValue.sortCode,
         }),
       );
-      if (error !== undefined) {
-        setEditable(true);
-      }
     }
+  };
+
+  const dropChanges = () => {
+    setScanValue({
+      accountNumber: scan.accountNumber,
+      sortCode: scan.sortCode,
+    });
+    if (onChange) {
+      onChange(
+        new ScanCoordinates({
+          accountNumber: scan.accountNumber,
+          sortCode: scan.sortCode,
+        }),
+      );
+    }
+    setEditable(false);
   };
 
   const errorForAccountNumberCode =
@@ -218,14 +258,22 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
               error={errorForAccountNumberCode}
             />
             {editable ? (
-              <SaveIcon
-                onClick={saveChanges}
-                className="stroke-green cursor-pointer"
-              />
+              <>
+                <SaveIcon
+                  onClick={saveChanges}
+                  className="stroke-green cursor-pointer"
+                />
+                <XIcon
+                  onClick={dropChanges}
+                  className="stroke-red cursor-pointer"
+                />
+              </>
             ) : (
               <PencilIcon
                 className="stroke-gray-50 cursor-pointer"
-                onClick={() => setEditable(true)}
+                onClick={() => {
+                  setEditable(true);
+                }}
               />
             )}
           </div>

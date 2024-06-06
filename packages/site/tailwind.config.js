@@ -15,6 +15,10 @@ export const theme = {
     },
   },
   extend: {
+    zIndex: {
+      '1000': '1000',
+      "1": "1",
+    },
     colors: {
       sky: '#006CF6',
       snow: '#FFFFFF',
