@@ -58,12 +58,12 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
             className="absolute animate-in no-scrollbar"
             style={{
               transition: 'all 1s ease',
-              // transform:
-              //   controlsVisible && logoVisible
-              //     ? shouldNotShowLogo
-              //       ? 'translateX(0)'
-              //       : 'translateX(-15vw)'
-              //     : 'translateX(0)',
+              marginLeft:
+                controlsVisible && logoVisible
+                  ? shouldNotShowLogo
+                    ? 0
+                    : '-25vw'
+                  : 0,
               opacity: controlsVisible ? 1 : 0,
               width: !logoVisible ? '100%' : 'auto',
               padding: logoVisible ? '0' : '0 10vw',
@@ -71,12 +71,6 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
               height: 'calc(100% - 220px)',
               paddingBottom: '20px',
               overflow: 'auto',
-              visibility:
-                controlsVisible && logoVisible
-                  ? shouldNotShowLogo
-                    ? 'visible'
-                    : 'hidden'
-                  : 'visible',
             }}
           >
             <MetaMaskContextProvider>
