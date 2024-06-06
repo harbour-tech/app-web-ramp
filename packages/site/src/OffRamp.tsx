@@ -373,39 +373,56 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let newValue = event.target.value;
+    let value = event.target.value;
 
-    // Only allow numbers and a period
-    newValue = newValue.replace(/[^0-9.]/g, '');
+    // Determine the decimal separator for the current locale
+    const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
 
-    // Convert negative numbers to positive
-    if (newValue.startsWith('-')) {
-      newValue = newValue.substring(1);
-    }
+    // Replace the non-local decimal separator with the local one
+    value = value.replace(
+      decimalSeparator === '.' ? ',' : '.',
+      decimalSeparator,
+    );
 
-    // Limit to 2 decimal places
-    if (newValue.includes('.')) {
-      const parts = newValue.split('.');
-      if (parts[1].length > 2) {
-        newValue = `${parts[0]}.${parts[1].substring(0, 2)}`;
+    // Limit the number of decimal places to two
+    let result = value.replace(
+      new RegExp(`(\\${decimalSeparator}\\d{2})\\d+`),
+      '$1',
+    );
+
+    // Check if the result ends with a dot
+    if (result.endsWith(decimalSeparator)) {
+      const dotIndex = result.indexOf(decimalSeparator);
+      // Remove the dot if it is not the last character
+      if (dotIndex !== result.length - 1) {
+        result = result.substring(0, result.length - 1);
       }
     }
 
-    // Don't update the state if the new value contains more than one period
-    if ((newValue.match(/\./g) || []).length > 1) {
+    // Replace two or more leading zeros with a single zero
+    result = result.replace(/^00+/, '0');
+
+    // Check if the result starts with a zero and is an integer
+    if (
+      result.length > 1 &&
+      result.startsWith('0') &&
+      result.match(/^[0-9]*$/)
+    ) {
+      // Remove one leading zero (e.g., change "0123" to "123")
+      result = result.replace(/^0/, '');
+    }
+
+    // Remove all non-numeric characters except for the decimal separator
+    result = result.replace(new RegExp(`[^\\d${decimalSeparator}]`, 'g'), '');
+
+    // Don't update the state if the new value contains more than one decimal separator
+    if (
+      (result.match(new RegExp(`\\${decimalSeparator}`, 'g')) || []).length > 1
+    ) {
       return;
     }
 
-    // Remove leading zeros unless the number is a fraction less than 1
-    if (
-      newValue.length > 1 &&
-      newValue.startsWith('0') &&
-      !newValue.startsWith('0.')
-    ) {
-      newValue = newValue.replace(/^0+/, '');
-    }
-
-    setAmount(newValue);
+    setAmount(result);
   };
 
   const bankAccountType =
