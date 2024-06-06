@@ -93,8 +93,20 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
 
   const handleInput = (value: string) => {
+    // Determine the decimal separator for the current locale
+    const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
+
+    // Replace the non-local decimal separator with the local one
+    value = value.replace(
+      decimalSeparator === '.' ? ',' : '.',
+      decimalSeparator,
+    );
+
     // Limit the number of decimal places to two
-    let result = value.replace(/(\.\d{2})\d+/, '$1');
+    let result = value.replace(
+      new RegExp(`(\\${decimalSeparator}\\d{2})\\d+`),
+      '$1',
+    );
 
     if (result.endsWith('.')) {
       const dotIndex = result.indexOf('.');
