@@ -14,7 +14,7 @@ import useWindowDimensions from '@/hooks/useWindowDimensions';
 export const Root: FunctionComponent<PropsWithChildren> = () => {
   const [gradientsReady, setGradientsReady] = useState(false);
   const [logoVisible, setLogoVisible] = useState(true);
-  const [controllsVisible, setControllsVisible] = useState(false);
+  const [controlsVisible, setControlsVisible] = useState(false);
   const { width } = useWindowDimensions();
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      setControllsVisible(true);
+      setControlsVisible(true);
     }, 1500);
   }, []);
 
@@ -58,19 +58,25 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
             className="absolute animate-in no-scrollbar"
             style={{
               transition: 'all 1s ease',
-              transform:
-                controllsVisible && logoVisible
-                  ? shouldNotShowLogo
-                    ? 'translateX(0)'
-                    : 'translateX(-15vw)'
-                  : 'translateX(0)',
-              opacity: controllsVisible ? 1 : 0,
+              // transform:
+              //   controlsVisible && logoVisible
+              //     ? shouldNotShowLogo
+              //       ? 'translateX(0)'
+              //       : 'translateX(-15vw)'
+              //     : 'translateX(0)',
+              opacity: controlsVisible ? 1 : 0,
               width: !logoVisible ? '100%' : 'auto',
               padding: logoVisible ? '0' : '0 10vw',
               top: '220px',
               height: 'calc(100% - 220px)',
               paddingBottom: '20px',
               overflow: 'auto',
+              visibility:
+                controlsVisible && logoVisible
+                  ? shouldNotShowLogo
+                    ? 'visible'
+                    : 'hidden'
+                  : 'visible',
             }}
           >
             <MetaMaskContextProvider>
@@ -84,7 +90,7 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
               className="absolute"
               style={{
                 transition: 'all 1s ease',
-                transform: controllsVisible
+                transform: controlsVisible
                   ? shouldNotShowLogo
                     ? 'translateX(150vw)'
                     : 'translateX(15vw)'
