@@ -7,24 +7,49 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { OnboardingModalProvider } from '@/contexts';
 
+import Bugsnag from '@bugsnag/js';
+import BugsnagPluginReact from '@bugsnag/plugin-react';
+import BugsnagPerformance from '@bugsnag/browser-performance';
+
+const apiKey = 'e285fb66c0e35636856bf5f0ca605a1c';
+const client = Bugsnag.start({
+  apiKey,
+  plugins: [new BugsnagPluginReact()],
+  releaseStage: import.meta.env.VITE_BUGSNAG_STAGE,
+  onError: () => {
+    if (!import.meta.env.VITE_BUGSNAG_STAGE) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+});
+BugsnagPerformance.start({ apiKey });
+
+// eslint-disable-next-line react-refresh/only-export-components
+const ErrorBoundary =
+  client.getPlugin('react')?.createErrorBoundary(React) || React.Fragment;
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <OnboardingModalProvider>
-      <ThemeProvider>
-        <Root />
-        <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
-      </ThemeProvider>
-    </OnboardingModalProvider>
-  </React.StrictMode>,
+  <ErrorBoundary>
+    <React.StrictMode>
+      <OnboardingModalProvider>
+        <ThemeProvider>
+          <Root />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+          />
+        </ThemeProvider>
+      </OnboardingModalProvider>
+    </React.StrictMode>
+  </ErrorBoundary>,
 );
