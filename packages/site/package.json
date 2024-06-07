@@ -17,6 +17,9 @@
   },
   "dependencies": {
     "@bufbuild/protobuf": "^1.8.0",
+    "@bugsnag/browser-performance": "^2.6.0",
+    "@bugsnag/js": "^7.23.0",
+    "@bugsnag/plugin-react": "^7.22.7",
     "@connectrpc/connect": "^1.4.0",
     "@connectrpc/connect-web": "^1.4.0",
     "@metamask/providers": "^16.0.0",
