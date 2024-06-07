@@ -6,7 +6,6 @@ PROD_BUCKET="site-snap-harbour-fi-013e336"
 PROD_DIST_ID="E2LTT3YBWEFXKV"
 BUGSNAG_API_KEY="e285fb66c0e35636856bf5f0ca605a1c"
 
-
 .PHONY: app/deploy/dev
 app/deploy/dev: app/deps
 	npm i --workspace=packages/site && npm run build:staging --workspace=packages/site
@@ -30,7 +29,7 @@ app/deploy/prod: app/deps
 	echo "Build hash: $$hash" && \
 	fullPath=$$(pwd) && \
 	ls -la && \
-	npx bugsnag-sourcemaps upload --api-key ${BUGSNAG_API_KEY} --app-version 0.0.1 --minified-file $$fullPath/index-$$hash.js --source-map $$fullPath/index-$$hash.js.map --minified-url https://dev-snap.harborapps-nonprod.link/assets/index-$$hash.js --no-cli-pager --overwrite
+	npx bugsnag-sourcemaps upload --api-key ${BUGSNAG_API_KEY} --app-version 0.0.1 --minified-file $$fullPath/index-$$hash.js --source-map $$fullPath/index-$$hash.js.map --minified-url https://snap.harbour.fi/assets/index-$$hash.js --no-cli-pager --overwrite
 
 .PHONY: app/deps
 app/deps:

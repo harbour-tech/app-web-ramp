@@ -11,12 +11,20 @@ import Bugsnag from '@bugsnag/js';
 import BugsnagPluginReact from '@bugsnag/plugin-react';
 import BugsnagPerformance from '@bugsnag/browser-performance';
 
+const apiKey = 'e285fb66c0e35636856bf5f0ca605a1c';
 const client = Bugsnag.start({
-  apiKey: 'e285fb66c0e35636856bf5f0ca605a1c',
+  apiKey,
   plugins: [new BugsnagPluginReact()],
-  releaseStage: import.meta.env.VITE_BUGSNAG_STAGE || 'development',
+  releaseStage: import.meta.env.VITE_BUGSNAG_STAGE,
+  onError: () => {
+    if (!import.meta.env.VITE_BUGSNAG_STAGE) {
+      return false;
+    } else {
+      return true;
+    }
+  },
 });
-BugsnagPerformance.start({ apiKey: 'e285fb66c0e35636856bf5f0ca605a1c' });
+BugsnagPerformance.start({ apiKey });
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ErrorBoundary =
