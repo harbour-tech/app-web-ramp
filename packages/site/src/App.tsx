@@ -2,6 +2,8 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import {
   GetAccountInfoResponse,
+  GetAccountInfoResponse_CryptoAsset,
+  GetAccountInfoResponse_Wallet,
   Protocol,
   SetBankAccountRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
@@ -53,6 +55,42 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   const [changingBankAccountFailed, setChangingBankAccountFailed] = useState<
     boolean | string
   >(false);
+  const [onRampSelectedAsset, setOnRampSelectedAsset] = useState<
+    GetAccountInfoResponse_CryptoAsset | undefined
+  >(undefined);
+  const [onRampSelectedWallet, setOnRampSelectedWallet] = useState<
+    GetAccountInfoResponse_Wallet | undefined
+  >(undefined);
+  const [offRampSelectedAsset, setOffRampSelectedAsset] = useState<
+    GetAccountInfoResponse_CryptoAsset | undefined
+  >(undefined);
+  const [offRampSelectedWallet, setOffRampSelectedWallet] = useState<
+    GetAccountInfoResponse_Wallet | undefined
+  >(undefined);
+
+  const handleOnRampAssetSelected = (
+    asset: GetAccountInfoResponse_CryptoAsset,
+  ) => {
+    setOnRampSelectedAsset(asset);
+  };
+
+  const handleOnRampWalletSelected = (
+    wallet: GetAccountInfoResponse_Wallet | undefined,
+  ) => {
+    setOnRampSelectedWallet(wallet);
+  };
+
+  const handleOffRampAssetSelected = (
+    asset: GetAccountInfoResponse_CryptoAsset,
+  ) => {
+    setOffRampSelectedAsset(asset);
+  };
+
+  const handleOffRampWalletSelected = (
+    wallet: GetAccountInfoResponse_Wallet | undefined,
+  ) => {
+    setOffRampSelectedWallet(wallet);
+  };
 
   const load = async (message?: string) => {
     if (message === 'onboardingFinished') {
@@ -244,6 +282,10 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
             <OnRamp
               account={accountInfo.result.value}
               onAddWallet={handleAddWallet}
+              onRampSelectedAsset={onRampSelectedAsset}
+              onRampSelectedWallet={onRampSelectedWallet}
+              handleOnRampAssetSelected={handleOnRampAssetSelected}
+              handleOnRampWalletSelected={handleOnRampWalletSelected}
             />
           </TabsContent>
           <TabsContent value="offramp">
@@ -252,6 +294,10 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
               onAddWallet={handleAddWallet}
               onSaveBankAccount={handleSaveBankAccount}
               changingBankAccountFailed={changingBankAccountFailed}
+              offRampSelectedAsset={offRampSelectedAsset}
+              offRampSelectedWallet={offRampSelectedWallet}
+              handleOffRampAssetSelected={handleOffRampAssetSelected}
+              handleOffRampWalletSelected={handleOffRampWalletSelected}
             />
           </TabsContent>
         </Tabs>

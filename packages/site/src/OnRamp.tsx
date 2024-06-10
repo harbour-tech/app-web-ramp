@@ -38,11 +38,21 @@ import WarningIcon from '@/assets/warningIcon';
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
   onAddWallet: (wallet: Wallet) => Promise<void>;
+  onRampSelectedAsset: GetAccountInfoResponse_CryptoAsset | undefined;
+  onRampSelectedWallet: GetAccountInfoResponse_Wallet | undefined;
+  handleOnRampAssetSelected: (
+    asset: GetAccountInfoResponse_CryptoAsset,
+  ) => void;
+  handleOnRampWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void;
 }
 
 export const OnRamp: FunctionComponent<OnRampProps> = ({
   account,
   onAddWallet,
+  onRampSelectedAsset,
+  onRampSelectedWallet,
+  handleOnRampAssetSelected,
+  handleOnRampWalletSelected,
 }) => {
   const [amountInput, setAmountInput] = useState<string>('0');
   const debounceAmountInput = useDebounce(amountInput, 400);
@@ -51,10 +61,10 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   const rampClient = useRampClient();
   const [selectedWallet, setSelectedWallet] = useState<
     GetAccountInfoResponse_Wallet | undefined
-  >(undefined);
+  >(onRampSelectedWallet);
   const [selectedAsset, setSelectedAsset] = useState<
     GetAccountInfoResponse_CryptoAsset | undefined
-  >(undefined);
+  >(onRampSelectedAsset);
   const [rampFeeResponse, setRampFeeResponse] =
     useState<EstimateOnRampFeeResponse>();
 
@@ -116,6 +126,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
       return;
     }
     setSelectedWallet(wallet);
+    handleOnRampWalletSelected(wallet);
     const asset = wallet.assets.find(
       (ra) => ra.asset!.assetId == selectedAsset!.assetId,
     );
@@ -124,6 +135,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
 
   const handleSelectAsset = (asset: GetAccountInfoResponse_CryptoAsset) => {
     setSelectedAsset(asset);
+    handleOnRampAssetSelected(asset);
     setSelectedWallet(undefined);
   };
 
@@ -184,6 +196,15 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
 
   const bankAccountType =
     currency === 'GBP' ? 'instant Faster Payments' : 'SEPA Instant';
+
+  useEffect(() => {
+    if (selectedAsset && selectedWallet) {
+      const asset = selectedWallet.assets.find(
+        (ra) => ra.asset!.assetId == selectedAsset!.assetId,
+      );
+      setOnRampAsset(asset);
+    }
+  }, [selectedAsset, selectedWallet]);
 
   return (
     <TooltipProvider>
