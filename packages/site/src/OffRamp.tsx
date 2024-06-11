@@ -452,9 +452,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     }
   }, [selectedAsset, selectedWallet]);
 
-  console.log('selectedAssetOFFRAMP', selectedAsset);
-  console.log('selectedWalletOFFRAMP', selectedWallet);
-
   return (
     <TooltipProvider>
       {isProcessingTransfer && <TransactionProcessingSpinner />}

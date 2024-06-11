@@ -61,14 +61,6 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   const [offRampSelectedAsset, setOffRampSelectedAsset] = useState<GetAccountInfoResponse_CryptoAsset | undefined>(undefined);
   // prettier-ignore
   const [offRampSelectedWallet, setOffRampSelectedWallet] = useState<GetAccountInfoResponse_Wallet | undefined>(undefined);
-  // prettier-ignore
-  const handleOnRampAssetSelected = (asset: GetAccountInfoResponse_CryptoAsset) => {setOnRampSelectedAsset(asset)};
-  // prettier-ignore
-  const handleOnRampWalletSelected = (wallet: GetAccountInfoResponse_Wallet | undefined) => {setOnRampSelectedWallet(wallet)};
-  // prettier-ignore
-  const handleOffRampAssetSelected = (asset: GetAccountInfoResponse_CryptoAsset,) => {setOffRampSelectedAsset(asset)};
-  // prettier-ignore
-  const handleOffRampWalletSelected = (wallet: GetAccountInfoResponse_Wallet | undefined) => {setOffRampSelectedWallet(wallet)};
 
   const load = async (message?: string) => {
     if (message === 'onboardingFinished') {
@@ -262,8 +254,8 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
               onAddWallet={handleAddWallet}
               onRampSelectedAsset={onRampSelectedAsset}
               onRampSelectedWallet={onRampSelectedWallet}
-              handleOnRampAssetSelected={handleOnRampAssetSelected}
-              handleOnRampWalletSelected={handleOnRampWalletSelected}
+              handleOnRampAssetSelected={setOnRampSelectedAsset}
+              handleOnRampWalletSelected={setOnRampSelectedWallet}
             />
           </TabsContent>
           <TabsContent value="offramp">
@@ -274,8 +266,8 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
               changingBankAccountFailed={changingBankAccountFailed}
               offRampSelectedAsset={offRampSelectedAsset}
               offRampSelectedWallet={offRampSelectedWallet}
-              handleOffRampAssetSelected={handleOffRampAssetSelected}
-              handleOffRampWalletSelected={handleOffRampWalletSelected}
+              handleOffRampAssetSelected={setOffRampSelectedAsset}
+              handleOffRampWalletSelected={setOffRampSelectedWallet}
             />
           </TabsContent>
         </Tabs>

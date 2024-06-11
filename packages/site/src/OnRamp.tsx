@@ -209,9 +209,6 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     }
   }, [selectedAsset, selectedWallet]);
 
-  console.log('selectedAssetONRAMP', selectedAsset);
-  console.log('selectedWalletONRAMP', selectedWallet);
-
   return (
     <TooltipProvider>
       <div className="flex flex-col items-center">
