@@ -73,7 +73,7 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
               <LoadingSpinner className="w-[50px] h-[50px]" />
             </div>
           )}
-          {url && (
+          {url && isOnboardingVisible ? (
             <iframe
               key={url}
               frameBorder="0"
@@ -82,6 +82,8 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
               src={url}
               onLoad={() => setIsOnboardingLoading(false)}
             />
+          ) : (
+            <div />
           )}
         </div>
       </div>
