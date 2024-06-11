@@ -102,7 +102,7 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
             'absolute z-0 bg-gray-600 w-full overflow-hidden top-0',
           )}
           style={{
-            height: logoVisible ? '50%' : 'calc(100vh - 111px)',
+            height: logoVisible ? '50%' : '100vh',
             transition: 'height 1s ease',
           }}
         >
@@ -119,7 +119,7 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
         <div
           className="absolute z-0 bg-gray-500 w-full overflow-hidden bottom-0"
           style={{
-            height: logoVisible ? '50%' : '111px',
+            height: logoVisible ? '50%' : '0px',
             transition: 'height 1s ease',
           }}
         >
