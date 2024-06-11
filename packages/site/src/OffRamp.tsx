@@ -552,9 +552,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           <Input
                             type="text"
                             id="amount"
-                            placeholder={`amount in ${
-                              offRampAsset!.asset?.shortName
-                            }`}
                             value={amount}
                             onChange={handleAmountChange}
                             disabled={false}
