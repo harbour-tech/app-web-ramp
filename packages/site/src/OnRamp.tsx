@@ -43,7 +43,9 @@ export interface OnRampProps {
   handleOnRampAssetSelected: (
     asset: GetAccountInfoResponse_CryptoAsset,
   ) => void;
-  handleOnRampWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void;
+  handleOnRampWalletSelected: (
+    wallet: GetAccountInfoResponse_Wallet | undefined,
+  ) => void;
 }
 
 export const OnRamp: FunctionComponent<OnRampProps> = ({
@@ -135,8 +137,9 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
 
   const handleSelectAsset = (asset: GetAccountInfoResponse_CryptoAsset) => {
     setSelectedAsset(asset);
-    handleOnRampAssetSelected(asset);
     setSelectedWallet(undefined);
+    handleOnRampAssetSelected(asset);
+    handleOnRampWalletSelected(undefined);
   };
 
   const getOnRampBankAccount = (): BankAccount => {
@@ -205,6 +208,9 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
       setOnRampAsset(asset);
     }
   }, [selectedAsset, selectedWallet]);
+
+  console.log('selectedAssetONRAMP', selectedAsset);
+  console.log('selectedWalletONRAMP', selectedWallet);
 
   return (
     <TooltipProvider>

@@ -65,7 +65,9 @@ export interface OffRampProps {
   handleOffRampAssetSelected: (
     asset: GetAccountInfoResponse_CryptoAsset,
   ) => void;
-  handleOffRampWalletSelected: (wallet: GetAccountInfoResponse_Wallet) => void;
+  handleOffRampWalletSelected: (
+    wallet: GetAccountInfoResponse_Wallet | undefined,
+  ) => void;
 }
 
 export const OffRamp: FunctionComponent<OffRampProps> = ({
@@ -281,6 +283,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     setSelectedAsset(asset);
     handleOffRampAssetSelected(asset);
     setSelectedWallet(undefined);
+    handleOffRampWalletSelected(undefined);
   };
 
   const handleSelectWalletClick = (
@@ -448,6 +451,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       setOffRampAsset(asset);
     }
   }, [selectedAsset, selectedWallet]);
+
+  console.log('selectedAssetOFFRAMP', selectedAsset);
+  console.log('selectedWalletOFFRAMP', selectedWallet);
 
   return (
     <TooltipProvider>
