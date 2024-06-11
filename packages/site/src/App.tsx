@@ -2,6 +2,8 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import {
   GetAccountInfoResponse,
+  GetAccountInfoResponse_CryptoAsset,
+  GetAccountInfoResponse_Wallet,
   Protocol,
   SetBankAccountRequest,
 } from '@/harbour/gen/ramp/v1/public_pb';
@@ -45,14 +47,20 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   const { openOnboardingModal, setOnFinishCallback } = useOnboardingModal();
   const [metamask, metamaskDispatch] = useMetaMask();
   const rampClient = useRampClient();
-  const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(
-    null,
-  );
+  // prettier-ignore
+  const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const isMetaMaskReady = metamask.snapsDetected;
-  const [changingBankAccountFailed, setChangingBankAccountFailed] = useState<
-    boolean | string
-  >(false);
+  // prettier-ignore
+  const [changingBankAccountFailed, setChangingBankAccountFailed] = useState<boolean | string>(false);
+  // prettier-ignore
+  const [onRampSelectedAsset, setOnRampSelectedAsset] = useState<GetAccountInfoResponse_CryptoAsset | undefined>(undefined);
+  // prettier-ignore
+  const [onRampSelectedWallet, setOnRampSelectedWallet] = useState<GetAccountInfoResponse_Wallet | undefined>(undefined);
+  // prettier-ignore
+  const [offRampSelectedAsset, setOffRampSelectedAsset] = useState<GetAccountInfoResponse_CryptoAsset | undefined>(undefined);
+  // prettier-ignore
+  const [offRampSelectedWallet, setOffRampSelectedWallet] = useState<GetAccountInfoResponse_Wallet | undefined>(undefined);
 
   const load = async (message?: string) => {
     if (message === 'onboardingFinished') {
@@ -244,6 +252,10 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
             <OnRamp
               account={accountInfo.result.value}
               onAddWallet={handleAddWallet}
+              onRampSelectedAsset={onRampSelectedAsset}
+              onRampSelectedWallet={onRampSelectedWallet}
+              handleOnRampAssetSelected={setOnRampSelectedAsset}
+              handleOnRampWalletSelected={setOnRampSelectedWallet}
             />
           </TabsContent>
           <TabsContent value="offramp">
@@ -252,6 +264,10 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
               onAddWallet={handleAddWallet}
               onSaveBankAccount={handleSaveBankAccount}
               changingBankAccountFailed={changingBankAccountFailed}
+              offRampSelectedAsset={offRampSelectedAsset}
+              offRampSelectedWallet={offRampSelectedWallet}
+              handleOffRampAssetSelected={setOffRampSelectedAsset}
+              handleOffRampWalletSelected={setOffRampSelectedWallet}
             />
           </TabsContent>
         </Tabs>

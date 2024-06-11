@@ -134,6 +134,7 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
       </CardHeader>
       <CardContent className="space-y-5">
         <SelectAsset
+          value={selectedAsset?.shortName}
           onValueChange={(value) => {
             const asset = assets.find((asset) => asset.shortName === value);
             if (asset) handleClick(asset);
@@ -164,6 +165,7 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
           <>
             {hasWalletsForSelectedAsset && (
               <SelectWallet
+                value={selectedWallet?.name}
                 key={selectedAsset.network}
                 onValueChange={(value) => {
                   const selectedWallet = wallets.find(
@@ -178,7 +180,12 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
                   </CardDescription>
                   <SelectWalletTrigger disabled={wallets.length === 0}>
                     {walletSelectedIcon}
-                    <SelectWalletValue placeholder="Select Wallet" />
+                    <SelectWalletValue
+                      placeholder="Select Wallet"
+                      key={selectedWallet?.protocol}
+                    >
+                      {selectedWallet?.name}
+                    </SelectWalletValue>
                   </SelectWalletTrigger>
                   <SelectWalletContent>
                     {wallets

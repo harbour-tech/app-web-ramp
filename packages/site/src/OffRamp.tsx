@@ -60,6 +60,14 @@ export interface OffRampProps {
   onAddWallet: (wallet: Wallet) => Promise<void>;
   onSaveBankAccount: (account: BankAccount) => void;
   changingBankAccountFailed: boolean | string;
+  offRampSelectedAsset: GetAccountInfoResponse_CryptoAsset | undefined;
+  offRampSelectedWallet: GetAccountInfoResponse_Wallet | undefined;
+  handleOffRampAssetSelected: (
+    asset: GetAccountInfoResponse_CryptoAsset,
+  ) => void;
+  handleOffRampWalletSelected: (
+    wallet: GetAccountInfoResponse_Wallet | undefined,
+  ) => void;
 }
 
 export const OffRamp: FunctionComponent<OffRampProps> = ({
@@ -67,6 +75,10 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   onAddWallet,
   onSaveBankAccount,
   changingBankAccountFailed,
+  offRampSelectedAsset,
+  offRampSelectedWallet,
+  handleOffRampAssetSelected,
+  handleOffRampWalletSelected,
 }) => {
   const rampClient = useRampClient();
   const [amount, setAmount] = useState('0');
@@ -77,10 +89,10 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const firstInputRef = useRef<HTMLInputElement>(null);
   const [selectedWallet, setSelectedWallet] = useState<
     GetAccountInfoResponse_Wallet | undefined
-  >(undefined);
+  >(offRampSelectedWallet);
   const [selectedAsset, setSelectedAsset] = useState<
     GetAccountInfoResponse_CryptoAsset | undefined
-  >(undefined);
+  >(offRampSelectedAsset);
   const [offRampAsset, setOffRampAsset] = useState<
     GetAccountInfoResponse_Wallet_RampAsset | undefined
   >(undefined);
@@ -269,7 +281,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
 
   const handleSelectAsset = (asset: GetAccountInfoResponse_CryptoAsset) => {
     setSelectedAsset(asset);
+    handleOffRampAssetSelected(asset);
     setSelectedWallet(undefined);
+    handleOffRampWalletSelected(undefined);
   };
 
   const handleSelectWalletClick = (
@@ -281,6 +295,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       return;
     }
     setSelectedWallet(wallet);
+    handleOffRampWalletSelected(wallet);
     const asset = wallet.assets.find(
       (ra) => ra.asset!.assetId == selectedAsset!.assetId,
     );
@@ -427,6 +442,15 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
 
   const bankAccountType =
     currency === 'GBP' ? 'instant Faster Payments' : 'SEPA Instant';
+
+  useEffect(() => {
+    if (selectedAsset && selectedWallet) {
+      const asset = selectedWallet.assets.find(
+        (ra) => ra.asset!.assetId == selectedAsset!.assetId,
+      );
+      setOffRampAsset(asset);
+    }
+  }, [selectedAsset, selectedWallet]);
 
   return (
     <TooltipProvider>
