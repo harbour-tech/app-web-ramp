@@ -9,7 +9,6 @@ import { OnboardingModalProvider } from '@/contexts';
 
 import Bugsnag from '@bugsnag/js';
 import BugsnagPluginReact from '@bugsnag/plugin-react';
-import BugsnagPerformance from '@bugsnag/browser-performance';
 
 const apiKey = 'e285fb66c0e35636856bf5f0ca605a1c';
 const client = Bugsnag.start({
@@ -23,8 +22,8 @@ const client = Bugsnag.start({
       return true;
     }
   },
+  logger: null,
 });
-BugsnagPerformance.start({ apiKey });
 
 // eslint-disable-next-line react-refresh/only-export-components
 const ErrorBoundary =

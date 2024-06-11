@@ -38,7 +38,6 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     window.addEventListener('message', onMessage);
-    console.log('faster?');
     return () => {
       window.removeEventListener('message', onMessage);
     };
