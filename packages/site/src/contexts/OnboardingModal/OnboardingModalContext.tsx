@@ -38,6 +38,7 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     window.addEventListener('message', onMessage);
+    console.log('faster?');
     return () => {
       window.removeEventListener('message', onMessage);
     };
@@ -73,7 +74,7 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
               <LoadingSpinner className="w-[50px] h-[50px]" />
             </div>
           )}
-          {url && (
+          {url && isOnboardingVisible ? (
             <iframe
               key={url}
               frameBorder="0"
@@ -82,6 +83,8 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
               src={url}
               onLoad={() => setIsOnboardingLoading(false)}
             />
+          ) : (
+            <div />
           )}
         </div>
       </div>
