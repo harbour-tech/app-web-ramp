@@ -223,7 +223,7 @@ const Scan: FunctionComponent<ScanProps> = ({ scan, onChange, error }) => {
     typeof error === 'string'
       ? error
       : error
-      ? 'Invalid Sort Code or Number'
+      ? 'Invalid Sort Code or Account Number'
       : null;
 
   return (
