@@ -141,8 +141,8 @@ const Scan: FunctionComponent<ScanProps> = ({
     typeof error === 'string' ? error : error ? 'Invalid Bank Number' : '';
 
   return (
-    <div className="flex gap-4">
-      <div className="w-3/5 items-center">
+    <div className="flex gap-3">
+      <div className="w-4/5 items-center">
         <Label htmlFor="sortCode">Sort Code</Label>
         <Input
           type="text"
