@@ -215,6 +215,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         };
         break;
       default:
+        toast.error('Something went wrong');
         throw `unsupported network: ${offRampAsset?.asset?.network}`;
     }
 
