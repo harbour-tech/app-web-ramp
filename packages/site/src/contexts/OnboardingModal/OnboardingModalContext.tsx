@@ -45,7 +45,7 @@ export const OnboardingModalProvider: React.FC<{ children: ReactNode }> = ({
 
   const openOnboardingModal = (url: string) => {
     setIsOnboardingLoading(true);
-    setUrl(url);
+    setUrl(`${url}&origin=web-ramp-app`); // remember to switch & to ? before query param if running on localhost as then it's without first token param e.g. setUrl(`${`http://localhost:9000`}?origin=web-ramp-app`);
     setIsOnboardingVisible(true);
   };
 
