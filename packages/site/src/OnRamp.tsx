@@ -186,7 +186,11 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
           setRampFeeResponse(res);
         })
         .catch((_err) => {
-          toast.error('Failed to estimate onramp fees');
+          toast.error('Something went wrong. Please try again later.');
+          setRampFeeResponse(undefined);
+        })
+        .finally(() => {
+          setCountingFees(false);
         });
     }
   }, [
