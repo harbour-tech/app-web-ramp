@@ -82,7 +82,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   handleOffRampWalletSelected,
 }) => {
   const rampClient = useRampClient();
-  const [amount, setAmount] = useState('0');
+  const [amount, setAmount] = useState('');
   const [amountInput, setAmountInput] = useState<string>('0');
   const debounceAmountInput = useDebounce(amountInput, 400);
   const [countingFees, setCountingFees] = useState<boolean>(false);
@@ -290,7 +290,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
           );
         }
       });
-    setAmount('0');
+    setAmount('');
   }
 
   const handleSelectAsset = (asset: GetAccountInfoResponse_CryptoAsset) => {
@@ -298,6 +298,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     handleOffRampAssetSelected(asset);
     setSelectedWallet(undefined);
     handleOffRampWalletSelected(undefined);
+    setAmount('');
   };
 
   const handleSelectWalletClick = (
@@ -314,7 +315,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       (ra) => ra.asset!.assetId == selectedAsset!.assetId,
     );
     setOffRampAsset(asset);
-    setAmount('0');
   };
   const needSetBankAccount = !account.offrampBankAccount.case;
 
@@ -380,7 +380,11 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
           setRampFeeResponse(res);
         })
         .catch((_err) => {
-          toast.error('Failed to estimate onramp fees');
+          toast.error('Something went wrong. Please try again later.');
+          setRampFeeResponse(undefined);
+        })
+        .finally(() => {
+          setCountingFees(false);
         });
     }
   }, [
