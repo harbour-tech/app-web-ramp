@@ -33,6 +33,7 @@ import {
   AVALANCHE_MAINNET_PARAMS,
   Erc20Token,
   ETHEREUM_MAINNET_PARAMS,
+  ETHERUM_TESTNET_SEPOLIA_PARAMS,
   POLYGON_AMOY_PARAMS,
   POLYGON_MAINNET_PARAMS,
   requestAccounts,
@@ -208,6 +209,18 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         );
         erc20Asset = {
           address: '0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582',
+          abi: [
+            'function balanceOf(address _owner) public view returns (uint256 balance)',
+            'function transfer(address _to, uint256 _value) public returns (bool success)',
+          ],
+        };
+        break;
+      case Network.ETHEREUM_SEPOLIA:
+        switchNetworkResult = await switchNetwork(
+          ETHERUM_TESTNET_SEPOLIA_PARAMS,
+        ).catch(handleSwitchNetworkError);
+        erc20Asset = {
+          address: '0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8',
           abi: [
             'function balanceOf(address _owner) public view returns (uint256 balance)',
             'function transfer(address _to, uint256 _value) public returns (bool success)',

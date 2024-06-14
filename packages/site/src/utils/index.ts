@@ -21,6 +21,18 @@ export const ETHEREUM_MAINNET_PARAMS: NetworkParams = {
   blockExplorerUrls: [],
 };
 
+export const ETHERUM_TESTNET_SEPOLIA_PARAMS: NetworkParams = {
+  chainId: '0xaa36a7',
+  chainName: 'Sepolia Test Network',
+  nativeCurrency: {
+    name: 'Sepolia ETH',
+    symbol: 'ETH',
+    decimals: 18,
+  },
+  rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com/'],
+  blockExplorerUrls: ['https://sepolia.etherscan.io/'],
+};
+
 export const AVALANCHE_MAINNET_PARAMS: NetworkParams = {
   chainId: '0xA86A',
   chainName: 'Avalanche Mainnet C-Chain',
