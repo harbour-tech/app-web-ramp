@@ -16,7 +16,7 @@ app/deploy/dev: app/deps
 	echo "Build hash: $$hash" && \
 	fullPath=$$(pwd) && \
 	ls -la && \
-	npx bugsnag-sourcemaps upload --api-key ${BUGSNAG_API_KEY} --app-version 0.0.1 --minified-file $$fullPath/index-$$hash.js --source-map $$fullPath/index-$$hash.js.map --minified-url https://dev-snap.harborapps-nonprod.link/assets/index-$$hash.js --no-cli-pager --overwrite
+	npx bugsnag-source-maps upload-browser --api-key ${BUGSNAG_API_KEY} --bundle $$fullPath/index-$$hash.js --source-map $$fullPath/index-$$hash.js.map --bundle-url https://dev-snap.harborapps-nonprod.link/assets/index-$$hash.js --overwrite
 
 # TODO: --mode production
 .PHONY: app/deploy/prod
@@ -29,7 +29,7 @@ app/deploy/prod: app/deps
 	echo "Build hash: $$hash" && \
 	fullPath=$$(pwd) && \
 	ls -la && \
-	npx bugsnag-sourcemaps upload --api-key ${BUGSNAG_API_KEY} --app-version 0.0.1 --minified-file $$fullPath/index-$$hash.js --source-map $$fullPath/index-$$hash.js.map --minified-url https://snap.harbour.fi/assets/index-$$hash.js --no-cli-pager --overwrite
+	npx bugsnag-source-maps upload-browser --api-key ${BUGSNAG_API_KEY} --bundle $$fullPath/index-$$hash.js --source-map $$fullPath/index-$$hash.js.map --bundle-url https://snap.harbour.fi/assets/index-$$hash.js --overwrite
 
 .PHONY: app/deps
 app/deps:
