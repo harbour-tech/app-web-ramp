@@ -19,7 +19,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -52,6 +51,7 @@ import {
 } from './ui/selectAsset';
 import MetaMaskLogo from '@/assets/metamask.svg';
 import { handle32002 } from '@/lib/utils';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export interface AssetAndWalletProps {
   protocol: Protocol | undefined;
@@ -242,7 +242,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
   };
 
   const handleAdd = async () => {
-    await onAdd(address!);
+    await onAdd(address!).finally(() => setAddress(undefined));
     setOpen(false);
   };
 
@@ -284,6 +284,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
         });
       } else {
         toast.error('No new wallet found');
+        setOpen(false);
       }
     }
     load();
@@ -298,61 +299,69 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+    <>
+      {open ? (
+        <Button className="mt-4 w-full gap-2" disabled>
+          <LoadingSpinner /> Accept in MetaMask
+        </Button>
+      ) : (
         <Button
           className="mt-4 w-full"
           disabled={existing.length > 0 && import.meta.env.VITE_SINGLE_WALLET}
+          onClick={() => handleOpenChange(true)}
         >
           Add wallet
         </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Add Metamask Wallet</DialogTitle>
-          <DialogDescription>
-            You may add as many wallets as you like, however they must all be
-            owned by you. By clicking the ADD WALLET button, you'll be prompted
-            by MetaMask to sign a transaction. Don't worry, there's no
-            transaction fees and no money transfer, this is purely to
-            demonstrate ownership of the wallet.
-          </DialogDescription>
-        </DialogHeader>
-        {!address && (
-          <div className="text-center">
-            Please select the address in MetaMask
-          </div>
-        )}
-        {address && (
-          <>
-            <div className="flex flex-col space-y-4 py-4">
-              <div className="flex flex-col items-start">
-                <Label htmlFor="link" className="text-right">
-                  Address
-                </Label>
-                <Input id="link" value={address.address} readOnly />
+      )}
+      <Dialog
+        open={!!address}
+        onOpenChange={() => {
+          setAddress(undefined);
+          setOpen(false);
+        }}
+      >
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Add Metamask Wallet</DialogTitle>
+            <DialogDescription>
+              You may add as many wallets as you like, however they must all be
+              owned by you. By clicking the ADD WALLET button, you'll be
+              prompted by MetaMask to sign a transaction. Don't worry, there's
+              no transaction fees and no money transfer, this is purely to
+              demonstrate ownership of the wallet.
+            </DialogDescription>
+          </DialogHeader>
+          {address && (
+            <>
+              <div className="flex flex-col space-y-4 py-4">
+                <div className="flex flex-col items-start">
+                  <Label htmlFor="link" className="text-right">
+                    Address
+                  </Label>
+                  <Input id="link" value={address.address} readOnly />
+                </div>
+                <div className="flex flex-col items-start">
+                  <Label htmlFor="link" className="text-right">
+                    Wallet Name
+                  </Label>
+                  <Input
+                    id="link"
+                    value={address.name}
+                    autoFocus={true}
+                    onChange={handleNameChange}
+                  />
+                </div>
               </div>
-              <div className="flex flex-col items-start">
-                <Label htmlFor="link" className="text-right">
-                  Wallet Name
-                </Label>
-                <Input
-                  id="link"
-                  value={address.name}
-                  autoFocus={true}
-                  onChange={handleNameChange}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="primary" onClick={handleAdd}>
-                <img src={MetaMaskLogo} className="mr-2 h-5 w-5" />
-                Add wallet
-              </Button>
-            </DialogFooter>
-          </>
-        )}
-      </DialogContent>
-    </Dialog>
+              <DialogFooter>
+                <Button type="button" variant="primary" onClick={handleAdd}>
+                  <img src={MetaMaskLogo} className="mr-2 h-5 w-5" />
+                  Add wallet
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

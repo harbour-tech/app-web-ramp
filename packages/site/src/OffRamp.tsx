@@ -44,7 +44,7 @@ import { AmountInput, AmountInputProps } from '@/components/ui/amountInput';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useRampClient } from '@/contexts';
 import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
-import { SmallLoader } from '@/components/LoadingSpinner';
+import { LoadingSpinner, SmallLoader } from '@/components/LoadingSpinner';
 import {
   Tooltip,
   TooltipContent,
@@ -82,6 +82,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   handleOffRampWalletSelected,
 }) => {
   const rampClient = useRampClient();
+  const [networkSwitchInProgress, setNetworkSwitchInProgress] = useState(false);
   const [amount, setAmount] = useState('');
   const [amountInput, setAmountInput] = useState<string>('0');
   const debounceAmountInput = useDebounce(amountInput, 400);
@@ -150,6 +151,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
 
   async function handleTransfer() {
+    setNetworkSwitchInProgress(true);
     let switchNetworkResult: boolean | undefined | void = false;
     const provider = new ethers.BrowserProvider(window.ethereum);
 
@@ -228,18 +230,23 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         };
         break;
       default:
-        toast.error('Something went wrong');
+        toast.error('Something went wrong during network switch');
+        setNetworkSwitchInProgress(false);
         throw `unsupported network: ${offRampAsset?.asset?.network}`;
     }
 
     if (switchNetworkResult !== true) {
+      setNetworkSwitchInProgress(false);
       return;
     }
 
     if (!(await provider.hasSigner(selectedWallet!.address))) {
-      await requestAccounts();
+      await requestAccounts().catch((_e) => {
+        setNetworkSwitchInProgress(false); //this catch need to be in place, we want to fail silently
+      });
       if (!(await provider.hasSigner(selectedWallet!.address))) {
-        alert(`No access to account ${selectedWallet!.address}`);
+        toast.error(`No access to account ${selectedWallet!.address}`);
+        setNetworkSwitchInProgress(false);
         throw '';
       }
     }
@@ -247,6 +254,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     const signer = await provider
       .getSigner(selectedWallet!.address)
       .catch((e) => {
+        setNetworkSwitchInProgress(false);
         if (e?.error?.code === -32002) {
           handle32002();
           throw e;
@@ -258,6 +266,8 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
         toast.error('Failed to connect to MetaMask signer');
         throw e;
       });
+
+    setNetworkSwitchInProgress(false);
 
     const usdcContract = new ethers.Contract(
       erc20Asset.address,
@@ -587,18 +597,24 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           You can only offramp to a bank account in your name.
                         </p>
                         <div>
-                          <Button
-                            className="w-full mt-4"
-                            onClick={handleTransfer}
-                            disabled={
-                              Number(amount) === 0 ||
-                              amount === null ||
-                              !!changingBankAccountFailed
-                            }
-                          >
-                            <img src={Metamask} className="mr-2 h-4 w-4" />
-                            Sign with MetaMask
-                          </Button>
+                          {networkSwitchInProgress ? (
+                            <Button className="w-full mt-4 gap-2" disabled>
+                              <LoadingSpinner /> Accept in MetaMask
+                            </Button>
+                          ) : (
+                            <Button
+                              className="w-full mt-4"
+                              onClick={handleTransfer}
+                              disabled={
+                                Number(amount) === 0 ||
+                                amount === null ||
+                                !!changingBankAccountFailed
+                              }
+                            >
+                              <img src={Metamask} className="mr-2 h-4 w-4" />
+                              Sign with MetaMask
+                            </Button>
+                          )}
                         </div>
                       </CardContent>
                       <CardFooter className="grid gap-4">
