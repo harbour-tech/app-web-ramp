@@ -255,6 +255,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
       const address: string[] = [];
       try {
         const result = await requestAccounts();
+        console.log('accounts', result.accounts);
         if (result) {
           result.accounts!.forEach((v) => v && address.push(v));
         }
@@ -284,6 +285,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
         });
       } else {
         toast.error('No new wallet found');
+        setOpen(false);
       }
     }
     load();
