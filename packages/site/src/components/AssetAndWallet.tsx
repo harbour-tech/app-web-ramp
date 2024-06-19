@@ -52,6 +52,7 @@ import {
 import MetaMaskLogo from '@/assets/metamask.svg';
 import { handle32002 } from '@/lib/utils';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { useLocalAddresses } from '@/contexts/LocalAddresses';
 
 export interface AssetAndWalletProps {
   protocol: Protocol | undefined;
@@ -78,6 +79,8 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
   selectAssetDescription,
   selectWalletDescription,
 }) => {
+  const { localAddresses } = useLocalAddresses();
+
   const handleSelect = (wallet: GetAccountInfoResponse_Wallet) => {
     onWalletSelected(wallet);
   };
@@ -124,8 +127,10 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
     <img width={24} src={MoneyIcon} />
   );
 
-  const hasWalletsForSelectedAsset =
-    wallets.filter((w) => w.protocol === protocol).length > 0;
+  const fillteredOutWallets = wallets
+    .filter((w) => w.protocol === protocol)
+    .filter((w) => localAddresses.includes(w.address));
+  const hasWalletsForSelectedAsset = fillteredOutWallets.length > 0;
 
   return (
     <Card>
@@ -178,7 +183,9 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
                   <CardDescription className="mb-2">
                     {selectWalletDescription}
                   </CardDescription>
-                  <SelectWalletTrigger disabled={wallets.length === 0}>
+                  <SelectWalletTrigger
+                    disabled={fillteredOutWallets.length === 0}
+                  >
                     {walletSelectedIcon}
                     <SelectWalletValue
                       placeholder="Select Wallet"
@@ -188,18 +195,16 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
                     </SelectWalletValue>
                   </SelectWalletTrigger>
                   <SelectWalletContent>
-                    {wallets
-                      .filter((w) => w.protocol === protocol)
-                      .map((wallet) => (
-                        <SelectWalletItem
-                          key={`${wallet.address}:${wallet.protocol}`}
-                          value={`${wallet.address}:${wallet.protocol}`}
-                          icon={walletItemIcon(wallet.protocol)}
-                          walletAddress={wallet.address}
-                        >
-                          {wallet.name || wallet.address.substring(0, 6)}
-                        </SelectWalletItem>
-                      ))}
+                    {fillteredOutWallets.map((wallet) => (
+                      <SelectWalletItem
+                        key={`${wallet.address}:${wallet.protocol}`}
+                        value={`${wallet.address}:${wallet.protocol}`}
+                        icon={walletItemIcon(wallet.protocol)}
+                        walletAddress={wallet.address}
+                      >
+                        {wallet.name || wallet.address.substring(0, 6)}
+                      </SelectWalletItem>
+                    ))}
                   </SelectWalletContent>
                 </div>
               </SelectWallet>
@@ -233,8 +238,8 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
   existing,
   onAdd,
 }) => {
+  const { setLocalAddresses } = useLocalAddresses();
   const [open, setOpen] = useState(false);
-
   const [address, setAddress] = useState<Wallet | undefined>(undefined);
 
   const handleOpenChange = async (open: boolean) => {
@@ -256,7 +261,12 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
       try {
         const result = await requestAccounts();
         if (result) {
-          result.accounts!.forEach((v) => v && address.push(v));
+          result.accounts &&
+            result.accounts.length > 0 &&
+            setLocalAddresses(result.accounts);
+          result.accounts!.forEach(
+            (singleAddress) => singleAddress && address.push(singleAddress),
+          );
         }
       } catch (e) {
         const code = e?.code || 0;
@@ -274,16 +284,21 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
         setOpen(false);
         return;
       }
+      if (address.length === 0) {
+        toast.error('No account found in MetaMask');
+        setOpen(false);
+        return;
+      }
 
       const addr = address.find((a) => !existing.includes(a!));
       if (addr) {
         setAddress({
-          protocol: protocol,
+          protocol,
           address: addr,
           name: 'MetaMask Wallet',
         });
       } else {
-        toast.error('No new wallet found');
+        toast.success('Accounts ready to use');
         setOpen(false);
       }
     }
@@ -292,7 +307,7 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({
-      protocol: protocol,
+      protocol,
       name: e.target.value,
       address: address!.address,
     });

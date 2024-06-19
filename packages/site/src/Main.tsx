@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { Root } from '@/Root';
-import { ThemeProvider } from '@/providers/ThemeProvider';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { OnboardingModalProvider } from '@/contexts';
 
 import Bugsnag from '@bugsnag/js';
 import BugsnagPluginReact from '@bugsnag/plugin-react';
+import { LocalAddressesContextProvider } from '@/contexts/LocalAddresses';
 
 const apiKey = 'e285fb66c0e35636856bf5f0ca605a1c';
 const client = Bugsnag.start({
@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <ErrorBoundary>
     <React.StrictMode>
       <OnboardingModalProvider>
-        <ThemeProvider>
+        <LocalAddressesContextProvider>
           <Root />
           <ToastContainer
             position="bottom-right"
@@ -47,7 +47,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             pauseOnHover
             theme="dark"
           />
-        </ThemeProvider>
+        </LocalAddressesContextProvider>
       </OnboardingModalProvider>
     </React.StrictMode>
   </ErrorBoundary>,
