@@ -19,19 +19,19 @@ export const LocalAddressesContextProvider = ({
   useEffect(() => {
     const addresses = localStorage.getItem('localAddresses');
     if (addresses) {
-      setLocalAddresses(JSON.parse(addresses));
+      _setLocalAddresses(JSON.parse(addresses));
     }
   }, []);
 
   const clearLocalAddresses = () => {
-    setLocalAddresses([]);
+    _setLocalAddresses([]);
     localStorage.removeItem('localAddresses');
   };
 
   const setLocalAddresses = (localAddresses: string[]) => {
-    const addresses = localStorage.getItem('localAddresses') || '[]';
+    const addressesStringify = localStorage.getItem('localAddresses') || '[]';
     const uniqueAddresses = Array.from(
-      new Set([...JSON.parse(addresses), ...localAddresses]),
+      new Set([...JSON.parse(addressesStringify), ...localAddresses]),
     );
     _setLocalAddresses(uniqueAddresses);
     localStorage.setItem('localAddresses', JSON.stringify(uniqueAddresses));
