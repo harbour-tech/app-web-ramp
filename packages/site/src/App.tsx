@@ -36,6 +36,7 @@ import {
 import { isMobile } from 'react-device-detect';
 import { installationLink } from '@/lib/utils';
 import { handle32002 } from '@/lib/utils';
+import { useLocalAddresses } from '@/contexts/LocalAddresses';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
@@ -44,6 +45,7 @@ const SupportedNetworks = new Map<Protocol, Protocol>([
 ]);
 
 const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
+  const { clearLocalAddresses } = useLocalAddresses();
   const { openOnboardingModal, setOnFinishCallback } = useOnboardingModal();
   const [metamask, metamaskDispatch] = useMetaMask();
   const rampClient = useRampClient();
@@ -95,6 +97,7 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   }, []);
 
   const handleConnectClick = async () => {
+    clearLocalAddresses();
     try {
       await connectSnap();
       const installedSnap = await getSnap();
