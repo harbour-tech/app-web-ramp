@@ -38,14 +38,20 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
   const { setLocalAddresses } = useLocalAddresses();
   const [addingAddressInProgress, setAddingAddressInProgress] = useState(false);
   const [address, setAddress] = useState<Wallet | undefined>(undefined);
+  const [showLoadingInAddressModal, setShowLoadingInAddressModal] =
+    useState(false);
 
   const handleAddWallet = async (open: boolean) => {
     setAddingAddressInProgress(open);
   };
 
   const handleAdd = async () => {
-    await onAdd(address!).finally(() => setAddress(undefined));
-    setAddingAddressInProgress(false);
+    setShowLoadingInAddressModal(true);
+    await onAdd(address!).finally(() => {
+      setAddress(undefined);
+      setShowLoadingInAddressModal(false);
+      setAddingAddressInProgress(false);
+    });
   };
 
   useEffect(() => {
@@ -165,10 +171,21 @@ export const AddWallet: FunctionComponent<AddWalletProps> = ({
                 </div>
               </div>
               <DialogFooter>
-                <Button type="button" variant="primary" onClick={handleAdd}>
-                  <img src={MetaMaskLogo} className="mr-2 h-5 w-5" />
-                  Add wallet
-                </Button>
+                {showLoadingInAddressModal ? (
+                  <Button
+                    type="button"
+                    variant="primary"
+                    className="gap-2"
+                    disabled
+                  >
+                    <LoadingSpinner /> Accept in MetaMask
+                  </Button>
+                ) : (
+                  <Button onClick={handleAdd}>
+                    <img src={MetaMaskLogo} className="mr-2 h-5 w-5" />
+                    Add wallet
+                  </Button>
+                )}
               </DialogFooter>
             </>
           )}
