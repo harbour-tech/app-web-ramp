@@ -18,8 +18,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Success } from '@/components/Success';
 import { OnRamp } from '@/OnRamp';
-import { Wallet } from '@/components/AssetAndWallet';
 import { OffRamp } from '@/OffRamp';
+import { Wallet } from '@/components/AddWallet';
 
 import { BankAccount } from '@/types/bankAccount';
 import { toast } from 'react-toastify';

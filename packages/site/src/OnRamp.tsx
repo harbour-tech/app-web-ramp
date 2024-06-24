@@ -25,7 +25,7 @@ import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
 import { useDebounce } from '@/hooks/useDebounce';
 import { toast } from 'react-toastify';
 import { SmallLoader } from '@/components/LoadingSpinner';
-import { AssetAndWallet, Wallet } from './components/AssetAndWallet';
+import { AssetAndWallet } from './components/AssetAndWallet';
 import {
   Tooltip,
   TooltipProvider,
@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/tooltip';
 import InfoSvg from '@/assets/info.svg?react';
 import WarningIcon from '@/assets/warningIcon';
+import { Wallet } from '@/components/AddWallet';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;

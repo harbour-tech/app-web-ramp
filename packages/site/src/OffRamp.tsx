@@ -39,7 +39,7 @@ import {
   requestAccounts,
   switchNetwork,
 } from '@/utils';
-import { AssetAndWallet, Wallet } from './components/AssetAndWallet';
+import { AssetAndWallet } from './components/AssetAndWallet';
 import { AmountInput, AmountInputProps } from '@/components/ui/amountInput';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useRampClient } from '@/contexts';
@@ -55,6 +55,7 @@ import InfoSvg from '@/assets/info.svg?react';
 import { TransactionProcessingSpinner } from '@/components/TransactionProcessingSpinner';
 import WarningIcon from '@/assets/warningIcon';
 import { handle32002 } from '@/lib/utils';
+import { Wallet } from '@/components/AddWallet';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
