@@ -34,6 +34,7 @@ import {
   Erc20Token,
   ETHEREUM_MAINNET_PARAMS,
   ETHERUM_TESTNET_SEPOLIA_PARAMS,
+  NetworkParams,
   POLYGON_AMOY_PARAMS,
   POLYGON_MAINNET_PARAMS,
   requestAccounts,
@@ -156,85 +157,46 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
     let switchNetworkResult: boolean | undefined | void = false;
     const provider = new ethers.BrowserProvider(window.ethereum);
 
-    let erc20Asset: Erc20Token;
+    if (offRampAsset?.asset?.details.case != 'ethereumErc20Token') {
+      throw `unsupported token: ${offRampAsset?.asset?.details.case}`;
+    }
+
+    let erc20Asset: Erc20Token = {
+      address: offRampAsset?.asset?.details.value.tokenAddress,
+      abi: [
+        'function balanceOf(address _owner) public view returns (uint256 balance)',
+        'function transfer(address _to, uint256 _value) public returns (bool success)',
+      ],
+    };
+    let networkParams: NetworkParams;
     switch (offRampAsset?.asset?.network) {
       case Network.ETHEREUM_MAINNET:
-        switchNetworkResult = await switchNetwork(
-          ETHEREUM_MAINNET_PARAMS,
-        ).catch(handleSwitchNetworkError);
-        erc20Asset = {
-          address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-          abi: [
-            'function balanceOf(address _owner) public view returns (uint256 balance)',
-            'function transfer(address _to, uint256 _value) public returns (bool success)',
-          ],
-        };
+        networkParams = ETHEREUM_MAINNET_PARAMS;
         break;
       case Network.AVAX_C_MAINNET:
-        switchNetworkResult = await switchNetwork(
-          AVALANCHE_MAINNET_PARAMS,
-        ).catch(handleSwitchNetworkError);
-        erc20Asset = {
-          address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
-          abi: [
-            'function balanceOf(address _owner) public view returns (uint256 balance)',
-            'function transfer(address _to, uint256 _value) public returns (bool success)',
-          ],
-        };
+        networkParams = AVALANCHE_MAINNET_PARAMS;
         break;
       case Network.AVAX_FUJI:
-        switchNetworkResult = await switchNetwork(AVALANCHE_FUJI_PARAMS).catch(
-          handleSwitchNetworkError,
-        );
-        erc20Asset = {
-          address: '0x5425890298aed601595a70AB815c96711a31Bc65',
-          abi: [
-            'function balanceOf(address _owner) public view returns (uint256 balance)',
-            'function transfer(address _to, uint256 _value) public returns (bool success)',
-          ],
-        };
+        networkParams = AVALANCHE_FUJI_PARAMS;
         break;
       case Network.POLYGON_MAINNET:
-        switchNetworkResult = await switchNetwork(POLYGON_MAINNET_PARAMS).catch(
-          handleSwitchNetworkError,
-        );
-        erc20Asset = {
-          address: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
-          abi: [
-            'function balanceOf(address _owner) public view returns (uint256 balance)',
-            'function transfer(address _to, uint256 _value) public returns (bool success)',
-          ],
-        };
+        networkParams = POLYGON_MAINNET_PARAMS;
         break;
       case Network.POLYGON_AMOY:
-        switchNetworkResult = await switchNetwork(POLYGON_AMOY_PARAMS).catch(
-          handleSwitchNetworkError,
-        );
-        erc20Asset = {
-          address: '0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582',
-          abi: [
-            'function balanceOf(address _owner) public view returns (uint256 balance)',
-            'function transfer(address _to, uint256 _value) public returns (bool success)',
-          ],
-        };
+        networkParams = POLYGON_AMOY_PARAMS;
         break;
       case Network.ETHEREUM_SEPOLIA:
-        switchNetworkResult = await switchNetwork(
-          ETHERUM_TESTNET_SEPOLIA_PARAMS,
-        ).catch(handleSwitchNetworkError);
-        erc20Asset = {
-          address: '0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8',
-          abi: [
-            'function balanceOf(address _owner) public view returns (uint256 balance)',
-            'function transfer(address _to, uint256 _value) public returns (bool success)',
-          ],
-        };
+        networkParams = ETHERUM_TESTNET_SEPOLIA_PARAMS;
         break;
       default:
         toast.error('Something went wrong during network switch');
         setNetworkSwitchInProgress(false);
         throw `unsupported network: ${offRampAsset?.asset?.network}`;
     }
+
+    switchNetworkResult = await switchNetwork(networkParams).catch(
+      handleSwitchNetworkError,
+    );
 
     if (switchNetworkResult !== true) {
       setNetworkSwitchInProgress(false);
