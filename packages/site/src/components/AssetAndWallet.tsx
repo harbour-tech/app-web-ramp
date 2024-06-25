@@ -21,6 +21,8 @@ import CryptoNetworkLogo_Avalanche from '@/assets/cryptoNetworkLogo_Avalanche.sv
 import CryptoNetworkLogo_Ethereum from '@/assets/cryptoNetworkLogo_Ethereum.svg';
 import CryptoNetworkLogo_Polygon from '@/assets/cryptoNetworkLogo_Polygon.svg';
 import CryptoNetworkLogo_Terra from '@/assets/cryptoNetworkLogo_Terra.svg';
+import CryptoNetworkLogo_AlephZero from '@/assets/cryptoNetworkLogo_AlephZero.svg';
+
 import WalletIcon from '@/assets/walletIcon.svg';
 import AssetSymbolIcon_USDC from '@/assets/assetSymbolIcon_USDC.svg';
 import MoneyIcon from '@/assets/moneyIcon.svg';
@@ -80,6 +82,7 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
     [Protocol.ETHEREUM]: CryptoNetworkLogo_Ethereum,
     [Protocol.POLYGON]: CryptoNetworkLogo_Polygon,
     [Protocol.TERRA]: CryptoNetworkLogo_Terra,
+    [Protocol.ALEPH_ZERO]: CryptoNetworkLogo_AlephZero,
   };
 
   const walletItemIcon = (wallet: Protocol) => {
@@ -97,9 +100,10 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
   };
 
   const assetLogos = {
-    [AssetId.UNSPECIFIED]: undefined,
-    [AssetId.USDC]: AssetSymbolIcon_USDC,
-    [AssetId.AXL_USDC]: AssetSymbolIcon_USDC,
+    [AssetId.ASSET_ID_UNSPECIFIED]: undefined,
+    [AssetId.ASSET_ID_USDC]: AssetSymbolIcon_USDC,
+    [AssetId.ASSET_ID_AXL_USDC]: AssetSymbolIcon_USDC,
+    [AssetId.ASSET_ID_1USD]: AssetSymbolIcon_USDC,
   };
 
   const assetItemIcon = (asset: AssetId) => {
@@ -139,15 +143,18 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
               <SelectAssetValue placeholder="Select Asset" />
             </SelectAssetTrigger>
             <SelectAssetContent>
-              {assets.map((asset) => (
-                <SelectAssetItem
-                  key={asset!.shortName}
-                  value={asset.shortName}
-                  icon={assetItemIcon(asset.assetId)}
-                >
-                  {asset.shortName}
-                </SelectAssetItem>
-              ))}
+              {assets.map((asset) => {
+                console.log(asset.assetId);
+                return (
+                  <SelectAssetItem
+                    key={asset!.shortName}
+                    value={asset.shortName}
+                    icon={assetItemIcon(asset.assetId)}
+                  >
+                    {asset.shortName}
+                  </SelectAssetItem>
+                );
+              })}
             </SelectAssetContent>
           </div>
         </SelectAsset>
