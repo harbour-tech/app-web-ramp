@@ -1,0 +1,3 @@
+[submodule "packages/harbour-snap"]
+	path = packages/harbour-snap
+	url = git@github.com:harbour-tech/harbour-snap.git
