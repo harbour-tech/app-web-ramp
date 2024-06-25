@@ -143,18 +143,15 @@ export const AssetAndWallet: FunctionComponent<AssetAndWalletProps> = ({
               <SelectAssetValue placeholder="Select Asset" />
             </SelectAssetTrigger>
             <SelectAssetContent>
-              {assets.map((asset) => {
-                console.log(asset.assetId);
-                return (
-                  <SelectAssetItem
-                    key={asset!.shortName}
-                    value={asset.shortName}
-                    icon={assetItemIcon(asset.assetId)}
-                  >
-                    {asset.shortName}
-                  </SelectAssetItem>
-                );
-              })}
+              {assets.map((asset) => (
+                <SelectAssetItem
+                  key={asset!.shortName}
+                  value={asset.shortName}
+                  icon={assetItemIcon(asset.assetId)}
+                >
+                  {asset.shortName}
+                </SelectAssetItem>
+              ))}
             </SelectAssetContent>
           </div>
         </SelectAsset>
