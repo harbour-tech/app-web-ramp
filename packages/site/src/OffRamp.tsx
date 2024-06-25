@@ -161,7 +161,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
       throw `unsupported token: ${offRampAsset?.asset?.details.case}`;
     }
 
-    let erc20Asset: Erc20Token = {
+    const erc20Asset: Erc20Token = {
       address: offRampAsset?.asset?.details.value.tokenAddress,
       abi: [
         'function balanceOf(address _owner) public view returns (uint256 balance)',
