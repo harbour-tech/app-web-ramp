@@ -17,13 +17,12 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace=packages/site &  npm run  build --workspace=packages/snap",
+    "build": "npm run build --workspace=packages/site",
     "lint": "yarn lint:eslint && yarn lint:misc --check",
     "lint:eslint": "eslint . --cache --ext js,jsx,ts,tsx",
     "lint:fix": "npm lint:eslint --fix && npm lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' --ignore-path .gitignore",
-    "start": "npm run start --workspace=packages/site &  npm run  start --workspace=packages/snap",
-    "test": " npm run test --workspace=packages/snap"
+    "start": "npm run start --workspace=packages/site & npm run start --workspace=packages/hooks"
   },
   "dependencies": {
     "@radix-ui/react-select": "=2.0.0",

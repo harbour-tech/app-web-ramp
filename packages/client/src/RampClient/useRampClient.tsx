@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import RampClient from '../../harbour';
+import RampClient from '../schema';
 import { RampClientContext } from './RampClientContext';
 
 export const useRampClient = function (): RampClient {

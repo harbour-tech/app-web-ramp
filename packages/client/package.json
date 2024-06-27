@@ -1,0 +1,30 @@
+{
+  "name": "@harbour/client",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "buf": "npm run buf:sync && npm run buf:generate && npm run buf:clean",
+    "buf:clean": "rm -rf proto && npx prettier --write ./src/schema/gen",
+    "buf:generate": "buf generate && sed -i '' s/_pb.js/_pb/ src/schema/gen/*/v1/public_*.ts",
+    "buf:sync": "rm -rf proto && rm -rf _tmp && mkdir -p proto/ramp/v1/ && git clone --depth 1 git@github.com:harbour-tech/be-ramp-service.git _tmp && mv _tmp/proto/ramp/v1/public.proto proto/ramp/v1/ && rm -rf _tmp",
+    "build": "tsc -p tsconfig.json",
+    "start": "tsc -w -p tsconfig.json"
+  },
+  "dependencies": {
+    "@connectrpc/connect": "^1.4.0",
+    "@connectrpc/connect-web": "^1.4.0",
+    "@metamask/providers": "^16.0.0",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@bufbuild/connect-web": "^0.13.0",
+    "@bufbuild/protobuf": "^1.6.0",
+    "@bufbuild/protoc-gen-es": "^1.6.0",
+    "@connectrpc/protoc-gen-connect-es": "^1.4.0"
+  }
+}

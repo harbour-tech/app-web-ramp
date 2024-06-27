@@ -1,10 +1,11 @@
+import { PropsWithChildren, createContext, useMemo } from 'react';
+
 import RampClient, {
   EthereumSignature,
   Signature,
   SignerFunction,
-} from '@/harbour';
-import { singRequest } from '@/utils';
-import { PropsWithChildren, createContext, useMemo } from 'react';
+} from '../schema';
+import { singRequest } from '../utils';
 
 export const RampClientContext = createContext<RampClient | null>(null);
 

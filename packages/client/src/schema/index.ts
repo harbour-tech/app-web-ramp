@@ -1,3 +1,4 @@
+import type { PartialMessage } from '@bufbuild/protobuf';
 import { createPromiseClient, PromiseClient } from '@connectrpc/connect';
 import { createConnectTransport } from '@connectrpc/connect-web';
 
@@ -17,7 +18,6 @@ import {
   WhitelistAddressRequest,
   WhitelistAddressResponse,
 } from './gen/ramp/v1/public_pb';
-import { PartialMessage } from '@bufbuild/protobuf';
 
 export class RampClient {
   public client: PromiseClient<typeof RampService>;

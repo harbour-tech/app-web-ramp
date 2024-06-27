@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import HarbourLogo from '@/assets/harbourLogo.svg?react';
 import IntroAnimatedLogos from '@/components/ui/introAnimatedLogos';
 import { MetaMaskContextProvider, RampClientProvider } from '@/contexts';
-import useWindowDimensions from '@/hooks/useWindowDimensions';
+import { useWindowDimensions } from '@harbour/hooks';
 
 export const Root: FunctionComponent<PropsWithChildren> = () => {
   const [gradientsReady, setGradientsReady] = useState(false);

@@ -22,7 +22,7 @@ import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
 import { BankAccount } from '@/types/bankAccount';
 import { AmountInput, AmountInputProps } from '@/components/ui/amountInput';
 import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@harbour/hooks';
 import { toast } from 'react-toastify';
 import { SmallLoader } from '@/components/LoadingSpinner';
 import { AssetAndWallet } from './components/AssetAndWallet';

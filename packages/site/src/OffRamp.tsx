@@ -1,3 +1,4 @@
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import {
   EstimateOffRampFeeRequest,
   EstimateOffRampFeeResponse,
@@ -5,11 +6,7 @@ import {
   GetAccountInfoResponse_CryptoAsset,
   GetAccountInfoResponse_Wallet,
   GetAccountInfoResponse_Wallet_RampAsset,
-  IbanCoordinates,
-  Network,
-  ScanCoordinates,
-} from '@/harbour/gen/ramp/v1/public_pb';
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+} from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
 import {
   Card,
   CardContent,
@@ -42,7 +39,7 @@ import {
 } from '@/utils';
 import { AssetAndWallet } from './components/AssetAndWallet';
 import { AmountInput, AmountInputProps } from '@/components/ui/amountInput';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@harbour/hooks';
 import { useRampClient } from '@/contexts';
 import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
 import { LoadingSpinner, SmallLoader } from '@/components/LoadingSpinner';
