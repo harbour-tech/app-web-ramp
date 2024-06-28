@@ -44,6 +44,5 @@ export const handleAmountChange = (
   ) {
     return;
   }
-
   setAmount(result);
 };

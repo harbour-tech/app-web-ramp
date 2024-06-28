@@ -35,6 +35,7 @@ import InfoSvg from '@/assets/info.svg?react';
 import WarningIcon from '@/assets/warningIcon';
 import { Wallet } from '@/components/AddWallet';
 import { handleInput } from './utils/handleInput';
+import { getOnRampBankAccount } from './utils/getOnRampBankAccount';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -98,27 +99,12 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     handleOnRampWalletSelected(undefined);
   };
 
-  const getOnRampBankAccount = (): BankAccount => {
-    switch (account.onrampBankAccount.case) {
-      case 'onrampIban':
-        return {
-          case: 'iban',
-          value: account.onrampBankAccount.value,
-        };
-      case 'onrampScan':
-        return {
-          case: 'scan',
-          value: account.onrampBankAccount.value,
-        };
-      default:
-        throw 'onramp bank account must be set!';
-    }
-  };
+  const bankAccount = getOnRampBankAccount(account);
 
-  const currency = {
-    iban: 'EUR',
-    scan: 'GBP',
-  }[getOnRampBankAccount().case];
+  const currency = bankAccount.case === 'iban' ? 'EUR' : 'GBP';
+
+  const bankAccountType =
+    currency === 'GBP' ? 'instant Faster Payments' : 'SEPA Instant';
 
   useEffect(() => {
     if (
@@ -156,9 +142,6 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     debounceAmountInput,
     rampClient,
   ]);
-
-  const bankAccountType =
-    currency === 'GBP' ? 'instant Faster Payments' : 'SEPA Instant';
 
   useEffect(() => {
     if (selectedAsset && selectedWallet) {
@@ -233,7 +216,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                   <CardContent className="space-y-5">
                     {account.onrampBankAccount.case && (
                       <BankAccountComponent
-                        account={getOnRampBankAccount()}
+                        account={bankAccount}
                         withCopyToClipboard
                       />
                     )}
