@@ -8,7 +8,7 @@ BUGSNAG_API_KEY="e285fb66c0e35636856bf5f0ca605a1c"
 
 .PHONY: app/deploy/dev
 app/deploy/dev: app/deps
-	npm i --workspace=packages/site && npm run build:staging --workspace=packages/site
+	npm i && npm run build:staging
 	aws s3 sync packages/site/dist/. s3://${DEV_BUCKET} --no-cli-pager --profile harbor
 	aws cloudfront create-invalidation --distribution-id ${DEV_DIST_ID} --paths "/*" --no-cli-pager --profile harbor
 	@cd packages/site/dist/assets && \
@@ -21,7 +21,7 @@ app/deploy/dev: app/deps
 # TODO: --mode production
 .PHONY: app/deploy/prod
 app/deploy/prod: app/deps
-	npm i --workspace=packages/site && npm run build --workspace=packages/site
+	npm i && npm run build
 	aws s3 sync packages/site/dist/. s3://${PROD_BUCKET} --no-cli-pager --profile harbor-prod
 	aws cloudfront create-invalidation --distribution-id ${PROD_DIST_ID} --paths "/*" --no-cli-pager --profile harbor-prod
 	@cd packages/site/dist/assets && \

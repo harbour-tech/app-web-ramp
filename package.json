@@ -17,12 +17,12 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace=packages/site",
-    "lint": "yarn lint:eslint && yarn lint:misc --check",
+    "build": "turbo run build",
+    "lint": "npm lint:eslint && npm lint:misc --check",
     "lint:eslint": "eslint . --cache --ext js,jsx,ts,tsx",
     "lint:fix": "npm lint:eslint --fix && npm lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' --ignore-path .gitignore",
-    "start-snap": "npm run start --workspace=packages/site & npm run start --workspace=packages/hooks & npm run start --workspace=packages/client"
+    "start": "turbo run start"
   },
   "dependencies": {
     "@radix-ui/react-select": "=2.0.0",
@@ -48,8 +48,10 @@
     "prettier": "=2.8.8",
     "prettier-plugin-packagejson": "=2.5.0",
     "sharp": "=0.33.3",
+    "turbo": "^2.0.5",
     "typescript": "=5.1.6"
   },
+  "packageManager": "npm@10.2.4",
   "engines": {
     "node": ">=18.6.0"
   }

@@ -1,5 +1,5 @@
 {
-  "name": "@harbour/ramp-app",
+  "name": "@harbour/site",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -17,8 +17,8 @@
     "@bugsnag/plugin-react": "^7.24.0",
     "@connectrpc/connect": "^1.4.0",
     "@connectrpc/connect-web": "^1.4.0",
-    "@harbour/client": "^1.0.0",
-    "@harbour/hooks": "^1.0.0",
+    "@harbour/client": "*",
+    "@harbour/hooks": "*",
     "@metamask/providers": "^16.0.0",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
