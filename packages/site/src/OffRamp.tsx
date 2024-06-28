@@ -1,3 +1,4 @@
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import {
   EstimateOffRampFeeRequest,
   EstimateOffRampFeeResponse,
@@ -8,8 +9,7 @@ import {
   IbanCoordinates,
   Network,
   ScanCoordinates,
-} from '@/harbour/gen/ramp/v1/public_pb';
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+} from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
 import {
   Card,
   CardContent,
@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
 import { BankAccountWithIcon } from '@/components/BankAccountWithEditIcon';
-import BankAccount from '@/types/bankAccount';
+import { BankAccount, useRampClient } from '@harbour/client';
 import { WalletIcon } from 'lucide-react';
 import { ethers, parseUnits } from 'ethers';
 import Metamask from '@/assets/metamask.svg';
@@ -42,8 +42,7 @@ import {
 } from '@/utils';
 import { AssetAndWallet } from './components/AssetAndWallet';
 import { AmountInput, AmountInputProps } from '@/components/ui/amountInput';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useRampClient } from '@/contexts';
+import { useDebounce } from '@harbour/hooks';
 import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
 import { LoadingSpinner, SmallLoader } from '@/components/LoadingSpinner';
 import {

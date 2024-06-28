@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "target": "es2020",
+    "moduleResolution": "node",
+    "lib": ["dom", "es2020"]
+  },
+  "include": ["src"]
+}

@@ -55,30 +55,6 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
   }
 };
 
-/**
- * Invoke the "hello" method from the example snap.
- */
-interface SingResponse {
-  publicKey: string;
-  signature: string;
-  signatureType: string;
-  encoding: string;
-}
-export const singRequest = async (body: string) => {
-  return await window.ethereum.request<SingResponse>({
-    method: 'wallet_invokeSnap',
-    params: {
-      snapId: defaultSnapOrigin,
-      request: {
-        method: 'sign_request',
-        params: {
-          message: body,
-        },
-      },
-    },
-  });
-};
-
 interface PersonalSignResponse {
   signature: string;
 }

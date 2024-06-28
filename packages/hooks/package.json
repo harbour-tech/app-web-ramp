@@ -1,0 +1,20 @@
+{
+  "name": "@harbour/hooks",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "harbour",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "tsc -w -p tsconfig.json"
+  },
+  "dependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "typescript": "^4.5.5"
+  }
+}

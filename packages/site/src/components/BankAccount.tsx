@@ -4,8 +4,8 @@ import { Input } from '@/components/ui/input';
 import {
   IbanCoordinates,
   ScanCoordinates,
-} from '@/harbour/gen/ramp/v1/public_pb';
-import { BankAccount as Account } from '@/types/bankAccount';
+} from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
+import { BankAccount as Account } from '@harbour/client/src/RampClient/types';
 
 export interface BankAccountProps {
   account: Account;
