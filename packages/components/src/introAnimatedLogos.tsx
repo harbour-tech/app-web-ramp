@@ -1,7 +1,6 @@
-import React from 'react';
-import ExchangeIcon from '@/assets/exchangeIcon.svg';
-import LogotypeHarbourMedium from '@/assets/logotypeHarbourMedium.svg';
-import LogotypeMetamaskMedium from '@/assets/logotypeMetamaskMedium.svg';
+import ExchangeIcon from './assets/exchangeIcon.svg';
+import LogotypeHarbourMedium from './assets/logotypeHarbourMedium.svg';
+import LogotypeMetamaskMedium from './assets/logotypeMetamaskMedium.svg';
 
 interface IntroAnimatedLogosProps {
   disabledAnimations?: boolean;

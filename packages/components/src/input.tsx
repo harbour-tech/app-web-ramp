@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import CopyIcon from '@/assets/copyIcon.svg';
+import { cn } from './utils';
+import CopyIcon from './assets/copyIcon.svg';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 

@@ -1,10 +1,4 @@
-import { type ClassValue, clsx } from 'clsx';
 import { isFirefox } from 'react-device-detect';
-import { twMerge } from 'tailwind-merge';
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export const installationLink = () => {
   let installationLink = import.meta.env.VITE_FLASK_INSTALLATION

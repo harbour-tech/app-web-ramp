@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import AssetSymbolIcon_EUR from '@/assets/assetSymbolIcon_EUR.svg';
-import AssetSymbolIcon_USDC from '@/assets/assetSymbolIcon_USDC.svg';
-import AssetSymbolIcon_GBP from '@/assets/assetSymbolIcon_GBP.svg';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { cn } from './utils';
+import AssetSymbolIcon_EUR from './assets/assetSymbolIcon_EUR.svg';
+import AssetSymbolIcon_USDC from './assets/assetSymbolIcon_USDC.svg';
+import AssetSymbolIcon_GBP from './assets/assetSymbolIcon_GBP.svg';
+import { LoadingSpinner } from './loadingSpinner';
 
 export interface AmountInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {

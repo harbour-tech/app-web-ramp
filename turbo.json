@@ -5,7 +5,8 @@
       "outputs": [
         "packages/site/dist/**",
         "packages/hooks/dist/**",
-        "packages/client/dist/**"
+        "packages/client/dist/**",
+        "packages/components/dist/**"
       ]
     },
     "build:staging": {
