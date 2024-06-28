@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Protocol } from '@/harbour/gen/ramp/v1/public_pb';
+import { Protocol } from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
 import { requestAccounts } from '@/utils';
 import {
   Dialog,

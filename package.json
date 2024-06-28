@@ -22,7 +22,7 @@
     "lint:eslint": "eslint . --cache --ext js,jsx,ts,tsx",
     "lint:fix": "npm lint:eslint --fix && npm lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' --ignore-path .gitignore",
-    "start": "npm run start --workspace=packages/site & npm run start --workspace=packages/hooks"
+    "start-snap": "npm run start --workspace=packages/site & npm run start --workspace=packages/hooks & npm run start --workspace=packages/client"
   },
   "dependencies": {
     "@radix-ui/react-select": "=2.0.0",

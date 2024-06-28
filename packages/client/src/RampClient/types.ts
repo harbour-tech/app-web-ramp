@@ -1,3 +1,8 @@
+import {
+  ScanCoordinates,
+  IbanCoordinates,
+} from '../schema/gen/ramp/v1/public_pb';
+
 /**
  * Hashing algorithm used for signing requests to Harbour API
  */
@@ -61,3 +66,13 @@ export const CosmosSignature: SignatureConfig = {
   signingAlgorithm: SigningAlgorithm.SECP256K1,
   encodingAlgorithm: EncodingAlgorithm.Base64,
 };
+
+export type BankAccount =
+  | {
+      value: ScanCoordinates;
+      case: 'scan';
+    }
+  | {
+      value: IbanCoordinates;
+      case: 'iban';
+    };

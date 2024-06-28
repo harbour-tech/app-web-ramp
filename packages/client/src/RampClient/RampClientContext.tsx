@@ -1,13 +1,11 @@
 import { PropsWithChildren, createContext, useMemo } from 'react';
 
-import RampClient, {
-  EthereumSignature,
-  Signature,
-  SignerFunction,
-} from '../schema';
+import RampClient from './client';
 import { singRequest } from '../utils';
+import { EthereumSignature, Signature, SignerFunction } from './types';
 
 export const RampClientContext = createContext<RampClient | null>(null);
+RampClientContext.displayName = 'AuthContextContext';
 
 export const RampClientProvider: React.FC<PropsWithChildren> = ({
   children,
@@ -24,7 +22,6 @@ export const RampClientProvider: React.FC<PropsWithChildren> = ({
     return new RampClient('/api/', signer);
   }, []);
 
-  RampClientContext.displayName = 'AuthContextContext';
   return (
     <RampClientContext.Provider value={client}>
       {children}

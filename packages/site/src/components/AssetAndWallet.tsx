@@ -7,9 +7,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
+  AssetId,
+  GetAccountInfoResponse_CryptoAsset,
   GetAccountInfoResponse_Wallet,
   Protocol,
-} from '@/harbour/gen/ramp/v1/public_pb';
+} from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
+
 import {
   SelectWallet,
   SelectWalletContent,
@@ -27,10 +30,6 @@ import WalletIcon from '@/assets/walletIcon.svg';
 import AssetSymbolIcon_USDC from '@/assets/assetSymbolIcon_USDC.svg';
 import MoneyIcon from '@/assets/moneyIcon.svg';
 
-import {
-  AssetId,
-  GetAccountInfoResponse_CryptoAsset,
-} from '@/harbour/gen/ramp/v1/public_pb';
 import {
   SelectAsset,
   SelectAssetContent,

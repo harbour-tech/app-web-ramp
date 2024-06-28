@@ -1,5 +1,5 @@
-import { GetAccountInfoResponse } from '@/harbour/gen/ramp/v1/public_pb.ts';
-import BankAccount from '@/types/bankAccount.tsx';
+import { BankAccount } from '@harbour/client/src/RampClient/types.ts';
+import { GetAccountInfoResponse } from '@harbour/client/src/schema/gen/ramp/v1/public_pb.ts';
 
 export * from './metamask';
 export * from './snap';

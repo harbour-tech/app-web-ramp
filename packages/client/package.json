@@ -6,7 +6,8 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "buf": "npm run buf:sync && npm run buf:generate && npm run buf:clean",
     "buf:clean": "rm -rf proto && npx prettier --write ./src/schema/gen",

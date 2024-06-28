@@ -6,7 +6,7 @@ import {
   GetAccountInfoResponse_Wallet,
   Protocol,
   SetBankAccountRequest,
-} from '@/harbour/gen/ramp/v1/public_pb';
+} from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
 import { Button } from '@/components/ui/button';
 import {
   bankAccountIsSameAsOnRampBankAccount,
@@ -21,22 +21,17 @@ import { OnRamp } from '@/OnRamp';
 import { OffRamp } from '@/OffRamp';
 import { Wallet } from '@/components/AddWallet';
 
-import { BankAccount } from '@/types/bankAccount';
 import { toast } from 'react-toastify';
 import { keccak256, SigningKey } from 'ethers';
 import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
 import MetaMaskWithLogo from '@/assets/metamaskWithName.svg?react';
 import { Snap } from '@/types';
-import {
-  MetamaskActions,
-  useMetaMask,
-  useOnboardingModal,
-  useRampClient,
-} from '@/contexts';
+import { MetamaskActions, useMetaMask, useOnboardingModal } from '@/contexts';
 import { isMobile } from 'react-device-detect';
 import { installationLink } from '@/lib/utils';
 import { handle32002 } from '@/lib/utils';
 import { useLocalAddresses } from '@/contexts/LocalAddresses';
+import { useRampClient, BankAccount } from '@harbour/client';
 
 const SupportedNetworks = new Map<Protocol, Protocol>([
   [Protocol.ETHEREUM, Protocol.ETHEREUM],
