@@ -58,6 +58,7 @@ import { handle32002 } from '@/lib/utils';
 import { Wallet } from '@/components/AddWallet';
 import { handleInput } from './utils/handleInput';
 import { handleAmountChange } from './utils/handleAmountChange';
+import { getOffRampBankAccount } from './utils/getOffRampBankAccount';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -248,37 +249,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
   const needSetBankAccount = !account.offrampBankAccount.case;
 
-  const getOffRampBankAccount = (
-    acc: GetAccountInfoResponse_Account,
-  ): BankAccount => {
-    switch (acc.offrampBankAccount.case) {
-      case 'offrampIban':
-        return {
-          case: 'iban',
-          value: acc.offrampBankAccount.value,
-        };
-      case 'offrampScan':
-        return {
-          case: 'scan',
-          value: acc.offrampBankAccount.value,
-        };
-      case undefined:
-        switch (acc.onrampBankAccount.case) {
-          case 'onrampIban':
-            return {
-              case: 'iban',
-              value: new IbanCoordinates(),
-            };
-          case 'onrampScan':
-            return {
-              case: 'scan',
-              value: new ScanCoordinates(),
-            };
-          default:
-            throw 'onramp bank account must always be set!';
-        }
-    }
-  };
   const [bankAccount, setBankAccount] = useState<BankAccount>(
     getOffRampBankAccount(account),
   );
