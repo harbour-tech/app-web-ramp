@@ -34,7 +34,7 @@ import {
 import InfoSvg from '@/assets/info.svg?react';
 import WarningIcon from '@/assets/warningIcon';
 import { Wallet } from '@/components/AddWallet';
-import { handleInput } from './utils/handleInput';
+import { inputFormatter } from './utils/inputFormatter';
 import { getRampBankAccount } from './utils/getRampBankAccount';
 
 export interface OnRampProps {
@@ -289,7 +289,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       label="SEND:"
                       value={amountInput}
                       onChange={(event) =>
-                        handleInput(event.target.value, setAmountInput)
+                        inputFormatter(event.target.value, setAmountInput)
                       }
                       onFocus={() =>
                         amountInput === '0' ? setAmountInput('') : null

@@ -56,8 +56,7 @@ import { TransactionProcessingSpinner } from '@/components/TransactionProcessing
 import WarningIcon from '@/assets/warningIcon';
 import { handle32002 } from '@/lib/utils';
 import { Wallet } from '@/components/AddWallet';
-import { handleInput } from './utils/handleInput';
-import { handleAmountChange } from './utils/handleAmountChange';
+import { inputFormatter } from './utils/inputFormatter';
 import { getRampBankAccount } from './utils/getRampBankAccount';
 
 export interface OffRampProps {
@@ -416,7 +415,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                             id="amount"
                             value={amount}
                             onChange={(event) =>
-                              handleAmountChange(event, setAmount)
+                              inputFormatter(event, setAmount)
                             }
                             disabled={false}
                           />
@@ -521,7 +520,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           label="SEND:"
                           value={amountInput}
                           onChange={(event) =>
-                            handleInput(event.target.value, setAmountInput)
+                            inputFormatter(event.target.value, setAmountInput)
                           }
                           onFocus={() =>
                             amountInput === '0' ? setAmountInput('') : null

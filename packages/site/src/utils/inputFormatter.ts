@@ -1,11 +1,19 @@
 import { Dispatch, SetStateAction } from 'react';
 
-type HandleInput = (
-  value: string,
-  setAmountInput: Dispatch<SetStateAction<string>>,
+type InputFormatter = (
+  eventOrValue: React.ChangeEvent<HTMLInputElement> | string,
+  setAmount: Dispatch<SetStateAction<string>>,
 ) => void;
 
-export const handleInput: HandleInput = (value, setAmountInput) => {
+export const inputFormatter: InputFormatter = (eventOrValue, setAmount) => {
+  // Determine the input value
+  let value: string;
+  if (typeof eventOrValue === 'string') {
+    value = eventOrValue;
+  } else {
+    value = eventOrValue.target.value;
+  }
+
   // Determine the decimal separator for the current locale
   const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
 
@@ -19,8 +27,8 @@ export const handleInput: HandleInput = (value, setAmountInput) => {
   );
 
   // Check if the result ends with a dot
-  if (result.endsWith('.')) {
-    const dotIndex = result.indexOf('.');
+  if (result.endsWith(decimalSeparator)) {
+    const dotIndex = result.indexOf(decimalSeparator);
     // Remove the dot if it is not the last character
     if (dotIndex !== result.length - 1) {
       result = result.substring(0, result.length - 1);
@@ -36,9 +44,15 @@ export const handleInput: HandleInput = (value, setAmountInput) => {
     result = result.replace(/^0/, '');
   }
 
-  // Remove all non-numeric characters except for the dot
-  result = result.replace(/[^\d.]/g, '');
+  // Remove all non-numeric characters except for the decimal separator
+  result = result.replace(new RegExp(`[^\\d${decimalSeparator}]`, 'g'), '');
 
-  // Set the processed result as the input value
-  setAmountInput(result);
+  // Don't update the state if the new value contains more than one decimal separator
+  if (
+    (result.match(new RegExp(`\\${decimalSeparator}`, 'g')) || []).length > 1
+  ) {
+    return;
+  }
+
+  setAmount(result);
 };
