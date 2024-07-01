@@ -58,7 +58,7 @@ import { handle32002 } from '@/lib/utils';
 import { Wallet } from '@/components/AddWallet';
 import { handleInput } from './utils/handleInput';
 import { handleAmountChange } from './utils/handleAmountChange';
-import { getOffRampBankAccount } from './utils/getOffRampBankAccount';
+import { getRampBankAccount } from './utils/getRampBankAccount';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -250,13 +250,13 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const needSetBankAccount = !account.offrampBankAccount.case;
 
   const [bankAccount, setBankAccount] = useState<BankAccount>(
-    getOffRampBankAccount(account),
+    getRampBankAccount(account),
   );
 
   const currency = {
     iban: 'EUR',
     scan: 'GBP',
-  }[getOffRampBankAccount(account).case];
+  }[getRampBankAccount(account).case];
 
   useEffect(() => {
     if (
@@ -427,7 +427,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         <div className="w-full items-center">
                           <BankAccountWithIcon
                             key={bankAccount.value.toString()}
-                            account={getOffRampBankAccount(account)}
+                            account={getRampBankAccount(account)}
                             onChange={updateBankAccount}
                             error={changingBankAccountFailed}
                           />

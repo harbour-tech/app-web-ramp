@@ -35,7 +35,7 @@ import InfoSvg from '@/assets/info.svg?react';
 import WarningIcon from '@/assets/warningIcon';
 import { Wallet } from '@/components/AddWallet';
 import { handleInput } from './utils/handleInput';
-import { getOnRampBankAccount } from './utils/getOnRampBankAccount';
+import { getRampBankAccount } from './utils/getRampBankAccount';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -99,7 +99,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     handleOnRampWalletSelected(undefined);
   };
 
-  const bankAccount = getOnRampBankAccount(account);
+  const bankAccount = getRampBankAccount(account);
 
   const currency = bankAccount.case === 'iban' ? 'EUR' : 'GBP';
 
