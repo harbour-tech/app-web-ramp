@@ -23,5 +23,5 @@
     "useUnknownInCatchVariables": false,
     "types": ["vite-plugin-svgr/client"]
   },
-  "include": ["src"]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "custom.d.ts"]
 }

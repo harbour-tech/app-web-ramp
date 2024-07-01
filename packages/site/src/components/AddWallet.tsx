@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Protocol } from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
 import { requestAccounts } from '@/utils';
 import {
@@ -9,14 +8,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+  Button,
+  Label,
+  Input,
+  LoadingSpinner,
+} from '@harbour/components';
 import { toast } from 'react-toastify';
 
 import MetaMaskLogo from '@/assets/metamask.svg';
 import { handle32002 } from '@/lib/utils';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useLocalAddresses } from '@/contexts/LocalAddresses';
 
 export interface Wallet {

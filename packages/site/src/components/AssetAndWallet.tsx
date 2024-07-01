@@ -5,7 +5,17 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+  SelectWallet,
+  SelectWalletContent,
+  SelectWalletItem,
+  SelectWalletTrigger,
+  SelectWalletValue,
+  SelectAsset,
+  SelectAssetContent,
+  SelectAssetItem,
+  SelectAssetTrigger,
+  SelectAssetValue,
+} from '@harbour/components';
 import {
   AssetId,
   GetAccountInfoResponse_CryptoAsset,
@@ -13,13 +23,6 @@ import {
   Protocol,
 } from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
 
-import {
-  SelectWallet,
-  SelectWalletContent,
-  SelectWalletItem,
-  SelectWalletTrigger,
-  SelectWalletValue,
-} from './ui/selectWallet';
 import CryptoNetworkLogo_Avalanche from '@/assets/cryptoNetworkLogo_Avalanche.svg';
 import CryptoNetworkLogo_Ethereum from '@/assets/cryptoNetworkLogo_Ethereum.svg';
 import CryptoNetworkLogo_Polygon from '@/assets/cryptoNetworkLogo_Polygon.svg';
@@ -27,16 +30,9 @@ import CryptoNetworkLogo_Terra from '@/assets/cryptoNetworkLogo_Terra.svg';
 import CryptoNetworkLogo_AlephZero from '@/assets/cryptoNetworkLogo_AlephZero.svg';
 
 import WalletIcon from '@/assets/walletIcon.svg';
-import AssetSymbolIcon_USDC from '@/assets/assetSymbolIcon_USDC.svg';
+import AssetSymbolIcon_USDC from '@harbour/components/src/assets/assetSymbolIcon_USDC.svg';
 import MoneyIcon from '@/assets/moneyIcon.svg';
 
-import {
-  SelectAsset,
-  SelectAssetContent,
-  SelectAssetItem,
-  SelectAssetTrigger,
-  SelectAssetValue,
-} from './ui/selectAsset';
 import { useLocalAddresses } from '@/contexts/LocalAddresses';
 import { AddWallet, Wallet } from './AddWallet';
 

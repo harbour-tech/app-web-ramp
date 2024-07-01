@@ -17,7 +17,21 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+  AmountInput,
+  AmountInputProps,
+  Note,
+  NoteDescription,
+  NoteTitle,
+  LoadingSpinner,
+  SmallLoader,
+  TooltipContent,
+  Tooltip,
+  TooltipTrigger,
+  TooltipPrimitive,
+  Button,
+  Label,
+  Input,
+} from '@harbour/components';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
 import { BankAccountWithIcon } from '@/components/BankAccountWithEditIcon';
 import { BankAccount, useRampClient } from '@harbour/client';
@@ -38,16 +52,7 @@ import {
   switchNetwork,
 } from '@/utils';
 import { AssetAndWallet } from './components/AssetAndWallet';
-import { AmountInput, AmountInputProps } from '@/components/ui/amountInput';
 import { useDebounce } from '@harbour/hooks';
-import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
-import { LoadingSpinner, SmallLoader } from '@/components/LoadingSpinner';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import InfoSvg from '@/assets/info.svg?react';
 import { TransactionProcessingSpinner } from '@/components/TransactionProcessingSpinner';
 import WarningIcon from '@/assets/warningIcon';
@@ -440,7 +445,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   }, [selectedAsset, selectedWallet]);
 
   return (
-    <TooltipProvider>
+    <TooltipPrimitive.TooltipProvider>
       {isProcessingTransfer && <TransactionProcessingSpinner />}
       <div className="flex items-start justify-center gap-8 mb-10">
         {needSetBankAccount && (
@@ -690,6 +695,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
           </div>
         )}
       </div>
-    </TooltipProvider>
+    </TooltipPrimitive.TooltipProvider>
   );
 };

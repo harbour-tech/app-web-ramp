@@ -7,7 +7,16 @@ import {
   Protocol,
   SetBankAccountRequest,
 } from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
-import { Button } from '@/components/ui/button';
+import {
+  Button,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Note,
+  NoteDescription,
+  NoteTitle,
+} from '@harbour/components';
 import {
   bankAccountIsSameAsOnRampBankAccount,
   connectSnap,
@@ -15,7 +24,6 @@ import {
   isLocalSnap,
   requestPersonalSign,
 } from '@/utils';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Success } from '@/components/Success';
 import { OnRamp } from '@/OnRamp';
 import { OffRamp } from '@/OffRamp';
@@ -23,7 +31,6 @@ import { Wallet } from '@/components/AddWallet';
 
 import { toast } from 'react-toastify';
 import { keccak256, SigningKey } from 'ethers';
-import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
 import MetaMaskWithLogo from '@/assets/metamaskWithName.svg?react';
 import { Snap } from '@/types';
 import { MetamaskActions, useMetaMask, useOnboardingModal } from '@/contexts';

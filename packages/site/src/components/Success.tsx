@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button } from './ui/button';
+import { Button } from '@harbour/components';
 import Confetti from '@/assets/confetti.svg';
 
 export interface SuccessProps {

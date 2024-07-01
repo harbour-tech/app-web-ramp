@@ -10,27 +10,28 @@ import {
 
 import { useRampClient, BankAccount } from '@harbour/client';
 import {
+  Label,
+  Input,
+  AmountInput,
+  AmountInputProps,
+  Note,
+  NoteDescription,
+  NoteTitle,
+  SmallLoader,
+  Tooltip,
+  TooltipPrimitive,
+  TooltipTrigger,
+  TooltipContent,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from '@harbour/components';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { BankAccount as BankAccountComponent } from '@/components/BankAccount';
-import { AmountInput, AmountInputProps } from '@/components/ui/amountInput';
-import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
 import { useDebounce } from '@harbour/hooks';
 import { toast } from 'react-toastify';
-import { SmallLoader } from '@/components/LoadingSpinner';
 import { AssetAndWallet } from './components/AssetAndWallet';
-import {
-  Tooltip,
-  TooltipProvider,
-  TooltipTrigger,
-  TooltipContent,
-} from '@/components/ui/tooltip';
 import InfoSvg from '@/assets/info.svg?react';
 import WarningIcon from '@/assets/warningIcon';
 import { Wallet } from '@/components/AddWallet';
@@ -214,7 +215,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   }, [selectedAsset, selectedWallet]);
 
   return (
-    <TooltipProvider>
+    <TooltipPrimitive.TooltipProvider>
       <div className="flex flex-col items-center">
         <div className="flex items-start justify-center gap-8 pt-4 w-full flex-wrap">
           <div
@@ -411,6 +412,6 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
           )}
         </div>
       </div>
-    </TooltipProvider>
+    </TooltipPrimitive.TooltipProvider>
   );
 };

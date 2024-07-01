@@ -1,4 +1,4 @@
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { LoadingSpinner } from '@harbour/components';
 import { ReactNode, createContext, useEffect, useRef, useState } from 'react';
 
 interface OnboardingModalContextType {

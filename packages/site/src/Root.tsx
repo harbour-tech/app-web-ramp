@@ -5,9 +5,8 @@ import {
   useEffect,
 } from 'react';
 import App from '@/App';
-import { cn } from '@/lib/utils';
+import { cn, IntroAnimatedLogos } from '@harbour/components';
 import HarbourLogo from '@/assets/harbourLogo.svg?react';
-import IntroAnimatedLogos from '@/components/ui/introAnimatedLogos';
 import { MetaMaskContextProvider } from '@/contexts';
 import { RampClientProvider } from '@harbour/client';
 import { useWindowDimensions } from '@harbour/hooks';

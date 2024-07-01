@@ -1,12 +1,12 @@
 import ExchangeIcon from './assets/exchangeIcon.svg';
 import LogotypeHarbourMedium from './assets/logotypeHarbourMedium.svg';
-import LogotypeMetamaskMedium from './assets/logotypeMetamaskMedium.svg';
+import LogotypeMetamaskMedium from './assets/logotypeHarbourMedium.svg';
 
 interface IntroAnimatedLogosProps {
   disabledAnimations?: boolean;
 }
 
-const IntroAnimatedLogos: React.FC<IntroAnimatedLogosProps> = ({
+export const IntroAnimatedLogos: React.FC<IntroAnimatedLogosProps> = ({
   disabledAnimations = false,
 }) => {
   return (
@@ -38,5 +38,3 @@ const IntroAnimatedLogos: React.FC<IntroAnimatedLogosProps> = ({
     </div>
   );
 };
-
-export default IntroAnimatedLogos;
