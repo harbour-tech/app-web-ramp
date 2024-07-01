@@ -1,23 +1,18 @@
 import { Dispatch, SetStateAction } from 'react';
 
-type InputFormatter = (
-  eventOrValue: React.ChangeEvent<HTMLInputElement> | string,
-  setAmount: Dispatch<SetStateAction<string>>,
+type AmountInputFormatter = (
+  event: React.ChangeEvent<HTMLInputElement>,
+  setStateAction: Dispatch<SetStateAction<string>>,
 ) => void;
 
-export const inputFormatter: InputFormatter = (eventOrValue, setAmount) => {
-  // Determine the input value
-  let value: string;
-  if (typeof eventOrValue === 'string') {
-    value = eventOrValue;
-  } else {
-    value = eventOrValue.target.value;
-  }
+export const amountInputFormatter: AmountInputFormatter = (
+  event,
+  setStateAction,
+) => {
+  let value: string = event.target.value;
 
-  // Determine the decimal separator for the current locale
   const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
 
-  // Replace the non-local decimal separator with the local one
   value = value.replace(decimalSeparator === '.' ? ',' : '.', decimalSeparator);
 
   // Limit the number of decimal places to two
@@ -54,5 +49,5 @@ export const inputFormatter: InputFormatter = (eventOrValue, setAmount) => {
     return;
   }
 
-  setAmount(result);
+  setStateAction(result);
 };

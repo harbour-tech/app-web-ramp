@@ -8,7 +8,7 @@ import {
   GetAccountInfoResponse_Wallet_RampAsset,
 } from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
 
-import { useRampClient, BankAccount } from '@harbour/client';
+import { useRampClient } from '@harbour/client';
 import {
   Card,
   CardContent,
@@ -34,7 +34,7 @@ import {
 import InfoSvg from '@/assets/info.svg?react';
 import WarningIcon from '@/assets/warningIcon';
 import { Wallet } from '@/components/AddWallet';
-import { inputFormatter } from './utils/inputFormatter';
+import { amountInputFormatter } from './utils/amountInputFormatter';
 import { getRampBankAccount } from './utils/getRampBankAccount';
 
 export interface OnRampProps {
@@ -58,8 +58,9 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   handleOnRampAssetSelected,
   handleOnRampWalletSelected,
 }) => {
-  const [amountInput, setAmountInput] = useState<string>('0');
-  const debounceAmountInput = useDebounce(amountInput, 400);
+  const [calculatorAmountInput, setCalculatorAmountInput] =
+    useState<string>('0');
+  const debounceAmountInput = useDebounce(calculatorAmountInput, 400);
   const [countingFees, setCountingFees] = useState<boolean>(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
   const rampClient = useRampClient();
@@ -287,15 +288,19 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       onClick={() => firstInputRef.current?.focus()}
                       currency={currency as AmountInputProps['currency']}
                       label="SEND:"
-                      value={amountInput}
+                      value={calculatorAmountInput}
                       onChange={(event) =>
-                        inputFormatter(event.target.value, setAmountInput)
+                        amountInputFormatter(event, setCalculatorAmountInput)
                       }
                       onFocus={() =>
-                        amountInput === '0' ? setAmountInput('') : null
+                        calculatorAmountInput === '0'
+                          ? setCalculatorAmountInput('')
+                          : null
                       }
                       onBlur={() =>
-                        amountInput === '' ? setAmountInput('0') : null
+                        calculatorAmountInput === ''
+                          ? setCalculatorAmountInput('0')
+                          : null
                       }
                     />
                     <AmountInput
