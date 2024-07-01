@@ -256,7 +256,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const currency = {
     iban: 'EUR',
     scan: 'GBP',
-  }[getRampBankAccount(account).case];
+  }[bankAccount.case];
 
   useEffect(() => {
     if (
@@ -427,7 +427,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         <div className="w-full items-center">
                           <BankAccountWithIcon
                             key={bankAccount.value.toString()}
-                            account={getRampBankAccount(account)}
+                            account={bankAccount}
                             onChange={updateBankAccount}
                             error={changingBankAccountFailed}
                           />
