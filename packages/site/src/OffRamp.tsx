@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import {
   EstimateOffRampFeeRequest,
   EstimateOffRampFeeResponse,
@@ -56,6 +56,8 @@ import { TransactionProcessingSpinner } from '@/components/TransactionProcessing
 import WarningIcon from '@/assets/warningIcon';
 import { handle32002 } from '@/lib/utils';
 import { Wallet } from '@/components/AddWallet';
+import { amountInputFormatter } from './utils/amountInputFormatter';
+import { getRampBankAccount } from './utils/getRampBankAccount';
 
 export interface OffRampProps {
   account: GetAccountInfoResponse_Account;
@@ -85,8 +87,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const rampClient = useRampClient();
   const [networkSwitchInProgress, setNetworkSwitchInProgress] = useState(false);
   const [amount, setAmount] = useState('');
-  const [amountInput, setAmountInput] = useState<string>('0');
-  const debounceAmountInput = useDebounce(amountInput, 400);
+  const [calculatorAmountInput, setCalculatorAmountInput] =
+    useState<string>('0');
+  const debounceAmountInput = useDebounce(calculatorAmountInput, 400);
   const [countingFees, setCountingFees] = useState<boolean>(false);
   const [isProcessingTransfer, setIsProcessingTransfer] = useState(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
@@ -105,50 +108,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
 
   const handleSwitchNetworkError = () => {
     toast.error('There was a problem with switching the network');
-  };
-
-  const handleInput = (value: string) => {
-    // Determine the decimal separator for the current locale
-    const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
-
-    // Replace the non-local decimal separator with the local one
-    value = value.replace(
-      decimalSeparator === '.' ? ',' : '.',
-      decimalSeparator,
-    );
-
-    // Limit the number of decimal places to two
-    let result = value.replace(
-      new RegExp(`(\\${decimalSeparator}\\d{2})\\d+`),
-      '$1',
-    );
-
-    if (result.endsWith('.')) {
-      const dotIndex = result.indexOf('.');
-      // Remove the dot if it is not the last character
-      if (dotIndex !== result.length - 1) {
-        result = result.substring(0, result.length - 1);
-      }
-    }
-
-    // Replace two or more leading zeros with a single zero
-    result = result.replace(/^00+/, '0');
-
-    // Check if the result starts with a zero and is an integer
-    if (
-      result.length > 1 &&
-      result.startsWith('0') &&
-      result.match(/^[0-9]*$/)
-    ) {
-      // Remove one leading zero (e.g., change "0123" to "123")
-      result = result.replace(/^0/, '');
-    }
-
-    // Remove all non-numeric characters except for the dot
-    result = result.replace(/[^\d.]/g, '');
-
-    // Set the processed result as the input value
-    setAmountInput(result);
   };
 
   async function handleTransfer() {
@@ -290,45 +249,14 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   };
   const needSetBankAccount = !account.offrampBankAccount.case;
 
-  const getOffRampBankAccount = (
-    acc: GetAccountInfoResponse_Account,
-  ): BankAccount => {
-    switch (acc.offrampBankAccount.case) {
-      case 'offrampIban':
-        return {
-          case: 'iban',
-          value: acc.offrampBankAccount.value,
-        };
-      case 'offrampScan':
-        return {
-          case: 'scan',
-          value: acc.offrampBankAccount.value,
-        };
-      case undefined:
-        switch (acc.onrampBankAccount.case) {
-          case 'onrampIban':
-            return {
-              case: 'iban',
-              value: new IbanCoordinates(),
-            };
-          case 'onrampScan':
-            return {
-              case: 'scan',
-              value: new ScanCoordinates(),
-            };
-          default:
-            throw 'onramp bank account must always be set!';
-        }
-    }
-  };
   const [bankAccount, setBankAccount] = useState<BankAccount>(
-    getOffRampBankAccount(account),
+    getRampBankAccount(account),
   );
 
   const currency = {
     iban: 'EUR',
     scan: 'GBP',
-  }[getOffRampBankAccount(account).case];
+  }[bankAccount.case];
 
   useEffect(() => {
     if (
@@ -375,59 +303,6 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
   const updateBankAccount = (account: BankAccount) => {
     setBankAccount(account);
     onSaveBankAccount(account);
-  };
-
-  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let value = event.target.value;
-
-    // Determine the decimal separator for the current locale
-    const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
-
-    // Replace the non-local decimal separator with the local one
-    value = value.replace(
-      decimalSeparator === '.' ? ',' : '.',
-      decimalSeparator,
-    );
-
-    // Limit the number of decimal places to two
-    let result = value.replace(
-      new RegExp(`(\\${decimalSeparator}\\d{2})\\d+`),
-      '$1',
-    );
-
-    // Check if the result ends with a dot
-    if (result.endsWith(decimalSeparator)) {
-      const dotIndex = result.indexOf(decimalSeparator);
-      // Remove the dot if it is not the last character
-      if (dotIndex !== result.length - 1) {
-        result = result.substring(0, result.length - 1);
-      }
-    }
-
-    // Replace two or more leading zeros with a single zero
-    result = result.replace(/^00+/, '0');
-
-    // Check if the result starts with a zero and is an integer
-    if (
-      result.length > 1 &&
-      result.startsWith('0') &&
-      result.match(/^[0-9]*$/)
-    ) {
-      // Remove one leading zero (e.g., change "0123" to "123")
-      result = result.replace(/^0/, '');
-    }
-
-    // Remove all non-numeric characters except for the decimal separator
-    result = result.replace(new RegExp(`[^\\d${decimalSeparator}]`, 'g'), '');
-
-    // Don't update the state if the new value contains more than one decimal separator
-    if (
-      (result.match(new RegExp(`\\${decimalSeparator}`, 'g')) || []).length > 1
-    ) {
-      return;
-    }
-
-    setAmount(result);
   };
 
   const bankAccountType =
@@ -540,7 +415,9 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                             type="text"
                             id="amount"
                             value={amount}
-                            onChange={handleAmountChange}
+                            onChange={(event) =>
+                              amountInputFormatter(event, setAmount)
+                            }
                             disabled={false}
                           />
                         </div>
@@ -550,7 +427,7 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                         <div className="w-full items-center">
                           <BankAccountWithIcon
                             key={bankAccount.value.toString()}
-                            account={getOffRampBankAccount(account)}
+                            account={bankAccount}
                             onChange={updateBankAccount}
                             error={changingBankAccountFailed}
                           />
@@ -642,13 +519,22 @@ export const OffRamp: FunctionComponent<OffRampProps> = ({
                           onClick={() => firstInputRef.current?.focus()}
                           currency={'USDC'}
                           label="SEND:"
-                          value={amountInput}
-                          onChange={(event) => handleInput(event.target.value)}
+                          value={calculatorAmountInput}
+                          onChange={(event) =>
+                            amountInputFormatter(
+                              event,
+                              setCalculatorAmountInput,
+                            )
+                          }
                           onFocus={() =>
-                            amountInput === '0' ? setAmountInput('') : null
+                            calculatorAmountInput === '0'
+                              ? setCalculatorAmountInput('')
+                              : null
                           }
                           onBlur={() =>
-                            amountInput === '' ? setAmountInput('0') : null
+                            calculatorAmountInput === ''
+                              ? setCalculatorAmountInput('0')
+                              : null
                           }
                         />
                         <AmountInput

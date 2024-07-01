@@ -8,7 +8,7 @@ import {
   GetAccountInfoResponse_Wallet_RampAsset,
 } from '@harbour/client/src/schema/gen/ramp/v1/public_pb';
 
-import { useRampClient, BankAccount } from '@harbour/client';
+import { useRampClient } from '@harbour/client';
 import {
   Card,
   CardContent,
@@ -34,6 +34,8 @@ import {
 import InfoSvg from '@/assets/info.svg?react';
 import WarningIcon from '@/assets/warningIcon';
 import { Wallet } from '@/components/AddWallet';
+import { amountInputFormatter } from './utils/amountInputFormatter';
+import { getRampBankAccount } from './utils/getRampBankAccount';
 
 export interface OnRampProps {
   account: GetAccountInfoResponse_Account;
@@ -56,8 +58,9 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   handleOnRampAssetSelected,
   handleOnRampWalletSelected,
 }) => {
-  const [amountInput, setAmountInput] = useState<string>('0');
-  const debounceAmountInput = useDebounce(amountInput, 400);
+  const [calculatorAmountInput, setCalculatorAmountInput] =
+    useState<string>('0');
+  const debounceAmountInput = useDebounce(calculatorAmountInput, 400);
   const [countingFees, setCountingFees] = useState<boolean>(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
   const rampClient = useRampClient();
@@ -73,51 +76,6 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
   const [onRampAsset, setOnRampAsset] = useState<
     GetAccountInfoResponse_Wallet_RampAsset | undefined
   >(undefined);
-
-  const handleInput = (value: string) => {
-    // Determine the decimal separator for the current locale
-    const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
-
-    // Replace the non-local decimal separator with the local one
-    value = value.replace(
-      decimalSeparator === '.' ? ',' : '.',
-      decimalSeparator,
-    );
-
-    // Limit the number of decimal places to two
-    let result = value.replace(
-      new RegExp(`(\\${decimalSeparator}\\d{2})\\d+`),
-      '$1',
-    );
-
-    // Check if the result ends with a dot
-    if (result.endsWith('.')) {
-      const dotIndex = result.indexOf('.');
-      // Remove the dot if it is not the last character
-      if (dotIndex !== result.length - 1) {
-        result = result.substring(0, result.length - 1);
-      }
-    }
-
-    // Replace two or more leading zeros with a single zero
-    result = result.replace(/^00+/, '0');
-
-    // Check if the result starts with a zero and is an integer
-    if (
-      result.length > 1 &&
-      result.startsWith('0') &&
-      result.match(/^[0-9]*$/)
-    ) {
-      // Remove one leading zero (e.g., change "0123" to "123")
-      result = result.replace(/^0/, '');
-    }
-
-    // Remove all non-numeric characters except for the dot
-    result = result.replace(/[^\d.]/g, '');
-
-    // Set the processed result as the input value
-    setAmountInput(result);
-  };
 
   const handleSelectWalletClick = (
     wallet: GetAccountInfoResponse_Wallet | undefined,
@@ -142,27 +100,12 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     handleOnRampWalletSelected(undefined);
   };
 
-  const getOnRampBankAccount = (): BankAccount => {
-    switch (account.onrampBankAccount.case) {
-      case 'onrampIban':
-        return {
-          case: 'iban',
-          value: account.onrampBankAccount.value,
-        };
-      case 'onrampScan':
-        return {
-          case: 'scan',
-          value: account.onrampBankAccount.value,
-        };
-      default:
-        throw 'onramp bank account must be set!';
-    }
-  };
+  const bankAccount = getRampBankAccount(account);
 
-  const currency = {
-    iban: 'EUR',
-    scan: 'GBP',
-  }[getOnRampBankAccount().case];
+  const currency = bankAccount.case === 'iban' ? 'EUR' : 'GBP';
+
+  const bankAccountType =
+    currency === 'GBP' ? 'instant Faster Payments' : 'SEPA Instant';
 
   useEffect(() => {
     if (
@@ -200,9 +143,6 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
     debounceAmountInput,
     rampClient,
   ]);
-
-  const bankAccountType =
-    currency === 'GBP' ? 'instant Faster Payments' : 'SEPA Instant';
 
   useEffect(() => {
     if (selectedAsset && selectedWallet) {
@@ -277,7 +217,7 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                   <CardContent className="space-y-5">
                     {account.onrampBankAccount.case && (
                       <BankAccountComponent
-                        account={getOnRampBankAccount()}
+                        account={bankAccount}
                         withCopyToClipboard
                       />
                     )}
@@ -348,13 +288,19 @@ export const OnRamp: FunctionComponent<OnRampProps> = ({
                       onClick={() => firstInputRef.current?.focus()}
                       currency={currency as AmountInputProps['currency']}
                       label="SEND:"
-                      value={amountInput}
-                      onChange={(event) => handleInput(event.target.value)}
+                      value={calculatorAmountInput}
+                      onChange={(event) =>
+                        amountInputFormatter(event, setCalculatorAmountInput)
+                      }
                       onFocus={() =>
-                        amountInput === '0' ? setAmountInput('') : null
+                        calculatorAmountInput === '0'
+                          ? setCalculatorAmountInput('')
+                          : null
                       }
                       onBlur={() =>
-                        amountInput === '' ? setAmountInput('0') : null
+                        calculatorAmountInput === ''
+                          ? setCalculatorAmountInput('0')
+                          : null
                       }
                     />
                     <AmountInput
