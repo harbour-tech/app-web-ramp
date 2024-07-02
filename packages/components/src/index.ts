@@ -1,3 +1,5 @@
+import './index.css';
+
 export * from './alert';
 export * from './amountInput';
 export * from './button';

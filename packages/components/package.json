@@ -39,6 +39,8 @@
     "postcss": "^8.4.38",
     "vite": "^5.2.9",
     "vite-plugin-dts": "^3.9.1",
-    "vite-plugin-svgr": "^4.2.0"
+    "vite-plugin-svgr": "^4.2.0",
+    "vite-plugin-css-injected-by-js": "^3.5.1"
+
   }
 }
