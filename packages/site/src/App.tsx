@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import './global.css';
 import { FC, useEffect, useMemo, useState } from 'react';
 import {
   GetAccountInfoResponse,
