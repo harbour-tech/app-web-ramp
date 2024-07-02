@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useContext, useState } from 'react';
 import {
   GetAccountInfoResponse,
   GetAccountInfoResponse_CryptoAsset,
@@ -20,16 +20,19 @@ import { Success } from '@/components/Success';
 import { OnRamp } from '@/OnRamp';
 import { OffRamp } from '@/OffRamp';
 import { Wallet } from '@/components/AddWallet';
-
 import { toast } from 'react-toastify';
 import { keccak256, SigningKey } from 'ethers';
 import { Note, NoteDescription, NoteTitle } from '@/components/ui/note';
 import MetaMaskWithLogo from '@/assets/metamaskWithName.svg?react';
 import { Snap } from '@/types';
-import { MetamaskActions, useMetaMask, useOnboardingModal } from '@/contexts';
+import {
+  MetamaskActions,
+  useMetaMask,
+  useOnboardingModal,
+  useAssetsAndWallets,
+} from '@/contexts';
 import { isMobile } from 'react-device-detect';
-import { installationLink } from '@/lib/utils';
-import { handle32002 } from '@/lib/utils';
+import { installationLink, handle32002 } from '@/lib/utils';
 import { useLocalAddresses } from '@/contexts/LocalAddresses';
 import { useRampClient, BankAccount } from '@harbour/client';
 
@@ -44,20 +47,24 @@ const App: FC<{ hideLogo: () => void }> = ({ hideLogo }) => {
   const { openOnboardingModal, setOnFinishCallback } = useOnboardingModal();
   const [metamask, metamaskDispatch] = useMetaMask();
   const rampClient = useRampClient();
-  // prettier-ignore
-  const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(null);
+  const {
+    changingBankAccountFailed,
+    setChangingBankAccountFailed,
+    onRampSelectedAsset,
+    setOnRampSelectedAsset,
+    onRampSelectedWallet,
+    setOnRampSelectedWallet,
+    offRampSelectedAsset,
+    setOffRampSelectedAsset,
+    offRampSelectedWallet,
+    setOffRampSelectedWallet,
+  } = useAssetsAndWallets();
+
+  const [accountInfo, setAccountInfo] = useState<GetAccountInfoResponse | null>(
+    null,
+  );
   const [showSuccess, setShowSuccess] = useState(false);
   const isMetaMaskReady = metamask.snapsDetected;
-  // prettier-ignore
-  const [changingBankAccountFailed, setChangingBankAccountFailed] = useState<boolean | string>(false);
-  // prettier-ignore
-  const [onRampSelectedAsset, setOnRampSelectedAsset] = useState<GetAccountInfoResponse_CryptoAsset | undefined>(undefined);
-  // prettier-ignore
-  const [onRampSelectedWallet, setOnRampSelectedWallet] = useState<GetAccountInfoResponse_Wallet | undefined>(undefined);
-  // prettier-ignore
-  const [offRampSelectedAsset, setOffRampSelectedAsset] = useState<GetAccountInfoResponse_CryptoAsset | undefined>(undefined);
-  // prettier-ignore
-  const [offRampSelectedWallet, setOffRampSelectedWallet] = useState<GetAccountInfoResponse_Wallet | undefined>(undefined);
 
   const load = async (message?: string) => {
     if (message === 'onboardingFinished') {

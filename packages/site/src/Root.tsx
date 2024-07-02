@@ -1,5 +1,5 @@
 import {
-  type FunctionComponent,
+  FunctionComponent,
   PropsWithChildren,
   useState,
   useEffect,
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import HarbourLogo from '@/assets/harbourLogo.svg?react';
 import IntroAnimatedLogos from '@/components/ui/introAnimatedLogos';
 import { MetaMaskContextProvider } from '@/contexts';
+import { AssetsAndWalletsContextProvider } from '@/contexts/AssetsAndWallets';
 import { RampClientProvider } from '@harbour/client';
 import { useWindowDimensions } from '@harbour/hooks';
 
@@ -75,9 +76,11 @@ export const Root: FunctionComponent<PropsWithChildren> = () => {
             }}
           >
             <MetaMaskContextProvider>
-              <RampClientProvider>
-                <App hideLogo={hideLogo} />
-              </RampClientProvider>
+              <AssetsAndWalletsContextProvider>
+                <RampClientProvider>
+                  <App hideLogo={hideLogo} />
+                </RampClientProvider>
+              </AssetsAndWalletsContextProvider>
             </MetaMaskContextProvider>
           </div>
           {logoVisible && (
